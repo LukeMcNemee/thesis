@@ -1,0 +1,235 @@
+%% Load document class fithesis2
+%% {10pt, 11pt, 12pt}
+%% {draft, final}
+%% {oneside, twoside}
+%% {onecolumn, twocolumn}
+\documentclass[11pt,final,twoside]{fithesis2}
+
+%% Basic packages
+\usepackage[czech]{babel}
+\usepackage{cmap}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+
+%% Additional packages for colors, advanced
+%% formatting options, etc.
+\usepackage{color}
+\usepackage{microtype}
+\usepackage{url}
+\usepackage{cslatexquotes}
+\usepackage{fancyvrb}
+\usepackage[small,bf]{caption}
+\usepackage[plainpages=false,pdfpagelabels,unicode]{hyperref}
+\usepackage[all]{hypcap}
+
+%% Fix long URLs in DVIs
+\usepackage{ifpdf}
+
+\ifpdf
+\else
+  \usepackage{breakurl}
+\fi
+
+%% Packages used to generate various lists
+%\usepackage{makeidx}
+%\makeindex
+
+\usepackage[xindy]{glossaries}
+\makeglossary
+
+%% Use STAR and CIRCLE signs for nested
+%% itemized lists
+\renewcommand{\labelitemii}{$\star$}
+\renewcommand{\labelitemiii}{$\circ$}
+
+%% Title page information
+\thesistitle{Komponenta distribuce a správy klíčů pro bezdrátové sensorové síťě}
+\thesissubtitle{bakalářská práce}
+\thesisstudent{Lukáš Němec}
+\thesiswoman{false} %% Important when using Slovak or Czech lang
+\thesisfaculty{fi}  %% {fi, eco, law, sci, fsps, phil, ped, med, fss}
+\thesislang{cs}     %% {en, sk, cs}
+\thesisyear{jaro 2014}
+\thesisadvisor{RNDr. Petr Švenda, Ph.D.}
+
+%% Beginning of the document
+\begin{document}
+
+%% Front page with a logo and basic thesis information
+\FrontMatter
+\ThesisTitlePage
+
+%% Thesis declaration (required)
+\begin{ThesisDeclaration}
+  \DeclarationText
+  \AdvisorName
+\end{ThesisDeclaration}
+
+%% Thanks (optional)
+\begin{ThesisThanks}
+poděkování
+\end{ThesisThanks}
+
+%% Abstract (required)
+\begin{ThesisAbstract}
+abstrakt
+\end{ThesisAbstract}
+
+%% Keywords (required)
+\begin{ThesisKeyWords}
+klíčová, slova
+\end{ThesisKeyWords}
+
+%% Beginning of the thesis itself
+\MainMatter
+
+%% TOC (required)
+\tableofcontents
+
+%% Thesis text structured using
+%% chapters, sections, subsections, etc.
+\chapter{Úvod}
+
+
+TODO
+
+\chapter{Existující implementace pro distribuci a správu klíčů}
+Mechanismus bexpečného ustanovení klíčů pro komunikaci v bezdrátové sensorové síti tvoří jeden ze základních předpokladů 
+pro bezpečné a spolehivé fungování sítě jako celku. Na zabezpečenou komunikaci například spoléhá ... TODO examples plus citations
+
+Přitom co se možných řešení týká, jsme zde limitování mnohými rozdíly oproti sítím v klasické podobě. Mezi nejvýznamnější rozdíly například
+patří omezené možnosti napájení (jednotlivé uzly mají většinou vlastní baterii a snahou je interval nutných výměn prodloužit co nejvíce), 
+většinu spojení nemůžeme považovat za trvalé (topologie sítě se může měnit, případně uzly z důvodu úspory energie komunikují pouze v určitých 
+intervalech) a musíme počítat s faktem, že hardware uzlu, především z důvodu ceny, nemá žádnou ochranu proti násilnému získání obsahu paměti uzlu, 
+tedy i případných kryptogafických klíčů v paměti obsažených. Následují tedy jednotlivé klasické možnosti správy klíčů s odůvodněním proč nejsou pro 
+použítí v rámci sensorové sítě vhodné.
+
+\subsection{Jeden sdílený klíč (master key)} Řešení pomocí jednoho sdíleného klíče, který zabezpečuje vešekerou komunikaci je sice nejjednodušší a 
+nejméně náročné co se implementace týká, nicméně tím výčet výhod tohoto řešení končí a následují nevýhodny, které převažují. Tou nejdůležitější 
+je problém v případě, že se útočníkovi podaří získat jedinný uzel z celé sítě, tedy získá sdílený klíč pro komunikaci v rámci celé sítě. Následně 
+má jednak možnost dešifrovat všechny zprávy zaslané v síti a jednak má možnost vysílat vlastní zprávy bez možnosti detekce.
+
+\subsection{Párové klíče (Pairwise keys)} Zde již je kompromitování komunikace v celé síti vyřešeno pomocí separátních klíčů pro každý uzel, 
+tedy útočník se získáním uzlu získá pouze zprávy směřující k tomuto uzlu, případně možnost vydávat se za tento uzel, nicméně toto řešení 
+obsahuje jiný problém. V případě skutečně rozsáhlé sítě (tísíce až statisíce uzlů) není technicky možné, aby paměť uzlu obsahovala natolik 
+velké množství klíčů, minimálně hardware který je v současné době dostupný pro stavbu sensorových sítí toto neumožnuje\footnote{pokud uvažujeme 
+AES\cite{Daemen1999} klíč o velikosti 128 bitů a 1000 uložených klíčů v paměti uzlu, dostáváme celkem 16KB dat, které je potřeba uložit do paměti uzlu. 
+Pokud uzažujeme například platformu TelosB\cite{MemsicInc.}, zde máme k dispozici právě 16KB EEPROM paměti určené k ukládání dat. Musíme však počítat s 
+tím, že není primárním cílem zabezpečená komunikace, ale sběr dat pomocí senzorů, tedy kryptografická data by neměla zabírat většinu paměťového prostoru 
+uzlu a to neuvažujme rozsáhlejší sítě s násobně větším množstvím uzlů}. Hlavní slabinou této varianty je tedy velmi velká paměťová náročnost a obtížná 
+škálovatelnost pro rozsáhlejší sítě. 
+
+\subsection{Asymetrická kryptografie} Při použití asymetrické kryptografie narážíme na problém ve omezeném výpočetním výkonu jednotlivých uzlů, 
+které jsou aktuálně schopné provádět pouze podmnožinu operací potřebných k bezpečnému fungování asymetrické kryptografie tak jak ji známe.
+Na druhou stranu existují implementace asymetrické kryptografie pro použití v rámci bezdrátových sensorových sítí \cite{Watro2004}, nicméně 
+tyto nejsou určeny pro komunikaci mezi jednotlivými uzly navzájem, ale spíše pro zasílání informací od sensorů k třetí straně. 
+Navíc při použití veřejných klíčů vyvstává problém s jejich revokací a opět je zde problém, že klíč z uzlu, který získá útočník může být použit 
+na kterémkoliv místě v síti.
+
+Celkově bráno, většina známých klasických přístupů není vhodná pro řešení správy klíčů v bezdrátové sensorové síti, je tedy na místě hledat alternativní řešení,
+která již budou brát v úvahu všechna omezení těchto sítí a využijí vlastnosti bezdrátových sensorových sítí ve svůj prospěch.
+
+\section{Pravděpodobnostní rozdělení klíčů (Eschenauer and Gligor scheme)}
+Návrh pravděpodobnostního rozdělení klíčů\cite{Eschenauer2002} řeší elegantním způsobem problém přílišné paměťové náročnosti při použití párových klíčů a je 
+založen na narozeninovém paradoxu\cite{Flajolet1992} díky kterému můžeme vypočítat pravděpodobnost s jakou dva uzly sdílejí stejný klíč. 
+Celkově se schéma skládá ze tří fází, první obsahuje predistribuci vybraných klíčů, druhá nalezení sdílených klíčů a třetí řeší nalezení cest v síti.
+
+\subsection{Popis fungování schématu}
+Samotná první fáze se skládá z několika kroků, nejdříve je vygenerována velká množina $P$ klíčů, z těchto je následně náhodně vybráno $k$ klíčů pro každý
+uzel. Počet $k$ vybraných klíčů je určen celkovým počtem uzlů a požadovanou pravděpodobností sdíleného klíče mezi sousedními uzly. Celá tato první fáze 
+probíhá před samotným rozmístěním uzlů. Následuje druhá fáze, která nastává ve fázi inicializace sítě, kdy jednotlivé uzly zjistí své sousedy v dosahu 
+rádiové komunikace a zjistí, se kterými sdílí klíč. Nejjednoduší cesta, jak tot provédst je, že každý uzel odešle všem ostatním ve svém okolí seznam jím 
+vlastněných klíčů. Seznam identifikátorů jednotlivých klíčů není potřeba považovat za citlivou informaci, proto tento postup postačuje. V případě potřeby 
+jej ale lze nahradit tak, že uzel odešle výzvy zašifrované pomocí všech klíčů, které vlastní. pokud se příjemnci podaří výzvu úspěšně dešifrovat, pak
+uzly mají společný klíč. Následuje ustanovení cest v síti, kdy je vyhledána cesta mezi uzly sítě, které nevlastní společný klíč, nicméně je možné je propojit 
+komunikací přes ostatní uzly, které klíč sdílejí. Touto cestou je následně vyměněn nový klíč pro přímé spojení. 
+
+Při následné komunikaci je v případě potřeby možné celý proces nalezení sdílených klíčů a cest v síti spustit znovu, například v případě získání části klíčů útočníkem
+je možné tyto klíče revokovat (zasláním zprávy z centrálního uzlu) a cesty ustanovit znovu bez použití těchto klíčů. Stejný proces může být inicializován i samotným uzlem
+a to v případě potřeby použití nových klíčů pro spojení. 
+
+\subsection{Vhodnost použití}
+Celé schéma si při své jednoduchosti zachovává velmi dobrou funkčnost a v případě potřeby komunikace pouze mezi uzly samotnými se pravděpodobně jedná o nejvýhodnější
+variatu řešení a to především pro případy, kdy je rozmístění jednotlivých uzlů náhodné a nemůžeme počítat s fizní topologií sítě. Schéma je taktéž velmi dobře kombinovatelné
+s dalšími jednoduchými způsoby komunikace a tedy rozšířitělné o případnou další funkcionalitu. Z hlediska implementace a náročnosti na hardware jednotlivých uzlů schéma
+splňuje všechny požadavky, nicméně schéma tak jak je nevyhovuje pro použítí v rámci vyvíjené komponenty především z důvodu nedostatečné funkcionality. Schéma sice zajistí ustanovení
+a správu komunikace mezi uzly samotnými, ale neřeší jakékoliv návazné problémy, jako například hromadné posílání zpráv z centrálního uzlu a vyžadovalo by příliš mnoho modifikací oproti 
+původnímu návrhu a proto nebylo vybráno.
+
+\section{TinyPK}
+TinyPK\cite{Watro2004} je návrhem způsobu, jak použít principy asymetrické kryptografie 
+pro komunikaci mezi uzly sensorové sítě a třetí stranou. Cílem atorů je eliminovat problémy spojené s využíváním 
+symetrikých klíčů, především zásadní otázku týkající se správy symetrikých klíčů. K tomuto využívají
+implementaci RSA algoritmu\cite{Rivest1978}, samozřejmně s omezeními, které stanovuje hardware jednotlivých uzlů.
+
+Návrh samotné komunikace s těmito omezeními samozřejmně počítá a proto na samotných uzlech jsou používány
+pouze operace s veřejným klíčem. Ze stejných důvodů taktéž není použit žádný standart certifikátů, ale 
+pouze podpisy jednotlivých klíčů a zpráv. S tímto souvisí problém s revokací klíčů, nicméně autoři se tímto nezabývají.
+Dále tento návrh počítá s existencí certifikační autority, jejiž veřejný klíč je předdistribuován na samotné uzly. 
+
+\subsection{Princip ustanovení komunikace}
+Komunikační protokol začíná s předpokladem předdistribuovaného veřejného klíče certifikační autority na jednotlivé
+uzly a existencí třetí strany se zájmem komunikovat se sensorovou sítí. Komunikace samotná je iniciována třetí
+stranou, konkrétně spojením s certifikační autoritou a následným podepsáním veřejného klíče třetí strany (klíč podepisuje 
+certifikační autorita po patřičném ověření identity třetí strany). Tento krok může proběhnout s předstihem oproti samotné 
+komunikaci se sensorovou sítí a tedy není vyžadováno, aby certifikační autorita byla neustále dostupná. 
+
+Nyní již k samotné komunikaci se sensorovou sítí. Tato je opět iniciována třetí stranou a to tím, že pošle jednotlivým uzlům 
+výzvu. První část zprávy tvoří veřejný klíč třetí strany (který je podepsaný certifikační autoritou) a druhá část je podepsána 
+soukromým klíčem třetí stray a je složená z časového razítka (timestamp) a kontrolního součtu celé zprávy. Po příjetí zprávy
+uzel ověří platnost podpisu certifikační autority a hodnotu kontrolního součtu, v případě že se uzlu podaří tyto údaje ověřit, 
+považuje třetí stranu za autentizovanou a vytvoří odpověd, která obsahuje symetrický klíč pro další komunikaci a ke správě připojí 
+původní časové razítko. Tuto zprávu zašifruje obdrženým veřejným klíčem a odešle. Třetí strana následně ověří, že se obdržené 
+časové razítko shoduje s původním zaslaným a v případě kladného výsledku srovnání začnš používat symetrický klíč pro 
+komunikaci s uzlem. 
+
+Protokol je dále možné rozšířit o autentizaci uzlu třetí straně. Tato probíhá za pomoci Diffie-Hellman protokolu\cite{Diffie1976}, 
+kdy komunikující strany nejdříve ustanoví společný klíč a následně uzel pošle zprávu, z jejíhož obsahu může třetí strana oveřit,
+že uzel vlastní privátní část Diffie-Hellman klíče. Dále pro účely ověření zpráva obsahuje  textový řetězec podepsaný 
+certifikační autoritou. Tento řetězec obsahuje sériové číslo uzlu, datum výroby a případně další údaje potřebné pro identifikaci. 
+Takto může třetí strana ověřit všechny potřebné údaje ke správné identifikaci uzlu, včetně správnosti podpisu certifikační autority, 
+a to bez nutnosti provedení kompletní RSA šifry na uzlu samotném.
+
+\subsection{Vhodnost použití}
+
+Zde je nutné konstatovat, že TinyPK i přes svoji velmi zajímavou koncepci neřeší požadovaný problém a to komunikaci mezi jednotlivými
+uzly navzájem. Navíc použití RSA algoritmu, byť ve velmi omezené podobě, přináší velmi výraznou dobu výpočtu na jednotlivých uzlech sítě. 
+Autoři článku implementovali TinyPK pro platformu TinyOS, konkrétně uzly typu MICA2\cite{Inc.} a v závisloti na dílce klíče a velikosti modulu
+trvaly jednotlivé operace RSA algoritmu řádově desitky sekund. Což velmi výrazně limituje schopnost uzlu řešit v mezidobí jakékoliv jiné úkoly, 
+tedy opět se nejedná o vhodné řešení. 
+
+Celkově je TinyPK zajímavým konceptem, nicméně nesplňuje požadavky kladené na vyvíjenou komponentu pro distribuci a správu klíčů, tedy není vhodný 
+pro požití. Nicméně v případě nutnosti rozšíření komponenty o schopnost komunikovat s třetí stranou by je jednalo o velmi zajímavou variantu řešení problému.
+
+
+
+
+
+%% Lists of tables and figures, glossary, etc.
+%\printindex
+%\printglossary
+%\listoffigures
+%\listoftables
+
+%% Bibliography from lib.bib
+\begingroup
+\def\tmpchapter{0}
+\renewcommand{\chaptername}{}
+\renewcommand{\thechapter}{}
+\addtocontents{toc}{\setcounter{tocdepth}{-1}}
+\chapter{Literatura}
+\renewcommand{\chapter}[2]{}% for other classes
+
+\bibliographystyle{plain}
+\bibliography{lib.bib}
+
+\addtocontents{toc}{\setcounter{tocdepth}{2}}
+\endgroup
+
+%% Additional materials
+\appendix
+
+%% End of the whole document
+\end{document}
