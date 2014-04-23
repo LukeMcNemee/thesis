@@ -131,7 +131,7 @@ na kterémkoliv místě v síti.
 Celkově bráno, většina známých klasických přístupů není vhodná pro řešení správy klíčů v bezdrátové sensorové síti, je tedy na místě hledat alternativní řešení,
 která již budou brát v úvahu všechna omezení těchto sítí a využijí vlastnosti bezdrátových sensorových sítí ve svůj prospěch.
 
-\section{Pravděpodobnostní rozdělení klíčů (Eschenauer and Gligor scheme)}
+\section{Pravděpodobnostní rozdělení klíčů (Eschenauer a Gligor)}
 Návrh pravděpodobnostního rozdělení klíčů\cite{Eschenauer2002} řeší elegantním způsobem problém přílišné paměťové náročnosti při použití párových klíčů a je 
 založen na narozeninovém paradoxu\cite{Flajolet1992} díky kterému můžeme vypočítat pravděpodobnost s jakou dva uzly sdílejí stejný klíč. 
 Celkově se schéma skládá ze tří fází, první obsahuje predistribuci vybraných klíčů, druhá nalezení sdílených klíčů a třetí řeší nalezení cest v síti.
@@ -140,7 +140,7 @@ Celkově se schéma skládá ze tří fází, první obsahuje predistribuci vybr
 Samotná první fáze se skládá z několika kroků, nejdříve je vygenerována velká množina $P$ klíčů, z těchto je následně náhodně vybráno $k$ klíčů pro každý
 uzel. Počet $k$ vybraných klíčů je určen celkovým počtem uzlů a požadovanou pravděpodobností sdíleného klíče mezi sousedními uzly. Celá tato první fáze 
 probíhá před samotným rozmístěním uzlů. Následuje druhá fáze, která nastává ve fázi inicializace sítě, kdy jednotlivé uzly zjistí své sousedy v dosahu 
-rádiové komunikace a zjistí, se kterými sdílí klíč. Nejjednoduší cesta, jak tot provédst je, že každý uzel odešle všem ostatním ve svém okolí seznam jím 
+rádiové komunikace a zjistí, se kterými sdílí klíč. Nejjednoduší cesta, jak toto provédst je, že každý uzel odešle všem ostatním ve svém okolí seznam jím 
 vlastněných klíčů. Seznam identifikátorů jednotlivých klíčů není potřeba považovat za citlivou informaci, proto tento postup postačuje. V případě potřeby 
 jej ale lze nahradit tak, že uzel odešle výzvy zašifrované pomocí všech klíčů, které vlastní. pokud se příjemnci podaří výzvu úspěšně dešifrovat, pak
 uzly mají společný klíč. Následuje ustanovení cest v síti, kdy je vyhledána cesta mezi uzly sítě, které nevlastní společný klíč, nicméně je možné je propojit 
@@ -157,6 +157,27 @@ s dalšími jednoduchými způsoby komunikace a tedy rozšířitělné o přípa
 splňuje všechny požadavky, nicméně schéma tak jak je nevyhovuje pro použítí v rámci vyvíjené komponenty především z důvodu nedostatečné funkcionality. Schéma sice zajistí ustanovení
 a správu komunikace mezi uzly samotnými, ale neřeší jakékoliv návazné problémy, jako například hromadné posílání zpráv z centrálního uzlu a vyžadovalo by příliš mnoho modifikací oproti 
 původnímu návrhu a proto nebylo vybráno.
+
+\section{Chan, Perrig a Song}
+Návrh dvou možnosti rozšíření\cite{Perrig2003} předchozího schématu\cite{Eschenauer2002} tak, aby bylo odolnější vůči možným útokům a aby síť měla možnost znovu zabezpečit spojení, jehož
+klíč byl prozrazen. Obě části počítají se stejnými podmínkami jako předchozí, tedy nahrání množiny klíčů na jednotlivé uzly s tím, že jednotlivé klíče jsou náhodně vybrány 
+z větší množiny všech generovaných klíčů.
+
+\subsection{q--composite key}
+Oproti původnímu návrhu, zde je ustanovena hodnota $q$, která vyjadřuje počet sdílených klíčů, které musí sousední uzly sdílet, aby bylo možné ustanovit spojení. Při původní variantě 
+je hodnota $q$ rovna jedné a tedy není potřeba se jí zabývat. Zde ovšem hraje důležitou roli z hlediska zvýšení zabezpečení sítě. Sousední uzly opět vysíláním identifikátorů klíčů které vlastní
+zjistí, se kterými sousedy sdílejí alespoň $q$ klíčů a s těmito zahájí komunikaci. Předpokládejme tedy, že dva uzly sdílejí $q'$ klíčů $k_1, k_2 \dots k_{q'}$ ($q' \ge q$) a existenci hashovací funkce $H$, 
+společný klíč $k$ pro následující komunikaci mezi uzly je tedy ustanoven následovně $k=H(k_1 || k_2 || \dots || k_{q'})$ s tím, že je zabezpečené stejné pořadí klíčů, například podle původního
+pořadí v jakém byly generovany. 
+
+Schéma zachovává původní princip nalezení cesty mezi uzly, které na začátku nevlastní potřebný počet společných klíčů a taktéž původní princip revokace klíčů pomocí zaslání zprávy z 
+centrálního uzlu. Celkově zlepšení poskytuje zvýšenou ochranu proti útokům malého rozsahu za cenu snížení odolnosti proti útokům většího rozsahu. Zde je možné konstatovat, že se jedná 
+o žádoucí vlastnosti, jelikož malé útoky je těžké zaznamenat (malé procento nefunkčních uzlů může být běžný jev), zatímco útoky na výrazně větší množství uzlů již pravděpodobně zaznamenány budou a 
+bude tedy možné provédst patřičná protiopatření. 
+
+\subsection{multipath}
+Druhý návrh se zabývá obnovením spojení, jehož klíč byl prozrazen, nicméně uzly samotné zůstaly útokem nedotčeny. K této situaci například dojde, pokud je klíč používaný pro komunikaci mezi
+uzly $A$ a $B$ uložen v paměti uzlu $C$ a útočník získá klíče na uložené na uzlu $C$. 
 
 \section{TinyPK}
 TinyPK\cite{Watro2004} je návrhem způsobu, jak použít principy asymetrické kryptografie 
