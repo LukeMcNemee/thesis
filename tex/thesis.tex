@@ -116,7 +116,7 @@ tedy útočník se získáním uzlu získá pouze zprávy směřující k tomuto
 obsahuje jiný problém. V případě skutečně rozsáhlé sítě (tísíce až statisíce uzlů) není technicky možné, aby paměť uzlu obsahovala natolik 
 velké množství klíčů, minimálně hardware který je v současné době dostupný pro stavbu sensorových sítí toto neumožnuje\footnote{pokud uvažujeme 
 AES\cite{Daemen1999} klíč o velikosti 128 bitů a 1000 uložených klíčů v paměti uzlu, dostáváme celkem 16KB dat, které je potřeba uložit do paměti uzlu. 
-Pokud uzažujeme například platformu TelosB\cite{MemsicInc.}, zde máme k dispozici právě 16KB EEPROM paměti určené k ukládání dat. Musíme však počítat s 
+Pokud uvažujeme například platformu TelosB\cite{MemsicInc.}, zde máme k dispozici právě 16KB EEPROM paměti určené k ukládání dat. Musíme však počítat s 
 tím, že není primárním cílem zabezpečená komunikace, ale sběr dat pomocí senzorů, tedy kryptografická data by neměla zabírat většinu paměťového prostoru 
 uzlu a to neuvažujme rozsáhlejší sítě s násobně větším množstvím uzlů}. Hlavní slabinou této varianty je tedy velmi velká paměťová náročnost a obtížná 
 škálovatelnost pro rozsáhlejší sítě. 
@@ -177,7 +177,17 @@ bude tedy možné provédst patřičná protiopatření.
 
 \subsection{multipath}
 Druhý návrh se zabývá obnovením spojení, jehož klíč byl prozrazen, nicméně uzly samotné zůstaly útokem nedotčeny. K této situaci například dojde, pokud je klíč používaný pro komunikaci mezi
-uzly $A$ a $B$ uložen v paměti uzlu $C$ a útočník získá klíče na uložené na uzlu $C$. 
+uzly $A$ a $B$ uložen v paměti uzlu $C$ a útočník získá klíče na uložené na uzlu $C$. Obnovaní komunikačního klíče je provedeno přes více nezávislých cest, konkrétně uzly $A$ a $B$ zjistí společné sousedy
+přes které se mohou spojit tak, že délka cesty je kratší než předem stanovená maximální hodnota přeskoků. Pokud tedy existuje $j$ cest spojujících tyto dva uzly, pka uzel $A$ pošle po mkaždé cestě náhodně 
+generovanou hodnotu $v$, celkově tedy pošle hodnoty $v_1, v_2, \dots v_j$. Na uzlu $B$ je nová hondota klíče spočítána z původní hodnoty následovně $k' = k \oplus v_1 \oplus v_2 \oplus \dots \oplus v_j$
+
+Tato metoda celkově způsobí znatelné zatížení sítě, především pro větší dovolený počet přeskoků. Pokud však dovolíme pouze malý počet přeskoků (například dva) zaznamenáme zlepšení v odolnosti proti 
+případným útokům. Především síť dokáže obnovit spojení, která jsou přerušena vyzrazením použitého klíče.
+
+\subsection{Vhodnost použití}
+Autoři nedoporučují oba navržené přístupy kombinovat, protože při použití obou dojde ke zkombinovaní negativních dopadů obou, tedy zmenšení celkového počtu klíčů aby bylo dostatečné množstvé shodných
+klíčů mezi jendotlivými uzly a k nárustu komunikace z důvodu obnovování jednotlivých spojení.
+
 
 \section{TinyPK}
 TinyPK\cite{Watro2004} je návrhem způsobu, jak použít principy asymetrické kryptografie 
