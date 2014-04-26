@@ -115,8 +115,8 @@ má jednak možnost dešifrovat všechny zprávy zaslané v síti a jednak má m
 tedy útočník se získáním uzlu získá pouze zprávy směřující k tomuto uzlu, případně možnost vydávat se za tento uzel, nicméně toto řešení 
 obsahuje jiný problém. V případě skutečně rozsáhlé sítě (tísíce až statisíce uzlů) není technicky možné, aby paměť uzlu obsahovala natolik 
 velké množství klíčů, minimálně hardware který je v současné době dostupný pro stavbu sensorových sítí toto neumožnuje\footnote{pokud uvažujeme 
-AES\cite{Daemen1999} klíč o velikosti 128 bitů a 1000 uložených klíčů v paměti uzlu, dostáváme celkem 16KB dat, které je potřeba uložit do paměti uzlu. 
-Pokud uvažujeme například platformu TelosB\cite{MemsicInc.}, zde máme k dispozici právě 16KB EEPROM paměti určené k ukládání dat. Musíme však počítat s 
+AES \cite{Daemen1999} klíč o velikosti 128 bitů a 1000 uložených klíčů v paměti uzlu, dostáváme celkem 16KB dat, které je potřeba uložit do paměti uzlu. 
+Pokud uvažujeme například platformu TelosB \cite{MemsicInc.}, zde máme k dispozici právě 16KB EEPROM paměti určené k ukládání dat. Musíme však počítat s 
 tím, že není primárním cílem zabezpečená komunikace, ale sběr dat pomocí senzorů, tedy kryptografická data by neměla zabírat většinu paměťového prostoru 
 uzlu a to neuvažujme rozsáhlejší sítě s násobně větším množstvím uzlů}. Hlavní slabinou této varianty je tedy velmi velká paměťová náročnost a obtížná 
 škálovatelnost pro rozsáhlejší sítě. 
@@ -131,9 +131,9 @@ na kterémkoliv místě v síti.
 Celkově bráno, většina známých klasických přístupů není vhodná pro řešení správy klíčů v bezdrátové sensorové síti, je tedy na místě hledat alternativní řešení,
 která již budou brát v úvahu všechna omezení těchto sítí a využijí vlastnosti bezdrátových sensorových sítí ve svůj prospěch.
 
-\section{Pravděpodobnostní rozdělení klíčů (Eschenauer a Gligor)}
-Návrh pravděpodobnostního rozdělení klíčů\cite{Eschenauer2002} řeší elegantním způsobem problém přílišné paměťové náročnosti při použití párových klíčů a je 
-založen na narozeninovém paradoxu\cite{Flajolet1992} díky kterému můžeme vypočítat pravděpodobnost s jakou dva uzly sdílejí stejný klíč. 
+\section{Pravděpodobnostní rozdělení klíčů (Eschenauer a Gligor)} \label{sec:Eschenauer}
+Návrh pravděpodobnostního rozdělení klíčů \cite{Eschenauer2002} řeší elegantním způsobem problém přílišné paměťové náročnosti při použití párových klíčů a je 
+založen na narozeninovém paradoxu díky kterému můžeme vypočítat pravděpodobnost s jakou dva uzly sdílejí stejný klíč. 
 Celkově se schéma skládá ze tří fází, první obsahuje predistribuci vybraných klíčů, druhá nalezení sdílených klíčů a třetí řeší nalezení cest v síti.
 
 \subsection{Popis fungování schématu}
@@ -159,11 +159,11 @@ a správu komunikace mezi uzly samotnými, ale neřeší jakékoliv návazné pr
 původnímu návrhu a proto nebylo vybráno.
 
 \section{Chan, Perrig a Song}
-Návrh dvou možnosti rozšíření\cite{Perrig2003} předchozího schématu\cite{Eschenauer2002} tak, aby bylo odolnější vůči možným útokům a aby síť měla možnost znovu zabezpečit spojení, jehož
+Návrh dvou možnosti rozšíření \cite{Perrig2003} předchozího schématu \cite{Eschenauer2002} tak, aby bylo odolnější vůči možným útokům a aby síť měla možnost znovu zabezpečit spojení, jehož
 klíč byl prozrazen. Obě části počítají se stejnými podmínkami jako předchozí, tedy nahrání množiny klíčů na jednotlivé uzly s tím, že jednotlivé klíče jsou náhodně vybrány 
 z větší množiny všech generovaných klíčů.
 
-\subsection{q--composite key}
+\subsection{q-kompozitní klíč (q-composite key)}
 Oproti původnímu návrhu, zde je ustanovena hodnota $q$, která vyjadřuje počet sdílených klíčů, které musí sousední uzly sdílet, aby bylo možné ustanovit spojení. Při původní variantě 
 je hodnota $q$ rovna jedné a tedy není potřeba se jí zabývat. Zde ovšem hraje důležitou roli z hlediska zvýšení zabezpečení sítě. Sousední uzly opět vysíláním identifikátorů klíčů které vlastní
 zjistí, se kterými sousedy sdílejí alespoň $q$ klíčů a s těmito zahájí komunikaci. Předpokládejme tedy, že dva uzly sdílejí $q'$ klíčů $k_1, k_2 \dots k_{q'}$ ($q' \ge q$) a existenci hashovací funkce $H$, 
@@ -175,7 +175,7 @@ centrálního uzlu. Celkově zlepšení poskytuje zvýšenou ochranu proti útok
 o žádoucí vlastnosti, jelikož malé útoky je těžké zaznamenat (malé procento nefunkčních uzlů může být běžný jev), zatímco útoky na výrazně větší množství uzlů již pravděpodobně zaznamenány budou a 
 bude tedy možné provédst patřičná protiopatření. 
 
-\subsection{multipath}
+\subsection{vícecestné obnovením spojení (multipath)}
 Druhý návrh se zabývá obnovením spojení, jehož klíč byl prozrazen, nicméně uzly samotné zůstaly útokem nedotčeny. K této situaci například dojde, pokud je klíč používaný pro komunikaci mezi
 uzly $A$ a $B$ uložen v paměti uzlu $C$ a útočník získá klíče na uložené na uzlu $C$. Obnovaní komunikačního klíče je provedeno přes více nezávislých cest, konkrétně uzly $A$ a $B$ zjistí společné sousedy
 přes které se mohou spojit tak, že délka cesty je kratší než předem stanovená maximální hodnota přeskoků. Pokud tedy existuje $j$ cest spojujících tyto dva uzly, pka uzel $A$ pošle po mkaždé cestě náhodně 
@@ -186,14 +186,46 @@ případným útokům. Především síť dokáže obnovit spojení, která jsou
 
 \subsection{Vhodnost použití}
 Autoři nedoporučují oba navržené přístupy kombinovat, protože při použití obou dojde ke zkombinovaní negativních dopadů obou, tedy zmenšení celkového počtu klíčů aby bylo dostatečné množstvé shodných
-klíčů mezi jendotlivými uzly a k nárustu komunikace z důvodu obnovování jednotlivých spojení.
+klíčů mezi jendotlivými uzly a k nárustu komunikace z důvodu obnovování jednotlivých spojení. 
+
+Oba návrhy jsou zajímavým řešením, které zlepší zabezpečení sítě oproti původní variantě pravděpodobnostního rozdělení klíčů. Variaty se liší způsobem, kterým tohoto zpešení dosáhnou, q-composite 
+varianta posiluje bezpečnost před samotným útokem a tedy odolnost vůči útoku, zatímco multipath poskytuje řešení pro případ úspěšného útoku a nabízí možnost jak minimalizovat škody útokem způsobené.
+Co se vhodnoti použití na vyvíjené komponentě týká, opět jsou splněny požadavky kladené omezeným výkonem jednotlivých uzlů, nicméně i přes přidanou funkcionalitu (především ve 
+variantě multipath) neobsahuje schéma všechny požadované vlastnosti. Především se nezabývá zabezpečením oboustrané komunikace s centrálním uzlem. Tedy použití by bylo vhodné pouze v kombinaci 
+s jiným přístupem. Z tohoto důvodu tedy chéma nebylo vybráno. 
+
+
+\section{Du, Deng, Han and Varshney}
+Zajímavý návrh \cite{Du2005} koncepčně vycházející ze schématu původně navrženého Blomem \cite{Blom1985}, ale rozšiřující jej o pravděpodobnostní rozdělení klíčů \ref{sec:Eschenauer}.
+Díky tomu získáváme schéma pro distribuci klíčů vhodné pro použítí v bezdrátových sensorových sítích. Oproti předchozím variantám návrh celkově zvyšuje odolnost sítě vůči 
+útočníkovi a to za cenu vyšší výpočetní náročnosti, nicméně tato zůstává na rozumné míře (tedy stále výrazně menší než u asymetrické kryptografie). 
+
+\subsection{původní Blomovo schéma}
+Blom \cite{Blom1985} se zabývá řešením problému distribuce klíčů v klasické síti, především s ohledem na velký počet uživatelů a tedy nepraktičnost případně až nemožnost ukládat všechny klíče u uživatele.
+Namísto toho navrhuje doručit každému uživateli relativně malé množství dat ze kterého dokáže všechny potřebné klíče odvodit. Schéma je kontruováno tak, aby každá dvojice uživatelů z celkového počtu $n$
+dokázala odvodit společný klíč a to pouze při uložení $\lambda + 1$ klíčů, kde $\lambda \ll n$. Co se bezpečnosti týká, dokud není počet kompromitovaných uživatelů (jejich klíčů) vyšší než hodnota 
+$\lambda$, pak můžeme všechna spojení považovat za bezpečná. V okamžiku kdy je hodnota $\lambda$ překročena, získává útočník přístup k veškeré komunikaci v síti. 
+
+Schéma je založené na násobení matic, konkrétně proces ustanovení klíčů probíhá následovně: 
+nejdříve je zkonstruována matice $G$ o rozměru $(\lambda + 1) \times n$ nad konečným tělesem $GF(q)$, kde $q > n$. Tato matice je veřejně známou informací a každý účastník, včetně útočníka, může znát 
+její obsah. Následuje zkonstruování symetrické matice $D$ s rozměrem $(\lambda + 1) \times (\lambda + 1) $, opět nad konečným tělesem $GF(q)$. Narozdíl od předchozí matice, matice $D$ je tajnou informací
+a celý její obsah zná pouze strana zabezpečující její generování a distribuci jednotlivých částí účastníkům. Poté je spočítána matice $A= (DG)^T$ a každému účastníkovi je distribuován k-tý sloupec 
+matice $G$ a k-tý řádek matice $A$ jednotlivým účastníkům ($k \in \{1, \dots , n\}$). 
+
+
+
+
+
+vybrán generátor $p$ z konečného tělesa $GF(q)$, kde $q$ je větší jak požadovaná délka klíče (a také $q > N$).
+
+
 
 
 \section{TinyPK}
-TinyPK\cite{Watro2004} je návrhem způsobu, jak použít principy asymetrické kryptografie 
+TinyPK \cite{Watro2004} je návrhem způsobu, jak použít principy asymetrické kryptografie 
 pro komunikaci mezi uzly sensorové sítě a třetí stranou. Cílem atorů je eliminovat problémy spojené s využíváním 
 symetrikých klíčů, především zásadní otázku týkající se správy symetrikých klíčů. K tomuto využívají
-implementaci RSA algoritmu\cite{Rivest1978}, samozřejmně s omezeními, které stanovuje hardware jednotlivých uzlů.
+implementaci RSA algoritmu \cite{Rivest1978}, samozřejmně s omezeními, které stanovuje hardware jednotlivých uzlů.
 
 Návrh samotné komunikace s těmito omezeními samozřejmně počítá a proto na samotných uzlech jsou používány
 pouze operace s veřejným klíčem. Ze stejných důvodů taktéž není použit žádný standart certifikátů, ale 
@@ -214,9 +246,9 @@ uzel ověří platnost podpisu certifikační autority a hodnotu kontrolního so
 považuje třetí stranu za autentizovanou a vytvoří odpověd, která obsahuje symetrický klíč pro další komunikaci a ke správě připojí 
 původní časové razítko. Tuto zprávu zašifruje obdrženým veřejným klíčem a odešle. Třetí strana následně ověří, že se obdržené 
 časové razítko shoduje s původním zaslaným a v případě kladného výsledku srovnání začnš používat symetrický klíč pro 
-komunikaci s uzlem. 
+komunikaci s uzlem.
 
-Protokol je dále možné rozšířit o autentizaci uzlu třetí straně. Tato probíhá za pomoci Diffie-Hellman protokolu\cite{Diffie1976}, 
+Protokol je dále možné rozšířit o autentizaci uzlu třetí straně. Tato probíhá za pomoci Diffie-Hellman protokolu \cite{Diffie1976}, 
 kdy komunikující strany nejdříve ustanoví společný klíč a následně uzel pošle zprávu, z jejíhož obsahu může třetí strana oveřit,
 že uzel vlastní privátní část Diffie-Hellman klíče. Dále pro účely ověření zpráva obsahuje  textový řetězec podepsaný 
 certifikační autoritou. Tento řetězec obsahuje sériové číslo uzlu, datum výroby a případně další údaje potřebné pro identifikaci. 
@@ -225,15 +257,19 @@ a to bez nutnosti provedení kompletní RSA šifry na uzlu samotném.
 
 \subsection{Vhodnost použití}
 
-Zde je nutné konstatovat, že TinyPK i přes svoji velmi zajímavou koncepci neřeší požadovaný problém a to komunikaci mezi jednotlivými
-uzly navzájem. Navíc použití RSA algoritmu, byť ve velmi omezené podobě, přináší velmi výraznou dobu výpočtu na jednotlivých uzlech sítě. 
-Autoři článku implementovali TinyPK pro platformu TinyOS, konkrétně uzly typu MICA2\cite{Inc.} a v závisloti na dílce klíče a velikosti modulu
-trvaly jednotlivé operace RSA algoritmu řádově desitky sekund. Což velmi výrazně limituje schopnost uzlu řešit v mezidobí jakékoliv jiné úkoly, 
-tedy opět se nejedná o vhodné řešení. 
+Zde je nutné konstatovat, že TinyPK neřeší komunikaci mezi jednotlivými uzly navzájem, ale komunikaci se třetí stranou. V případě vyvíjené 
+komponenty lze tento přístup aplikovat na komunikaci s centrálním uzlem. Tedy TinyPK by byl ideálním kandidátem na rozšíření schématu pravděpodobnostního
+rozdělení klíčů \ref{sec:Eschenauer}, případně ostatních schémat, které pravděpodobnostní rozdělení klíčů rozšiřují.
+Bohužel použití RSA algoritmu, byť ve velmi omezené podobě, přináší relativně dlouhou dobu výpočtu na jednotlivých uzlech sítě\footnote{ 
+Autoři článku implementovali TinyPK pro platformu TinyOS, konkrétně uzly typu MICA2 \cite{Inc.} a v závisloti na dílce klíče a velikosti modulu
+trvaly jednotlivé operace RSA algoritmu řádově desítky sekund.} Jedná se sice pouze o počáteční fázi ustanovení sdíleného klíče, nicméně zpoždění je znatelné.
 
-Celkově je TinyPK zajímavým konceptem, nicméně nesplňuje požadavky kladené na vyvíjenou komponentu pro distribuci a správu klíčů, tedy není vhodný 
-pro požití. Nicméně v případě nutnosti rozšíření komponenty o schopnost komunikovat s třetí stranou by je jednalo o velmi zajímavou variantu řešení problému.
-
+Výhodou použití tohoto schématu je, že v době rozmístění uzlů nemusí být třetí strana známa a díky použití asymetrické kryptografie může navázat komunikaci kdykoliv.
+Nicméně v případě vyvíjené komponenty toto není případ, který by bylo potřeba řešit. Třetí strana v podobě centrálního uzlu sice existuje, nicméně je v síti přítomná již 
+od začátku a se sítí komunikuje neustále. Implementovat další šifrovací algoritmus, který nám posluží pouze k počátečnímu ustanovení komunikace, když stejně dobře 
+nám může posloužit jiý implementovaná funkcionalita je plýtvání dostupnými zdroji, které jsou omezené. TinyPK najde využití v případech, kdy síť potřebuje komunikovat
+se třetí stanou po omezenou dobu, s tím že třetí strana není přítomna od začátku existence sítě a po získání potřebných informací komunikaci ukončí. Zde můžeme konstatovat, že 
+TinyPK nezapadá do celkového konceptu zamýšlené funkcionality vyvíjené komponenty a proto toto schéma nebylo vybráno.
 
 
 
