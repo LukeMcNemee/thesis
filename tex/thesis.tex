@@ -152,13 +152,13 @@ a to v případě potřeby použití nových klíčů pro spojení.
 
 \subsection{Vhodnost použití}
 Celé schéma si při své jednoduchosti zachovává velmi dobrou funkčnost a v případě potřeby komunikace pouze mezi uzly samotnými se pravděpodobně jedná o nejvýhodnější
-variatu řešení a to především pro případy, kdy je rozmístění jednotlivých uzlů náhodné a nemůžeme počítat s fizní topologií sítě. Schéma je taktéž velmi dobře kombinovatelné
+variatu řešení a to především pro případy, kdy je rozmístění jednotlivých uzlů náhodné a nemůžeme počítat s předem určenou topologií sítě. Schéma je taktéž velmi dobře kombinovatelné
 s dalšími jednoduchými způsoby komunikace a tedy rozšířitělné o případnou další funkcionalitu. Z hlediska implementace a náročnosti na hardware jednotlivých uzlů schéma
 splňuje všechny požadavky, nicméně schéma tak jak je nevyhovuje pro použítí v rámci vyvíjené komponenty především z důvodu nedostatečné funkcionality. Schéma sice zajistí ustanovení
 a správu komunikace mezi uzly samotnými, ale neřeší jakékoliv návazné problémy, jako například hromadné posílání zpráv z centrálního uzlu a vyžadovalo by příliš mnoho modifikací oproti 
 původnímu návrhu a proto nebylo vybráno.
 
-\section{Chan, Perrig a Song}
+\section{Chan, Perrig a Song} \label{sec:Chan}
 Návrh dvou možnosti rozšíření \cite{Perrig2003} předchozího schématu \cite{Eschenauer2002} tak, aby bylo odolnější vůči možným útokům a aby síť měla možnost znovu zabezpečit spojení, jehož
 klíč byl prozrazen. Obě části počítají se stejnými podmínkami jako předchozí, tedy nahrání množiny klíčů na jednotlivé uzly s tím, že jednotlivé klíče jsou náhodně vybrány 
 z větší množiny všech generovaných klíčů.
@@ -192,7 +192,7 @@ Oba návrhy jsou zajímavým řešením, které zlepší zabezpečení sítě op
 varianta posiluje bezpečnost před samotným útokem a tedy odolnost vůči útoku, zatímco multipath poskytuje řešení pro případ úspěšného útoku a nabízí možnost jak minimalizovat škody útokem způsobené.
 Co se vhodnoti použití na vyvíjené komponentě týká, opět jsou splněny požadavky kladené omezeným výkonem jednotlivých uzlů, nicméně i přes přidanou funkcionalitu (především ve 
 variantě multipath) neobsahuje schéma všechny požadované vlastnosti. Především se nezabývá zabezpečením oboustrané komunikace s centrálním uzlem. Tedy použití by bylo vhodné pouze v kombinaci 
-s jiným přístupem. Z tohoto důvodu tedy chéma nebylo vybráno. 
+s jiným přístupem. Z tohoto důvodu tedy schéma nebylo vybráno. 
 
 
 \section{Du, Deng, Han and Varshney}
@@ -207,23 +207,47 @@ dokázala odvodit společný klíč a to pouze při uložení $\lambda + 1$ klí
 $\lambda$, pak můžeme všechna spojení považovat za bezpečná. V okamžiku kdy je hodnota $\lambda$ překročena, získává útočník přístup k veškeré komunikaci v síti. 
 
 Schéma je založené na násobení matic, konkrétně proces ustanovení klíčů probíhá následovně: 
-nejdříve je zkonstruována matice $G$ o rozměru $(\lambda + 1) \times n$ nad konečným tělesem $GF(q)$, kde $q > n$. Tato matice je veřejně známou informací a každý účastník, včetně útočníka, může znát 
-její obsah. Následuje zkonstruování symetrické matice $D$ s rozměrem $(\lambda + 1) \times (\lambda + 1) $, opět nad konečným tělesem $GF(q)$. Narozdíl od předchozí matice, matice $D$ je tajnou informací
-a celý její obsah zná pouze strana zabezpečující její generování a distribuci jednotlivých částí účastníkům. Poté je spočítána matice $A= (DG)^T$ a každému účastníkovi je distribuován k-tý sloupec 
-matice $G$ a k-tý řádek matice $A$ jednotlivým účastníkům ($k \in \{1, \dots , n\}$). 
+nejdříve je zkonstruována matice $G$ o rozměru $(\lambda + 1) \times n$ nad konečným tělesem $GF(q)$, kde sloupce matice $G$ jsou lineárně nezávislé a $q > n$.
+Tato matice je veřejně známou informací a každý účastník, včetně útočníka, může znát její obsah. Následuje zkonstruování symetrické matice $D$ s rozměrem $(\lambda + 1) \times (\lambda + 1) $, 
+opět nad konečným tělesem $GF(q)$. Narozdíl od předchozí matice, matice $D$ je tajnou informací a celý její obsah zná pouze strana zabezpečující její generování a distribuci jednotlivých částí 
+účastníkům. Poté je spočítána matice $A= (DG)^T$ a každému účastníkovi je distribuován k-tý sloupec matice $G$ a k-tý řádek matice $A$ ($k \in \{1, \dots , n\}$). Následně komunikující strany
+mohou spočítat klíče $k_{ij}$ a $k_{ji}$.  
 
+\subsection{rozříření o pravděpodobnostní rozdělení}
+Při vytváření spojení v bezdrátové sítí není zcela nezbytné, aby byl kterýkoliv uzel schopen spojení se všemi ostatními uzly, mnohdy to ani není možné z důvodu krátkého dosahu rádia. Tedy
+graf spojení mezi jednotlivými uzly, který se snažíme vytvořit zcela jistě nemusí být úplný, stačí pokud se nám podaří vytvořit souvislý graf. Protože nepotřebujeme aby každé dva uzly 
+měly možnost ustanovení společného klíče, můžeme si dovolit upravit původní Blomovo schéma pomocí myšlenky pravděpodobnostního rozdělení a díky tomu získat větší odolnost proti útokům. 
 
+Pokud tedy původní schéma má jeden klíčový prostor (za klíčový prostor můžeme považovat dvojici matic $(D, G)$), v této variantě máme $\omega$ klíčových prostorů. Vycházíme z jedné společné matice $G$, 
+která je kostruována tak, že je vybrán generátor $p$ z konečného tělesa $GF(q)$, kde $q$ je větší jak požadovaná délka klíče (a také $q > N$) a tento generátor následně jednoznačně určuje tvar matice $G$.
+Dále konstruujeme $\omega$ symetrických matic $D$ a pro každý uzel jich vybereme $\tau$ ($\tau < \omega$). Následně proběhne iniciální fáze, kdy rozmístěné uzly zjistí spoelčné klíče se svými sousedy
+(společný klíč lze mezi uzly ustanovit, pokud alespoň jeden z $\tau$ klíčových prostorů na uzlech je shodný). Následně po vytvoření počátečního spojeného grafu, za použití předdistribuovaných hodnot, 
+může případně probehnout následující fáze, kdy dojde k ustanovení spojení mezi sousedy, kterým se nepodařilo spojení navázat ve fázi předchozí. Zde tyto dvojice využijí již ustanovené cesty, po kterých si 
+vymnění informace potřebné k navázání bezpečné komunikace. 
 
+\subsection{Vhodnost použití}
+Toto schéma nám při použití skýtá několik zajímavých výhod, stejně jako předchozí varianty je velmi dobře škálovatelné a to i pro opravdu velké množství uzlů\footnote{pokud budeme uvažovat 64bitový klíč, 
+pak schéma umožní použít až $2^{64}$ uzlů}. Schéma má taktéž výrazně větší odolnost vůči útoku, oproti variantám \ref{sec:Eschenauer} nebo \ref{sec:Chan} musí útočník kompromitovat až pětinásobek počtu uzlů, 
+aby dosáhnul zaručeného úspěchu při napadení sítě. Taktéž z hlediska paměťové náročnosti lze schéma považovat za vyhovující, protože pro uložení matice $G$ potřebujeme uložit pouze jeden její prvek 
+(matice je jednoznačně určená svým generátorem) potřebujeme na každém uzlu uložit $\tau \cdot (\lambda +1)$ položek klíčů, což je výrazně méně než varianta uložení všech vzájemných klíčů. Navíc 
+poměr mezi bezpečností a náročností na provoz můžeme upravovat vhodným nastavením hodnot jak parametru $\lambda$, tak i parametru $\tau$. Oba parametry ovlivňují paměťovou náročnost, čím větší hodnota, tím 
+více informací je třeba uložit. Dále pak $\tau$ ovlivňuje pravděpodobnost, že dva uzly naleznou společný klíč, cíž vyšší hodnota $\tau$ je, tím větší je pravděpodobnost nalezení shodného klíčového prostoru
+dvou sousedících uzlů. Hodnota $\lambda$ pak ovlivňuje bezpečnost sítě, protože útočník musí kompromitovat alespoň $\lambda$ uzlů, aby byl schopen kompromitovat celou síť, tedy čím vyšší hodnota, tím 
+je síť odolnější proti potenciálnímu útoku.
 
+Schéma je sice co se implementace a paměti týká náročnější než předchozí varinaty, nicméně tato náročnost přináší výhody v oblasti bezpečnosti a to výhody nikoliv 
+nepodstatné. Jedná se tedy o pravděpodobně nejslibnější variatu pravděpodobnostního rozdělení klíčů ze všech tří diskutovaných. Nicméně stejně jako předchozí varinaty, toto schéma nepokrývá celý 
+zamýšlený rozsah vyvíjené komponenty a proto by bylo potřeba jej rozšířit či kombinovat s jiným schématem. Navíc schéma počítá s náhodným rozmístěním jendotlivých uzlů v prostoru, zatímco v našem případě 
+bude poloha uzlů předem známa, tedy potenciál tohoto schématu by nebyl zcela využit. Z těchto důvodů tedy schéma nebylo vybráno.
 
-vybrán generátor $p$ z konečného tělesa $GF(q)$, kde $q$ je větší jak požadovaná délka klíče (a také $q > N$).
 
 
 
 
 \section{TinyPK}
 TinyPK \cite{Watro2004} je návrhem způsobu, jak použít principy asymetrické kryptografie 
-pro komunikaci mezi uzly sensorové sítě a třetí stranou. Cílem atorů je eliminovat problémy spojené s využíváním 
+pro komunikaci mezi uzly sensorové sítě a třetí stranou. Tedy toto schéma by mohlo být využito k rozšíření předchozích variant, například \ref{sec:Eschenauer}
+nebo dalších. Cílem atorů je eliminovat problémy spojené s využíváním 
 symetrikých klíčů, především zásadní otázku týkající se správy symetrikých klíčů. K tomuto využívají
 implementaci RSA algoritmu \cite{Rivest1978}, samozřejmně s omezeními, které stanovuje hardware jednotlivých uzlů.
 
@@ -269,7 +293,7 @@ Nicméně v případě vyvíjené komponenty toto není případ, který by bylo
 od začátku a se sítí komunikuje neustále. Implementovat další šifrovací algoritmus, který nám posluží pouze k počátečnímu ustanovení komunikace, když stejně dobře 
 nám může posloužit jiý implementovaná funkcionalita je plýtvání dostupnými zdroji, které jsou omezené. TinyPK najde využití v případech, kdy síť potřebuje komunikovat
 se třetí stanou po omezenou dobu, s tím že třetí strana není přítomna od začátku existence sítě a po získání potřebných informací komunikaci ukončí. Zde můžeme konstatovat, že 
-TinyPK nezapadá do celkového konceptu zamýšlené funkcionality vyvíjené komponenty a proto toto schéma nebylo vybráno.
+TinyPK nezapadá do celkového konceptu zamýšlené funkcionality vyvíjené komponenty a proto toto schéma nebylo vybráno. 
 
 
 
