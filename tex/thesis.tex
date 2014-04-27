@@ -163,7 +163,7 @@ Návrh dvou možnosti rozšíření \cite{Perrig2003} předchozího schématu \c
 klíč byl prozrazen. Obě části počítají se stejnými podmínkami jako předchozí, tedy nahrání množiny klíčů na jednotlivé uzly s tím, že jednotlivé klíče jsou náhodně vybrány 
 z větší množiny všech generovaných klíčů.
 
-\subsection{q-kompozitní klíč (q-composite key)}
+\subsection{Q-kompozitní klíč (q-composite key)}
 Oproti původnímu návrhu, zde je ustanovena hodnota $q$, která vyjadřuje počet sdílených klíčů, které musí sousední uzly sdílet, aby bylo možné ustanovit spojení. Při původní variantě 
 je hodnota $q$ rovna jedné a tedy není potřeba se jí zabývat. Zde ovšem hraje důležitou roli z hlediska zvýšení zabezpečení sítě. Sousední uzly opět vysíláním identifikátorů klíčů které vlastní
 zjistí, se kterými sousedy sdílejí alespoň $q$ klíčů a s těmito zahájí komunikaci. Předpokládejme tedy, že dva uzly sdílejí $q'$ klíčů $k_1, k_2 \dots k_{q'}$ ($q' \ge q$) a existenci hashovací funkce $H$, 
@@ -175,7 +175,7 @@ centrálního uzlu. Celkově zlepšení poskytuje zvýšenou ochranu proti útok
 o žádoucí vlastnosti, jelikož malé útoky je těžké zaznamenat (malé procento nefunkčních uzlů může být běžný jev), zatímco útoky na výrazně větší množství uzlů již pravděpodobně zaznamenány budou a 
 bude tedy možné provédst patřičná protiopatření. 
 
-\subsection{vícecestné obnovením spojení (multipath)}
+\subsection{Vícecestné obnovením spojení (multipath)}
 Druhý návrh se zabývá obnovením spojení, jehož klíč byl prozrazen, nicméně uzly samotné zůstaly útokem nedotčeny. K této situaci například dojde, pokud je klíč používaný pro komunikaci mezi
 uzly $A$ a $B$ uložen v paměti uzlu $C$ a útočník získá klíče na uložené na uzlu $C$. Obnovaní komunikačního klíče je provedeno přes více nezávislých cest, konkrétně uzly $A$ a $B$ zjistí společné sousedy
 přes které se mohou spojit tak, že délka cesty je kratší než předem stanovená maximální hodnota přeskoků. Pokud tedy existuje $j$ cest spojujících tyto dva uzly, pka uzel $A$ pošle po mkaždé cestě náhodně 
@@ -200,7 +200,7 @@ Zajímavý návrh \cite{Du2005} koncepčně vycházející ze schématu původn�
 Díky tomu získáváme schéma pro distribuci klíčů vhodné pro použítí v bezdrátových sensorových sítích. Oproti předchozím variantám návrh celkově zvyšuje odolnost sítě vůči 
 útočníkovi a to za cenu vyšší výpočetní náročnosti, nicméně tato zůstává na rozumné míře (tedy stále výrazně menší než u asymetrické kryptografie). 
 
-\subsection{původní Blomovo schéma}
+\subsection{Původní Blomovo schéma}
 Blom \cite{Blom1985} se zabývá řešením problému distribuce klíčů v klasické síti, především s ohledem na velký počet uživatelů a tedy nepraktičnost případně až nemožnost ukládat všechny klíče u uživatele.
 Namísto toho navrhuje doručit každému uživateli relativně malé množství dat ze kterého dokáže všechny potřebné klíče odvodit. Schéma je kontruováno tak, aby každá dvojice uživatelů z celkového počtu $n$
 dokázala odvodit společný klíč a to pouze při uložení $\lambda + 1$ klíčů, kde $\lambda \ll n$. Co se bezpečnosti týká, dokud není počet kompromitovaných uživatelů (jejich klíčů) vyšší než hodnota 
@@ -213,7 +213,7 @@ opět nad konečným tělesem $GF(q)$. Narozdíl od předchozí matice, matice $
 účastníkům. Poté je spočítána matice $A= (DG)^T$ a každému účastníkovi je distribuován k-tý sloupec matice $G$ a k-tý řádek matice $A$ ($k \in \{1, \dots , n\}$). Následně komunikující strany
 mohou spočítat klíče $k_{ij}$ a $k_{ji}$.  
 
-\subsection{rozříření o pravděpodobnostní rozdělení}
+\subsection{Rozříření o pravděpodobnostní rozdělení}
 Při vytváření spojení v bezdrátové sítí není zcela nezbytné, aby byl kterýkoliv uzel schopen spojení se všemi ostatními uzly, mnohdy to ani není možné z důvodu krátkého dosahu rádia. Tedy
 graf spojení mezi jednotlivými uzly, který se snažíme vytvořit zcela jistě nemusí být úplný, stačí pokud se nám podaří vytvořit souvislý graf. Protože nepotřebujeme aby každé dva uzly 
 měly možnost ustanovení společného klíče, můžeme si dovolit upravit původní Blomovo schéma pomocí myšlenky pravděpodobnostního rozdělení a díky tomu získat větší odolnost proti útokům. 
@@ -239,10 +239,6 @@ Schéma je sice co se implementace a paměti týká náročnější než předch
 nepodstatné. Jedná se tedy o pravděpodobně nejslibnější variatu pravděpodobnostního rozdělení klíčů ze všech tří diskutovaných. Nicméně stejně jako předchozí varinaty, toto schéma nepokrývá celý 
 zamýšlený rozsah vyvíjené komponenty a proto by bylo potřeba jej rozšířit či kombinovat s jiným schématem. Navíc schéma počítá s náhodným rozmístěním jendotlivých uzlů v prostoru, zatímco v našem případě 
 bude poloha uzlů předem známa, tedy potenciál tohoto schématu by nebyl zcela využit. Z těchto důvodů tedy schéma nebylo vybráno.
-
-
-
-
 
 \section{TinyPK}
 TinyPK \cite{Watro2004} je návrhem způsobu, jak použít principy asymetrické kryptografie 
@@ -294,6 +290,33 @@ od začátku a se sítí komunikuje neustále. Implementovat další šifrovací
 nám může posloužit jiý implementovaná funkcionalita je plýtvání dostupnými zdroji, které jsou omezené. TinyPK najde využití v případech, kdy síť potřebuje komunikovat
 se třetí stanou po omezenou dobu, s tím že třetí strana není přítomna od začátku existence sítě a po získání potřebných informací komunikaci ukončí. Zde můžeme konstatovat, že 
 TinyPK nezapadá do celkového konceptu zamýšlené funkcionality vyvíjené komponenty a proto toto schéma nebylo vybráno. 
+
+\section{Panja, Madria and Bhargava}
+
+Na stromové sturktuře grafu založený návrh \cite{Panja2007} distribuce klíčů, který se svým přístupem odlišuje od většiny ostatních. Původní myšlenka využítí stromové struktury
+vychází z Tree Based Group Diffie-Hellman (TGDH) protokolu \cite{Kim2000} a k této jsou přidány další vlastnosti potřebné pro úspěšné nasazení v oblasti bezdrátových sensorových sítí. 
+Síť pro své fungování nevyžaduje existenci důvěryhodné třetí strany, je schopná dynamicky reagovat na změny podmínek a těmto se přizpůsobovat. Sdílené klíče jsou počítány distribuovaným 
+způsobem (tímto dochází k eliminaci selhání v možném slabém místě) od listů sítě až po kořenový uzel.  
+
+\subsection{Hierarchická struktura sítě}
+Strutura celé sítě je hierarchicky rozdělena, a může se dle potřeb dynamicky měnit. Sensorové uzly jsou rozděleny do jednotlivých skupin (clusterů) podle geografického rozmístění a 
+v každém clusteru je sestavena stromová struktura tak, že kořenový uzel stromu se straá o veškerou organizaci a komunikaci mezi jednotlivými clustery, zatímco ostatní uzly v grafu 
+mají na starost sledovaní okolí pomocí svých sensorů. Celá síť typicky obsahuje několik clusterů a tyto jsou jedním kořenovým uzlem (v hierarchii umístěném mimo struktury clusterů)
+spojeny do jediného stromu. Tento uzel zajištuje komunikaci sítě s vnějším prostředím a také komunikaci mezi jednotlivými clustery. V síti jsou použity dva typy klíčů, jeden pro 
+komunikaci uvnitř každého z clusterů, a druhý pro komunikaci nad úrovní clusterů. Druhý klíč je znám pouze kořenovým elementům jednoltivých skupin a centrálnímu uzlu, tedy kompromitování 
+jednotlivého sensorového uzlu nezpůsobí kompromitování komunikace v celé síti. 
+
+\subsection{Princip dílčích výpočtů klíče}
+Výpočet klíče předpokládá aktivní účast každého uzlu sítě, kdy moment začátku výpočtu určuje kořenový uzel, nicméně výpočet samotný zahajují uzly umístěné v listech grafu. 
+Tyto uzly vygenerují náhodné číslo a pošlou jej svým rodičům. Každý následující uzel v grafu přijme hodnoty od svých potomků, tyto vloží do funkce $f$ a vypočítanou hodnotu opět 
+posílá svému rodiči. Funkce $f$ je konstruována tak, aby splňovala následující požadavky: funkce musí být aplikovatelná na takový blok dat, který je sensorový uzel schpen jednoduše zpracovat
+(omezení je zde dáno výpočetním výkonem uzlu a velikostí dostupné paměťové kapacity). Funkce musí produkovat výstup fixní délky a pro jakoukoliv výslednou hodnotu by mělo být výpočetně neproveditelné 
+získat původní parametry funkce (důvodem je, aby uzly níže v hierarchii nebyly schopné získat informaci zpracovávanou uzlem v hierarchii výše).
+Funkce samotná má různou podobu v závisloti na konkrétním počtu potomků jednotlivých uzlů. 
+
+Proces výpočtu pokračuje směrem vzhůru, až ke kořenovému uzlu clusteru. Tento vypočítá sdílený klíč pro celý zluster a ten rozešle hromadnou zprávou všem uzlům v clusteru. 
+
+
 
 
 
