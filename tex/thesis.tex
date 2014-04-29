@@ -301,7 +301,8 @@ způsobem (tímto dochází k eliminaci selhání v možném slabém místě) od
 \subsection{Hierarchická struktura sítě}
 Strutura celé sítě je hierarchicky rozdělena, a může se dle potřeb dynamicky měnit. Sensorové uzly jsou rozděleny do jednotlivých skupin (clusterů) podle geografického rozmístění a 
 v každém clusteru je sestavena stromová struktura tak, že kořenový uzel stromu se straá o veškerou organizaci a komunikaci mezi jednotlivými clustery, zatímco ostatní uzly v grafu 
-mají na starost sledovaní okolí pomocí svých sensorů. Celá síť typicky obsahuje několik clusterů a tyto jsou jedním kořenovým uzlem (v hierarchii umístěném mimo struktury clusterů)
+mají na starost sledovaní okolí pomocí svých sensorů. Celá síť typicky obsahuje několik clusterů a tyto jsou jedním kořenovým uzlem (stejně jako v prostředí clusterů, jeden z uzlů na stejné
+úrovni je vybrán jako kořenový, tedy centrální uzel plní dvojí roli, jednak kořenový uzel svého clusteru a jednak kořenový uzel všech ostatních kořenových uzlů)
 spojeny do jediného stromu. Tento uzel zajištuje komunikaci sítě s vnějším prostředím a také komunikaci mezi jednotlivými clustery. V síti jsou použity dva typy klíčů, jeden pro 
 komunikaci uvnitř každého z clusterů, a druhý pro komunikaci nad úrovní clusterů. Druhý klíč je znám pouze kořenovým elementům jednoltivých skupin a centrálnímu uzlu, tedy kompromitování 
 jednotlivého sensorového uzlu nezpůsobí kompromitování komunikace v celé síti. 
@@ -314,10 +315,89 @@ posílá svému rodiči. Funkce $f$ je konstruována tak, aby splňovala násled
 získat původní parametry funkce (důvodem je, aby uzly níže v hierarchii nebyly schopné získat informaci zpracovávanou uzlem v hierarchii výše).
 Funkce samotná má různou podobu v závisloti na konkrétním počtu potomků jednotlivých uzlů. 
 
-Proces výpočtu pokračuje směrem vzhůru, až ke kořenovému uzlu clusteru. Tento vypočítá sdílený klíč pro celý zluster a ten rozešle hromadnou zprávou všem uzlům v clusteru. 
+Proces výpočtu pokračuje směrem vzhůru, až ke kořenovému uzlu clusteru. Tento vypočítá sdílený klíč pro celý cluster a rozešle vypočítaný klíč hromadnou zprávou všem uzlům v clusteru. 
+Pro celý proces ustanovení klíče je iniciálně použit preddistribuovaný symetrický klíč, který je po úspěšném ustanovení nového klíče smazán. Tento klíč slouží jednak k ochraně samotných posílaných 
+hodnot a jednak k výpočtu MAC hodnoty, která je taktéž součástí posílané zprávy. Pokud je proces ustanovení klíče spuštěn znovu, je pro komunikaci použit aktuální klíč. Proces ustanovení klíčů pro 
+komunikaci mezi clustery probíhá obdobně, kořenové elementy jendotlivých clusterů odešlou hodnotu spočítanou uzly svého clusteru k centrálnímu uzlu a tento opět pomocí funkce $f$ vypočítá klíč, který 
+následně zpětně zasílá kořenovým uzlům jednotlivých clusterů. Tto hodnota však zůstává známa jen kořenovým uzlům, tedy bežné sensorové uzly jsou schopné dešifrovat pouze komunikaci ve vlastním clusteru
+a zároveň kořenové uzly nejsou schopné dešivrovat interní komunikaci jiných clusterů, síť je tedy rozdělená a případný útok velmi pravděpodobně postihne pouze jeden cluster z mnoha. 
 
+V případě potřeby, ať už z důvodu útoku nebo pouze periodické aktualizace, je možné provédst úpravu klíče poze vyřazením , nebo naopak přidáním vybráné hodnoty do výpočtu funkce $f$. Tedy není zapotřebí
+procházet celý proces ustanovení klíče znovu, což výrazně snižuje dobu výpočtu a tedy náročnost této operace. 
 
+\subsection{Vhodnost použití}
 
+Síť s tímto schématem distribuce klíčů předpokládá náhodné rozmístění uzlů. Síť samotná vyřeší uspořádání do clusterů a nejvhodnější 
+variatu sestavení stromového grafu tak, aby došlo k optimálnímu pokrytí oblasti pomocí sensorů. Co se týká možností komunikace
+v síti, v rámci jednoho clusterů je komunikace velmi jednoduchá, jelikož všechny uzy sdílejí stejný klíč. Tuto vlastnost můžeme považovat 
+jak za výhodu, tak nevýhodu tohoto schématu. Z hllediska optimalizace komunikace je ideální, pokud je sdílený klíč použitý vícekrát, 
+protože odpadají paměťové nároky na uložení většího počtu klíčů a uzly mohou navzájem neomezeně komunikovat. Na druhou stranu při 
+kompromitování klíče dostane útočník přístup k značné části komunikace mezi všemi uzly až do doby, než bude útok detekován, nebo než 
+dojde k automatickému obnovení klíče. Tedy z pohledu bezpečnosti a odolnosti proti útokům není schéma ideální variantou. 
+
+Z druhého pohledu, schéma má výborné výsledky z hlediska paměťové náročnosti, taktéž je velmi dobře aplikovatelné na sítě s velkým
+počtem uzlů, vždy záleží pouze na vhodném výběru uspořádání do clusterů. Clustery taktéž přináši výhodu v podobě usnadněné komunikace, ať 
+už na lokální nebo globální úrovni. Cesta mezi každou dvojící uzlů je dána díky stromovému uspořádání jednoznačně a při přenosu informace 
+nedochází ke zvýšeným výpočetním nároků, protože klíče jsou v jednotlivých clusterech sdílené, tedy není potřeba informaci znovu 
+zašifrovávat při každém předání (tento krok je potřeba provédst pouze na hranicích clusterů). Celkově tedy schéma nabízí výměnu mezi 
+bezpečností za cenu menších nároků na provoz sítě. 
+
+Z hlediska vhodnosti použití ve vyvíjené komponentě schéma vhodné není, protože sice má malé nároky na paměť jednotlivých uzlů, na druhou 
+stranu vyžaduje vyšší výpočetní výkon pro proces ustanovení klíčů. Zároveň však síť neposkytuje dostatečnou bezpečnost, protože 
+kompromitování jednoho uzlu kompromituje komunikaci v celém clusteru. Schéma tedy nebylo vybráno, protože výměna možnosti velkého počtu
+uzlů a malé paměťové náročnosti za odolnost proti útokům není pro vyvíjenou komponentu žádoucí. 
+
+\section{LEAP+}
+Z předchozích schémat zcela jasně vyplývá, že pro řešení problému distribuce klíčů není vhodný koncept jednoho okruhu klíčů (například pouze klíče pro komunikaci se sousedy, nebo pouze
+klíče pro komunikaci v clusteru). Z této myšleky vychází schéma LEAP+ \cite{Zhu2006} (Localized Encryption and Authentication Protocol -- lokalizovaný protokol pro šifrovaní a autentizaci) 
+a navrhuje síť zabezpečit pomocí čtyř typů klíčů. Každý uzel tedy může vlastnit následující klíče: klíč pro individuální komunikaci s centrální stanicí (Base Station -- BS), klíč pro komunikaci 
+ve skupině uzlů (clusteru), klíč pro hromadnou komunikaci se všemi uzly (například plošně vysílaná zpráva od BS ) a klíče pro komunikaci s přímými sousedy. Dále schéma umožnuje autentizaci hromadně 
+zasílaných zpráv pomocí řetězce hash hodnot (keychain). 
+
+Schéma předpokládá statickou síť kde nedochází ke změnám topologie. Díky různým klíčům jsou možné různé způsoby komunikace, uzel s uzlem (unicast), uzel s celým clusterem (lokální broadcast) 
+a komunikace se všemi uzly v síti (globální broadcast). Cílem schématu je zajistit důvernost, autentizaci a spolehlivý přenos jednotlivých zpráv v síti a to při zachování malých nároků
+na energii spotřebovanou při výpočtech a komunikaci. Jak již bylo naznačeno dříve, síť počítá s existencí centrálního uzlu, u kterého je předpokládán vyšší výkon a zároveň zajištěné napajení tak 
+aby centrální uzel nebyl omezován limitovanou dobou provozu. Tento uzel typicky nemá stejný hardware jako uzly tvořící síť a má na starost jak organizaci celé sítě, tak zprostředkování komunikace se 
+sítí vnějším stranám.  
+
+\subsection{Derivace klíčů}
+
+Derivace klíčů probíhá postupně, nejdříve jsou ustanoveny párové klíče pro komunikaci mezi sousedními uzly a tyto jsou následně využity pro ustanovení ostatních typů klíčů. 
+Na jednotlivé uzly je před rozmístěním předdistribuován jeden společný klíč, který slouží k počátečnímu navázání komunikace. Sice předpokládáme, že jednotlivé uzly nejsou odoplné vůči 
+útoku a tedy že je útočník chopen zíkat obsah paměti jendotlivých uzlů, tedy i případné klíče v paměti uložené. Nicméně proces získání informací z paměti uzlu má předpokládanou dobu trvání desítky sekund 
+až minuty v závisloti na konkrétních podmínkách \cite{Deng2005}. Pokud tedy je zajištěno, že klíč bude smazán z paměti uzlu v době, kdy není technologicky možné jej získat, je bezpečné tuto varinatu použít.
+K derivaci klíčů je použitý RC5 algoritmus \cite{Rivest1995}, používaný v podobě jednosměrné MAC funkce tak, aby nebylo možné zjistit původní hodnoty ze kterých byly klíče derivovány.
+
+\paragraph{Párové klíče} 
+Derivace párových klíčů vychází z předdistribuovaného iniciálního klíče $K_{IN}$, který je využit ke spočítání klíče každého jednotlivého uzlu. Výpočet proběhne pomocí jednosměrné funkce 
+$K_u=f_{K_{IN}}(u)$, kde $K_u$ je nově spočítaný klíč uzlu s ID $n$ a $f$ je RC5 algoritmus upravený do podoby jednosměrné MAC funkce. Uzel následně provede vyslání požadavku o derivaci klíče všem dostupným 
+sousedům, zjistí jejich ID a následně každá dvojice provede výpočet společného klíče. Oba uzly znají původní hodnotu $K_{IN}$, tedy i uzel s ID $v$ dokáze spočítat $K_u$ a následně oba uzly mohou spočítat
+$K_{uv} = f_{K_{u}}(v)$, případně $K_{vu}$ při výpočtu v opačném pořadí. Uzly si následně pamatují vypočítané hodnoty klíčů a svoji původní hodnotu vypočítanou z původního $K_{IN}$ klíče. 
+$K_{IN}$ klíč je následně po vypršení časového limitu smazán z paměti uzlu a tede získáním obsahu paměti uzlu získá útočník přístup pouze ke klíčům obsaženým v paměti uzlu, ale nezíská data potřebná k 
+získání klíčů ostatních uzlů.
+
+V případě potřeby přidání nových uzlů postupujeme úplně stejně, pouze je možná pouze jedna varianta společného klíče, protože uzly již obsažené v síti nemají možnost spočítat klíč nového uzlu, jelikož 
+původní klíč už byl smazán z jejich paměti, zatímco nový uzel klíč zatím k dispozici má. 
+\paragraph{Ostatní typy klíčů} 
+Ostaní typy klíčů jsou ustanoveny pomocí již existujících spojení, tedy klíče pro komunikaci v clusteru jsou distribuovány pomocí párových klíčů a tedy předávány mezi jednotlivými uzly dokud 
+klíč neobdrží všechny uzly zařazené do konkrétního clusteru. Klíče pro hromadnou komunikacu jsou následně distribuovány pomocí jednotlivých cluster klíčů. 
+
+Vyjímkou v této hierarchii jsou klíče pro individuální komunikaci s centrálním uzlem, tyto jsou spočítány před samotným rozmístěním a nahrány na jednotlivé uzly. Výpočet probíhá pomocí stejné funkce $f$, 
+jako parametr je použito ID uzlu a klíč je znám pouze centrálnímu uzlu. Centrální uzel jednotlivé klíče neukládá, předpokládáme že má dostatečný výpočetní výkon, aby dokázal požadovaný klíč výdy v případě 
+potřeby vypočítat bez znatelného zpoždění v komunikaci.
+
+\subsection{Autentizace hromadných zpráv}
+LEAP+ schéma obsahuje podporu jednosměrných řetězců hash hodnot \cite{Lamport1981} (keychain), kde každý uzel vygeneruje vlastní keychain a první hodnotu pošle svým sousedům. 
+V případě potřeby odeslání autentizované zprávy uzel připojí následující hodnotu keychainu, která slouží jako autentizační informace. Jelikož k výpočtu je použita jednosměrná funkce, není možné z první 
+hodnoty získat hodnotu druhou, tedy druhou hodnotu může znát pouze uzel, který provedl původní výpočet keychainu a odeslal první hodnotu. Ostatní uzly tedy provedou výpočet vycházejí z druhé hodnoty a pokud 
+obdrží původní první hodnotu, je zpráva považovaná za autentizovanou. Každý uzel tedy svůj keychain potřebuje iniciálně vygenerovat v dostatečné délce a potřebuje uložit v paměti původní hodnotu, ze které 
+provádel výpočet, aby mohl pokaždé vypočítat hodnotu pro autentizaci zprávy. TODO: why weak
+
+\subsection{Vhodnost použití}
+LEAP+ poskytuje až čtyři různé typy klíčů, které mohou být použity k zvýšení bezpečnosti dalších protokolů. Důležitým faktorem je, že schéma poskytuje výhody hromadných klíčů, ale zároveň díky 
+párovým klíčům a možné obnově hromadných klíčů minimalizuje následky komromitování jednoltivých uzlů. Zároveň schéma obsahuje podporu pro slabou (nicméně dostečnou) formu autentizace zpráv. 
+Nevýhodou schématu je předpoklad staické sítě, nicméně v případě vyvíjené komponenty se jedná o očekávanou vlastnost sítě, tedy tento problém nelze považovat za skutečnou nevýhodu. Toto 
+schéma s níže popsanými úpravami tedy bylo vybráno pro implementování ve vyvíjené komponentě.
 
 
 
@@ -326,7 +406,6 @@ Proces výpočtu pokračuje směrem vzhůru, až ke kořenovému uzlu clusteru. 
 %\printglossary
 %\listoffigures
 %\listoftables
-
 %% Bibliography from lib.bib
 \begingroup
 \def\tmpchapter{0}
