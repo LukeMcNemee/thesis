@@ -45,7 +45,7 @@
 \renewcommand{\labelitemiii}{$\circ$}
 
 %% Title page information
-\thesistitle{Komponenta distribuce a správy klíčů pro bezdrátové sensorové síťě}
+\thesistitle{Komponenta distribuce a správy klíčů pro bezdrátové sensorové sítě}
 \thesissubtitle{bakalářská práce}
 \thesisstudent{Lukáš Němec}
 \thesiswoman{false} %% Important when using Slovak or Czech lang
@@ -69,17 +69,17 @@
 
 %% Thanks (optional)
 \begin{ThesisThanks}
-poděkování
+TODO
 \end{ThesisThanks}
 
 %% Abstract (required)
 \begin{ThesisAbstract}
-abstrakt
+TODO
 \end{ThesisAbstract}
 
 %% Keywords (required)
 \begin{ThesisKeyWords}
-klíčová, slova
+TODO
 \end{ThesisKeyWords}
 
 %% Beginning of the thesis itself
@@ -96,27 +96,28 @@ klíčová, slova
 TODO
 
 \chapter{Existující implementace pro distribuci a správu klíčů}
-Mechanismus bexpečného ustanovení klíčů pro komunikaci v bezdrátové sensorové síti tvoří jeden ze základních předpokladů 
-pro bezpečné a spolehivé fungování sítě jako celku. Na zabezpečenou komunikaci například spoléhá ... TODO examples plus citations
+Mechanismus bezpečného ustanovení klíčů pro komunikaci v bezdrátové sensorové síti tvoří jeden ze základních předpokladů 
+pro bezpečné a spolehlivé fungování sítě jako celku. Na zabezpečenou komunikaci například spoléhá ... TODO examples plus citations
 
 Přitom co se možných řešení týká, jsme zde limitování mnohými rozdíly oproti sítím v klasické podobě. Mezi nejvýznamnější rozdíly například
 patří omezené možnosti napájení (jednotlivé uzly mají většinou vlastní baterii a snahou je interval nutných výměn prodloužit co nejvíce), 
 většinu spojení nemůžeme považovat za trvalé (topologie sítě se může měnit, případně uzly z důvodu úspory energie komunikují pouze v určitých 
 intervalech) a musíme počítat s faktem, že hardware uzlu, především z důvodu ceny, nemá žádnou ochranu proti násilnému získání obsahu paměti uzlu, 
-tedy i případných kryptogafických klíčů v paměti obsažených. Následují tedy jednotlivé klasické možnosti správy klíčů s odůvodněním proč nejsou pro 
-použítí v rámci sensorové sítě vhodné.
+tedy i případných kryptografických klíčů v paměti obsažených. Následují tedy jednotlivé klasické možnosti správy klíčů s odůvodněním proč nejsou pro 
+použití v rámci sensorové sítě vhodné.
 
-\subsection{Jeden sdílený klíč (master key)} Řešení pomocí jednoho sdíleného klíče, který zabezpečuje vešekerou komunikaci je sice nejjednodušší a 
-nejméně náročné co se implementace týká, nicméně tím výčet výhod tohoto řešení končí a následují nevýhodny, které převažují. Tou nejdůležitější 
-je problém v případě, že se útočníkovi podaří získat jedinný uzel z celé sítě, tedy získá sdílený klíč pro komunikaci v rámci celé sítě. Následně 
+\section{Klasické přístupy k řešení problému distribuce klíčů}
+\subsection{Jeden sdílený klíč (master key)} Řešení pomocí jednoho sdíleného klíče, který zabezpečuje veškerou komunikaci je sice nejjednodušší a 
+nejméně náročné co se implementace týká, nicméně tím výčet výhod tohoto řešení končí a následují nevýhody, které převažují. Tou nejdůležitější 
+je problém v případě, že se útočníkovi podaří získat jediný uzel z celé sítě, tedy získá sdílený klíč pro komunikaci v rámci celé sítě. Následně 
 má jednak možnost dešifrovat všechny zprávy zaslané v síti a jednak má možnost vysílat vlastní zprávy bez možnosti detekce.
 
 \subsection{Párové klíče (Pairwise keys)} Zde již je kompromitování komunikace v celé síti vyřešeno pomocí separátních klíčů pro každý uzel, 
 tedy útočník se získáním uzlu získá pouze zprávy směřující k tomuto uzlu, případně možnost vydávat se za tento uzel, nicméně toto řešení 
-obsahuje jiný problém. V případě skutečně rozsáhlé sítě (tísíce až statisíce uzlů) není technicky možné, aby paměť uzlu obsahovala natolik 
-velké množství klíčů, minimálně hardware který je v současné době dostupný pro stavbu sensorových sítí toto neumožnuje\footnote{pokud uvažujeme 
-AES \cite{Daemen1999} klíč o velikosti 128 bitů a 1000 uložených klíčů v paměti uzlu, dostáváme celkem 16KB dat, které je potřeba uložit do paměti uzlu. 
-Pokud uvažujeme například platformu TelosB \cite{MemsicInc.}, zde máme k dispozici právě 16KB EEPROM paměti určené k ukládání dat. Musíme však počítat s 
+obsahuje jiný problém. V případě skutečně rozsáhlé sítě (tisíce až sta tisíce uzlů) není technicky možné, aby paměť uzlu obsahovala natolik 
+velké množství klíčů, minimálně hardware který je v současné době dostupný pro stavbu sensorových sítí toto neumožňuje\footnote{pokud uvažujeme 
+AES \cite{Daemen1999} klíč o velikosti 128 bitů a 1000 uložených klíčů v paměti uzlu, dostáváme celkem 16 KB dat, které je potřeba uložit do paměti uzlu. 
+Pokud uvažujeme například platformu TelosB \cite{MemsicInc.}, zde máme k dispozici právě 16 KB EEPROM paměti určené k ukládání dat. Musíme však počítat s 
 tím, že není primárním cílem zabezpečená komunikace, ale sběr dat pomocí senzorů, tedy kryptografická data by neměla zabírat většinu paměťového prostoru 
 uzlu a to neuvažujme rozsáhlejší sítě s násobně větším množstvím uzlů}. Hlavní slabinou této varianty je tedy velmi velká paměťová náročnost a obtížná 
 škálovatelnost pro rozsáhlejší sítě. 
@@ -140,9 +141,9 @@ Celkově se schéma skládá ze tří fází, první obsahuje predistribuci vybr
 Samotná první fáze se skládá z několika kroků, nejdříve je vygenerována velká množina $P$ klíčů, z těchto je následně náhodně vybráno $k$ klíčů pro každý
 uzel. Počet $k$ vybraných klíčů je určen celkovým počtem uzlů a požadovanou pravděpodobností sdíleného klíče mezi sousedními uzly. Celá tato první fáze 
 probíhá před samotným rozmístěním uzlů. Následuje druhá fáze, která nastává ve fázi inicializace sítě, kdy jednotlivé uzly zjistí své sousedy v dosahu 
-rádiové komunikace a zjistí, se kterými sdílí klíč. Nejjednoduší cesta, jak toto provédst je, že každý uzel odešle všem ostatním ve svém okolí seznam jím 
+rádiové komunikace a zjistí, se kterými sdílí klíč. Nejednoduší cesta, jak toto provést je, že každý uzel odešle všem ostatním ve svém okolí seznam jím 
 vlastněných klíčů. Seznam identifikátorů jednotlivých klíčů není potřeba považovat za citlivou informaci, proto tento postup postačuje. V případě potřeby 
-jej ale lze nahradit tak, že uzel odešle výzvy zašifrované pomocí všech klíčů, které vlastní. pokud se příjemnci podaří výzvu úspěšně dešifrovat, pak
+jej ale lze nahradit tak, že uzel odešle výzvy zašifrované pomocí všech klíčů, které vlastní. pokud se příjemci podaří výzvu úspěšně dešifrovat, pak
 uzly mají společný klíč. Následuje ustanovení cest v síti, kdy je vyhledána cesta mezi uzly sítě, které nevlastní společný klíč, nicméně je možné je propojit 
 komunikací přes ostatní uzly, které klíč sdílejí. Touto cestou je následně vyměněn nový klíč pro přímé spojení. 
 
@@ -152,9 +153,9 @@ a to v případě potřeby použití nových klíčů pro spojení.
 
 \subsection{Vhodnost použití}
 Celé schéma si při své jednoduchosti zachovává velmi dobrou funkčnost a v případě potřeby komunikace pouze mezi uzly samotnými se pravděpodobně jedná o nejvýhodnější
-variatu řešení a to především pro případy, kdy je rozmístění jednotlivých uzlů náhodné a nemůžeme počítat s předem určenou topologií sítě. Schéma je taktéž velmi dobře kombinovatelné
-s dalšími jednoduchými způsoby komunikace a tedy rozšířitělné o případnou další funkcionalitu. Z hlediska implementace a náročnosti na hardware jednotlivých uzlů schéma
-splňuje všechny požadavky, nicméně schéma tak jak je nevyhovuje pro použítí v rámci vyvíjené komponenty především z důvodu nedostatečné funkcionality. Schéma sice zajistí ustanovení
+variantu řešení a to především pro případy, kdy je rozmístění jednotlivých uzlů náhodné a nemůžeme počítat s předem určenou topologií sítě. Schéma je taktéž velmi dobře kombinovatelné
+s dalšími jednoduchými způsoby komunikace a tedy rozšířitelné o případnou další funkcionalitu. Z hlediska implementace a náročnosti na hardware jednotlivých uzlů schéma
+splňuje všechny požadavky, nicméně schéma tak jak je nevyhovuje pro použití v rámci vyvíjené komponenty především z důvodu nedostatečné funkcionality. Schéma sice zajistí ustanovení
 a správu komunikace mezi uzly samotnými, ale neřeší jakékoliv návazné problémy, jako například hromadné posílání zpráv z centrálního uzlu a vyžadovalo by příliš mnoho modifikací oproti 
 původnímu návrhu a proto nebylo vybráno.
 
@@ -168,92 +169,92 @@ Oproti původnímu návrhu, zde je ustanovena hodnota $q$, která vyjadřuje po�
 je hodnota $q$ rovna jedné a tedy není potřeba se jí zabývat. Zde ovšem hraje důležitou roli z hlediska zvýšení zabezpečení sítě. Sousední uzly opět vysíláním identifikátorů klíčů které vlastní
 zjistí, se kterými sousedy sdílejí alespoň $q$ klíčů a s těmito zahájí komunikaci. Předpokládejme tedy, že dva uzly sdílejí $q'$ klíčů $k_1, k_2 \dots k_{q'}$ ($q' \ge q$) a existenci hashovací funkce $H$, 
 společný klíč $k$ pro následující komunikaci mezi uzly je tedy ustanoven následovně $k=H(k_1 || k_2 || \dots || k_{q'})$ s tím, že je zabezpečené stejné pořadí klíčů, například podle původního
-pořadí v jakém byly generovany. 
+pořadí v jakém byly generovány. 
 
 Schéma zachovává původní princip nalezení cesty mezi uzly, které na začátku nevlastní potřebný počet společných klíčů a taktéž původní princip revokace klíčů pomocí zaslání zprávy z 
 centrálního uzlu. Celkově zlepšení poskytuje zvýšenou ochranu proti útokům malého rozsahu za cenu snížení odolnosti proti útokům většího rozsahu. Zde je možné konstatovat, že se jedná 
 o žádoucí vlastnosti, jelikož malé útoky je těžké zaznamenat (malé procento nefunkčních uzlů může být běžný jev), zatímco útoky na výrazně větší množství uzlů již pravděpodobně zaznamenány budou a 
-bude tedy možné provédst patřičná protiopatření. 
+bude tedy možné provést patřičná protiopatření. 
 
 \subsection{Vícecestné obnovením spojení (multipath)}
 Druhý návrh se zabývá obnovením spojení, jehož klíč byl prozrazen, nicméně uzly samotné zůstaly útokem nedotčeny. K této situaci například dojde, pokud je klíč používaný pro komunikaci mezi
-uzly $A$ a $B$ uložen v paměti uzlu $C$ a útočník získá klíče na uložené na uzlu $C$. Obnovaní komunikačního klíče je provedeno přes více nezávislých cest, konkrétně uzly $A$ a $B$ zjistí společné sousedy
-přes které se mohou spojit tak, že délka cesty je kratší než předem stanovená maximální hodnota přeskoků. Pokud tedy existuje $j$ cest spojujících tyto dva uzly, pka uzel $A$ pošle po mkaždé cestě náhodně 
-generovanou hodnotu $v$, celkově tedy pošle hodnoty $v_1, v_2, \dots v_j$. Na uzlu $B$ je nová hondota klíče spočítána z původní hodnoty následovně $k' = k \oplus v_1 \oplus v_2 \oplus \dots \oplus v_j$
+uzly $A$ a $B$ uložen v paměti uzlu $C$ a útočník získá klíče na uložené na uzlu $C$. Obnovení komunikačního klíče je provedeno přes více nezávislých cest, konkrétně uzly $A$ a $B$ zjistí společné sousedy
+přes které se mohou spojit tak, že délka cesty je kratší než předem stanovená maximální hodnota přeskoků. Pokud tedy existuje $j$ cest spojujících tyto dva uzly, pak uzel $A$ pošle po každé cestě náhodně 
+generovanou hodnotu $v$, celkově tedy pošle hodnoty $v_1, v_2, \dots v_j$. Na uzlu $B$ je nová hodnota klíče spočítána z původní hodnoty následovně $k' = k \oplus v_1 \oplus v_2 \oplus \dots \oplus v_j$
 
 Tato metoda celkově způsobí znatelné zatížení sítě, především pro větší dovolený počet přeskoků. Pokud však dovolíme pouze malý počet přeskoků (například dva) zaznamenáme zlepšení v odolnosti proti 
 případným útokům. Především síť dokáže obnovit spojení, která jsou přerušena vyzrazením použitého klíče.
 
 \subsection{Vhodnost použití}
-Autoři nedoporučují oba navržené přístupy kombinovat, protože při použití obou dojde ke zkombinovaní negativních dopadů obou, tedy zmenšení celkového počtu klíčů aby bylo dostatečné množstvé shodných
-klíčů mezi jendotlivými uzly a k nárustu komunikace z důvodu obnovování jednotlivých spojení. 
+Autoři nedoporučují oba navržené přístupy kombinovat, protože při použití obou dojde ke zkombinovaní negativních dopadů obou, tedy zmenšení celkového počtu klíčů aby bylo dostatečné množství shodných
+klíčů mezi jednotlivými uzly a k nárůstu komunikace z důvodu obnovování jednotlivých spojení. 
 
-Oba návrhy jsou zajímavým řešením, které zlepší zabezpečení sítě oproti původní variantě pravděpodobnostního rozdělení klíčů. Variaty se liší způsobem, kterým tohoto zpešení dosáhnou, q-composite 
+Oba návrhy jsou zajímavým řešením, které zlepší zabezpečení sítě oproti původní variantě pravděpodobnostního rozdělení klíčů. Varianty se liší způsobem, kterým tohoto zlepšení dosáhnou, q-composite 
 varianta posiluje bezpečnost před samotným útokem a tedy odolnost vůči útoku, zatímco multipath poskytuje řešení pro případ úspěšného útoku a nabízí možnost jak minimalizovat škody útokem způsobené.
-Co se vhodnoti použití na vyvíjené komponentě týká, opět jsou splněny požadavky kladené omezeným výkonem jednotlivých uzlů, nicméně i přes přidanou funkcionalitu (především ve 
-variantě multipath) neobsahuje schéma všechny požadované vlastnosti. Především se nezabývá zabezpečením oboustrané komunikace s centrálním uzlem. Tedy použití by bylo vhodné pouze v kombinaci 
+Co se vhodnosti použití na vyvíjené komponentě týká, opět jsou splněny požadavky kladené omezeným výkonem jednotlivých uzlů, nicméně i přes přidanou funkcionalitu (především ve 
+variantě multipath) neobsahuje schéma všechny požadované vlastnosti. Především se nezabývá zabezpečením oboustranné komunikace s centrálním uzlem. Tedy použití by bylo vhodné pouze v kombinaci 
 s jiným přístupem. Z tohoto důvodu tedy schéma nebylo vybráno. 
 
 
 \section{Du, Deng, Han and Varshney}
 Zajímavý návrh \cite{Du2005} koncepčně vycházející ze schématu původně navrženého Blomem \cite{Blom1985}, ale rozšiřující jej o pravděpodobnostní rozdělení klíčů \ref{sec:Eschenauer}.
-Díky tomu získáváme schéma pro distribuci klíčů vhodné pro použítí v bezdrátových sensorových sítích. Oproti předchozím variantám návrh celkově zvyšuje odolnost sítě vůči 
+Díky tomu získáváme schéma pro distribuci klíčů vhodné pro použití v bezdrátových sensorových sítích. Oproti předchozím variantám návrh celkově zvyšuje odolnost sítě vůči 
 útočníkovi a to za cenu vyšší výpočetní náročnosti, nicméně tato zůstává na rozumné míře (tedy stále výrazně menší než u asymetrické kryptografie). 
 
 \subsection{Původní Blomovo schéma}
 Blom \cite{Blom1985} se zabývá řešením problému distribuce klíčů v klasické síti, především s ohledem na velký počet uživatelů a tedy nepraktičnost případně až nemožnost ukládat všechny klíče u uživatele.
-Namísto toho navrhuje doručit každému uživateli relativně malé množství dat ze kterého dokáže všechny potřebné klíče odvodit. Schéma je kontruováno tak, aby každá dvojice uživatelů z celkového počtu $n$
+Namísto toho navrhuje doručit každému uživateli relativně malé množství dat ze kterého dokáže všechny potřebné klíče odvodit. Schéma je konstruováno tak, aby každá dvojice uživatelů z celkového počtu $n$
 dokázala odvodit společný klíč a to pouze při uložení $\lambda + 1$ klíčů, kde $\lambda \ll n$. Co se bezpečnosti týká, dokud není počet kompromitovaných uživatelů (jejich klíčů) vyšší než hodnota 
 $\lambda$, pak můžeme všechna spojení považovat za bezpečná. V okamžiku kdy je hodnota $\lambda$ překročena, získává útočník přístup k veškeré komunikaci v síti. 
 
 Schéma je založené na násobení matic, konkrétně proces ustanovení klíčů probíhá následovně: 
 nejdříve je zkonstruována matice $G$ o rozměru $(\lambda + 1) \times n$ nad konečným tělesem $GF(q)$, kde sloupce matice $G$ jsou lineárně nezávislé a $q > n$.
 Tato matice je veřejně známou informací a každý účastník, včetně útočníka, může znát její obsah. Následuje zkonstruování symetrické matice $D$ s rozměrem $(\lambda + 1) \times (\lambda + 1) $, 
-opět nad konečným tělesem $GF(q)$. Narozdíl od předchozí matice, matice $D$ je tajnou informací a celý její obsah zná pouze strana zabezpečující její generování a distribuci jednotlivých částí 
+opět nad konečným tělesem $GF(q)$. Na rozdíl od předchozí matice, matice $D$ je tajnou informací a celý její obsah zná pouze strana zabezpečující její generování a distribuci jednotlivých částí 
 účastníkům. Poté je spočítána matice $A= (DG)^T$ a každému účastníkovi je distribuován k-tý sloupec matice $G$ a k-tý řádek matice $A$ ($k \in \{1, \dots , n\}$). Následně komunikující strany
 mohou spočítat klíče $k_{ij}$ a $k_{ji}$.  
 
-\subsection{Rozříření o pravděpodobnostní rozdělení}
+\subsection{Rozšíření o pravděpodobnostní rozdělení}
 Při vytváření spojení v bezdrátové sítí není zcela nezbytné, aby byl kterýkoliv uzel schopen spojení se všemi ostatními uzly, mnohdy to ani není možné z důvodu krátkého dosahu rádia. Tedy
 graf spojení mezi jednotlivými uzly, který se snažíme vytvořit zcela jistě nemusí být úplný, stačí pokud se nám podaří vytvořit souvislý graf. Protože nepotřebujeme aby každé dva uzly 
 měly možnost ustanovení společného klíče, můžeme si dovolit upravit původní Blomovo schéma pomocí myšlenky pravděpodobnostního rozdělení a díky tomu získat větší odolnost proti útokům. 
 
 Pokud tedy původní schéma má jeden klíčový prostor (za klíčový prostor můžeme považovat dvojici matic $(D, G)$), v této variantě máme $\omega$ klíčových prostorů. Vycházíme z jedné společné matice $G$, 
-která je kostruována tak, že je vybrán generátor $p$ z konečného tělesa $GF(q)$, kde $q$ je větší jak požadovaná délka klíče (a také $q > N$) a tento generátor následně jednoznačně určuje tvar matice $G$.
-Dále konstruujeme $\omega$ symetrických matic $D$ a pro každý uzel jich vybereme $\tau$ ($\tau < \omega$). Následně proběhne iniciální fáze, kdy rozmístěné uzly zjistí spoelčné klíče se svými sousedy
-(společný klíč lze mezi uzly ustanovit, pokud alespoň jeden z $\tau$ klíčových prostorů na uzlech je shodný). Následně po vytvoření počátečního spojeného grafu, za použití předdistribuovaných hodnot, 
-může případně probehnout následující fáze, kdy dojde k ustanovení spojení mezi sousedy, kterým se nepodařilo spojení navázat ve fázi předchozí. Zde tyto dvojice využijí již ustanovené cesty, po kterých si 
-vymnění informace potřebné k navázání bezpečné komunikace. 
+která je konstruována tak, že je vybrán generátor $p$ z konečného tělesa $GF(q)$, kde $q$ je větší jak požadovaná délka klíče (a také $q > N$) a tento generátor následně jednoznačně určuje tvar matice $G$.
+Dále konstruujeme $\omega$ symetrických matic $D$ a pro každý uzel jich vybereme $\tau$ ($\tau < \omega$). Následně proběhne iniciální fáze, kdy rozmístěné uzly zjistí společné klíče se svými sousedy
+(společný klíč lze mezi uzly ustanovit, pokud alespoň jeden z $\tau$ klíčových prostorů na uzlech je shodný). Následně po vytvoření počátečního spojeného grafu, za použití predistribuovaných hodnot, 
+může případně proběhnout následující fáze, kdy dojde k ustanovení spojení mezi sousedy, kterým se nepodařilo spojení navázat ve fázi předchozí. Zde tyto dvojice využijí již ustanovené cesty, po kterých si 
+vymění informace potřebné k navázání bezpečné komunikace. 
 
 \subsection{Vhodnost použití}
 Toto schéma nám při použití skýtá několik zajímavých výhod, stejně jako předchozí varianty je velmi dobře škálovatelné a to i pro opravdu velké množství uzlů\footnote{pokud budeme uvažovat 64bitový klíč, 
 pak schéma umožní použít až $2^{64}$ uzlů}. Schéma má taktéž výrazně větší odolnost vůči útoku, oproti variantám \ref{sec:Eschenauer} nebo \ref{sec:Chan} musí útočník kompromitovat až pětinásobek počtu uzlů, 
-aby dosáhnul zaručeného úspěchu při napadení sítě. Taktéž z hlediska paměťové náročnosti lze schéma považovat za vyhovující, protože pro uložení matice $G$ potřebujeme uložit pouze jeden její prvek 
+aby dosáhl zaručeného úspěchu při napadení sítě. Taktéž z hlediska paměťové náročnosti lze schéma považovat za vyhovující, protože pro uložení matice $G$ potřebujeme uložit pouze jeden její prvek 
 (matice je jednoznačně určená svým generátorem) potřebujeme na každém uzlu uložit $\tau \cdot (\lambda +1)$ položek klíčů, což je výrazně méně než varianta uložení všech vzájemných klíčů. Navíc 
 poměr mezi bezpečností a náročností na provoz můžeme upravovat vhodným nastavením hodnot jak parametru $\lambda$, tak i parametru $\tau$. Oba parametry ovlivňují paměťovou náročnost, čím větší hodnota, tím 
-více informací je třeba uložit. Dále pak $\tau$ ovlivňuje pravděpodobnost, že dva uzly naleznou společný klíč, cíž vyšší hodnota $\tau$ je, tím větší je pravděpodobnost nalezení shodného klíčového prostoru
+více informací je třeba uložit. Dále pak $\tau$ ovlivňuje pravděpodobnost, že dva uzly naleznou společný klíč, čím vyšší hodnota $\tau$ je, tím větší je pravděpodobnost nalezení shodného klíčového prostoru
 dvou sousedících uzlů. Hodnota $\lambda$ pak ovlivňuje bezpečnost sítě, protože útočník musí kompromitovat alespoň $\lambda$ uzlů, aby byl schopen kompromitovat celou síť, tedy čím vyšší hodnota, tím 
 je síť odolnější proti potenciálnímu útoku.
 
-Schéma je sice co se implementace a paměti týká náročnější než předchozí varinaty, nicméně tato náročnost přináší výhody v oblasti bezpečnosti a to výhody nikoliv 
-nepodstatné. Jedná se tedy o pravděpodobně nejslibnější variatu pravděpodobnostního rozdělení klíčů ze všech tří diskutovaných. Nicméně stejně jako předchozí varinaty, toto schéma nepokrývá celý 
-zamýšlený rozsah vyvíjené komponenty a proto by bylo potřeba jej rozšířit či kombinovat s jiným schématem. Navíc schéma počítá s náhodným rozmístěním jendotlivých uzlů v prostoru, zatímco v našem případě 
+Schéma je sice co se implementace a paměti týká náročnější než předchozí varianty, nicméně tato náročnost přináší výhody v oblasti bezpečnosti a to výhody nikoliv 
+nepodstatné. Jedná se tedy o pravděpodobně nejslibnější variantu pravděpodobnostního rozdělení klíčů ze všech tří diskutovaných. Nicméně stejně jako předchozí varianty, toto schéma nepokrývá celý 
+zamýšlený rozsah vyvíjené komponenty a proto by bylo potřeba jej rozšířit či kombinovat s jiným schématem. Navíc schéma počítá s náhodným rozmístěním jednotlivých uzlů v prostoru, zatímco v našem případě 
 bude poloha uzlů předem známa, tedy potenciál tohoto schématu by nebyl zcela využit. Z těchto důvodů tedy schéma nebylo vybráno.
 
 \section{TinyPK}
 TinyPK \cite{Watro2004} je návrhem způsobu, jak použít principy asymetrické kryptografie 
 pro komunikaci mezi uzly sensorové sítě a třetí stranou. Tedy toto schéma by mohlo být využito k rozšíření předchozích variant, například \ref{sec:Eschenauer}
-nebo dalších. Cílem atorů je eliminovat problémy spojené s využíváním 
-symetrikých klíčů, především zásadní otázku týkající se správy symetrikých klíčů. K tomuto využívají
-implementaci RSA algoritmu \cite{Rivest1978}, samozřejmně s omezeními, které stanovuje hardware jednotlivých uzlů.
+nebo dalších. Cílem autorů je eliminovat problémy spojené s využíváním 
+symetrických klíčů, především zásadní otázku týkající se správy symetrických klíčů. K tomuto využívají
+implementaci RSA algoritmu \cite{Rivest1978}, samozřejmě s omezeními, které stanovuje hardware jednotlivých uzlů.
 
-Návrh samotné komunikace s těmito omezeními samozřejmně počítá a proto na samotných uzlech jsou používány
+Návrh samotné komunikace s těmito omezeními samozřejmě počítá a proto na samotných uzlech jsou používány
 pouze operace s veřejným klíčem. Ze stejných důvodů taktéž není použit žádný standart certifikátů, ale 
 pouze podpisy jednotlivých klíčů a zpráv. S tímto souvisí problém s revokací klíčů, nicméně autoři se tímto nezabývají.
-Dále tento návrh počítá s existencí certifikační autority, jejiž veřejný klíč je předdistribuován na samotné uzly. 
+Dále tento návrh počítá s existencí certifikační autority, jejíž veřejný klíč je predistribuován na samotné uzly. 
 
 \subsection{Princip ustanovení komunikace}
-Komunikační protokol začíná s předpokladem předdistribuovaného veřejného klíče certifikační autority na jednotlivé
+Komunikační protokol začíná s předpokladem predistribuovaného veřejného klíče certifikační autority na jednotlivé
 uzly a existencí třetí strany se zájmem komunikovat se sensorovou sítí. Komunikace samotná je iniciována třetí
 stranou, konkrétně spojením s certifikační autoritou a následným podepsáním veřejného klíče třetí strany (klíč podepisuje 
 certifikační autorita po patřičném ověření identity třetí strany). Tento krok může proběhnout s předstihem oproti samotné 
@@ -261,15 +262,15 @@ komunikaci se sensorovou sítí a tedy není vyžadováno, aby certifikační au
 
 Nyní již k samotné komunikaci se sensorovou sítí. Tato je opět iniciována třetí stranou a to tím, že pošle jednotlivým uzlům 
 výzvu. První část zprávy tvoří veřejný klíč třetí strany (který je podepsaný certifikační autoritou) a druhá část je podepsána 
-soukromým klíčem třetí stray a je složená z časového razítka (timestamp) a kontrolního součtu celé zprávy. Po příjetí zprávy
+soukromým klíčem třetí strany a je složená z časového razítka (timestamp) a kontrolního součtu celé zprávy. Po příjetí zprávy
 uzel ověří platnost podpisu certifikační autority a hodnotu kontrolního součtu, v případě že se uzlu podaří tyto údaje ověřit, 
-považuje třetí stranu za autentizovanou a vytvoří odpověd, která obsahuje symetrický klíč pro další komunikaci a ke správě připojí 
+považuje třetí stranu za autentizovanou a vytvoří odpověď, která obsahuje symetrický klíč pro další komunikaci a ke správě připojí 
 původní časové razítko. Tuto zprávu zašifruje obdrženým veřejným klíčem a odešle. Třetí strana následně ověří, že se obdržené 
-časové razítko shoduje s původním zaslaným a v případě kladného výsledku srovnání začnš používat symetrický klíč pro 
+časové razítko shoduje s původním zaslaným a v případě kladného výsledku srovnání začne používat symetrický klíč pro 
 komunikaci s uzlem.
 
 Protokol je dále možné rozšířit o autentizaci uzlu třetí straně. Tato probíhá za pomoci Diffie-Hellman protokolu \cite{Diffie1976}, 
-kdy komunikující strany nejdříve ustanoví společný klíč a následně uzel pošle zprávu, z jejíhož obsahu může třetí strana oveřit,
+kdy komunikující strany nejdříve ustanoví společný klíč a následně uzel pošle zprávu, z jejíhož obsahu může třetí strana ověřit,
 že uzel vlastní privátní část Diffie-Hellman klíče. Dále pro účely ověření zpráva obsahuje  textový řetězec podepsaný 
 certifikační autoritou. Tento řetězec obsahuje sériové číslo uzlu, datum výroby a případně další údaje potřebné pro identifikaci. 
 Takto může třetí strana ověřit všechny potřebné údaje ke správné identifikaci uzlu, včetně správnosti podpisu certifikační autority, 
@@ -281,65 +282,65 @@ Zde je nutné konstatovat, že TinyPK neřeší komunikaci mezi jednotlivými uz
 komponenty lze tento přístup aplikovat na komunikaci s centrálním uzlem. Tedy TinyPK by byl ideálním kandidátem na rozšíření schématu pravděpodobnostního
 rozdělení klíčů \ref{sec:Eschenauer}, případně ostatních schémat, které pravděpodobnostní rozdělení klíčů rozšiřují.
 Bohužel použití RSA algoritmu, byť ve velmi omezené podobě, přináší relativně dlouhou dobu výpočtu na jednotlivých uzlech sítě\footnote{ 
-Autoři článku implementovali TinyPK pro platformu TinyOS, konkrétně uzly typu MICA2 \cite{Inc.} a v závisloti na dílce klíče a velikosti modulu
+Autoři článku implementovali TinyPK pro platformu TinyOS, konkrétně uzly typu MICA2 \cite{Inc.} a v závislosti na dílce klíče a velikosti modulu
 trvaly jednotlivé operace RSA algoritmu řádově desítky sekund.} Jedná se sice pouze o počáteční fázi ustanovení sdíleného klíče, nicméně zpoždění je znatelné.
 
 Výhodou použití tohoto schématu je, že v době rozmístění uzlů nemusí být třetí strana známa a díky použití asymetrické kryptografie může navázat komunikaci kdykoliv.
 Nicméně v případě vyvíjené komponenty toto není případ, který by bylo potřeba řešit. Třetí strana v podobě centrálního uzlu sice existuje, nicméně je v síti přítomná již 
-od začátku a se sítí komunikuje neustále. Implementovat další šifrovací algoritmus, který nám posluží pouze k počátečnímu ustanovení komunikace, když stejně dobře 
-nám může posloužit jiý implementovaná funkcionalita je plýtvání dostupnými zdroji, které jsou omezené. TinyPK najde využití v případech, kdy síť potřebuje komunikovat
+od začátku a se sítí komunikuje neustále. Implementovat další šifrovací algoritmus, který nám poslouží pouze k počátečnímu ustanovení komunikace, když stejně dobře 
+nám může posloužit jiný, je implementovaná funkcionalita navíc a plýtvání dostupnými zdroji, které jsou omezené. TinyPK najde využití v případech, kdy síť potřebuje komunikovat
 se třetí stanou po omezenou dobu, s tím že třetí strana není přítomna od začátku existence sítě a po získání potřebných informací komunikaci ukončí. Zde můžeme konstatovat, že 
 TinyPK nezapadá do celkového konceptu zamýšlené funkcionality vyvíjené komponenty a proto toto schéma nebylo vybráno. 
 
 \section{Panja, Madria and Bhargava}
 
-Na stromové sturktuře grafu založený návrh \cite{Panja2007} distribuce klíčů, který se svým přístupem odlišuje od většiny ostatních. Původní myšlenka využítí stromové struktury
+Na stromové struktuře grafu založený návrh \cite{Panja2007} distribuce klíčů, který se svým přístupem odlišuje od většiny ostatních. Původní myšlenka využití stromové struktury
 vychází z Tree Based Group Diffie-Hellman (TGDH) protokolu \cite{Kim2000} a k této jsou přidány další vlastnosti potřebné pro úspěšné nasazení v oblasti bezdrátových sensorových sítí. 
 Síť pro své fungování nevyžaduje existenci důvěryhodné třetí strany, je schopná dynamicky reagovat na změny podmínek a těmto se přizpůsobovat. Sdílené klíče jsou počítány distribuovaným 
 způsobem (tímto dochází k eliminaci selhání v možném slabém místě) od listů sítě až po kořenový uzel.  
 
 \subsection{Hierarchická struktura sítě}
-Strutura celé sítě je hierarchicky rozdělena, a může se dle potřeb dynamicky měnit. Sensorové uzly jsou rozděleny do jednotlivých skupin (clusterů) podle geografického rozmístění a 
-v každém clusteru je sestavena stromová struktura tak, že kořenový uzel stromu se straá o veškerou organizaci a komunikaci mezi jednotlivými clustery, zatímco ostatní uzly v grafu 
+Struktura celé sítě je hierarchicky rozdělena, a může se dle potřeb dynamicky měnit. Sensorové uzly jsou rozděleny do jednotlivých skupin (clusterů) podle geografického rozmístění a 
+v každém clusteru je sestavena stromová struktura tak, že kořenový uzel stromu se stará o veškerou organizaci a komunikaci mezi jednotlivými clustery, zatímco ostatní uzly v grafu 
 mají na starost sledovaní okolí pomocí svých sensorů. Celá síť typicky obsahuje několik clusterů a tyto jsou jedním kořenovým uzlem (stejně jako v prostředí clusterů, jeden z uzlů na stejné
 úrovni je vybrán jako kořenový, tedy centrální uzel plní dvojí roli, jednak kořenový uzel svého clusteru a jednak kořenový uzel všech ostatních kořenových uzlů)
-spojeny do jediného stromu. Tento uzel zajištuje komunikaci sítě s vnějším prostředím a také komunikaci mezi jednotlivými clustery. V síti jsou použity dva typy klíčů, jeden pro 
-komunikaci uvnitř každého z clusterů, a druhý pro komunikaci nad úrovní clusterů. Druhý klíč je znám pouze kořenovým elementům jednoltivých skupin a centrálnímu uzlu, tedy kompromitování 
+spojeny do jediného stromu. Tento uzel zajišťuje komunikaci sítě s vnějším prostředím a také komunikaci mezi jednotlivými clustery. V síti jsou použity dva typy klíčů, jeden pro 
+komunikaci uvnitř každého z clusterů, a druhý pro komunikaci nad úrovní clusterů. Druhý klíč je znám pouze kořenovým elementům jednotlivých skupin a centrálnímu uzlu, tedy kompromitování 
 jednotlivého sensorového uzlu nezpůsobí kompromitování komunikace v celé síti. 
 
 \subsection{Princip dílčích výpočtů klíče}
 Výpočet klíče předpokládá aktivní účast každého uzlu sítě, kdy moment začátku výpočtu určuje kořenový uzel, nicméně výpočet samotný zahajují uzly umístěné v listech grafu. 
 Tyto uzly vygenerují náhodné číslo a pošlou jej svým rodičům. Každý následující uzel v grafu přijme hodnoty od svých potomků, tyto vloží do funkce $f$ a vypočítanou hodnotu opět 
-posílá svému rodiči. Funkce $f$ je konstruována tak, aby splňovala následující požadavky: funkce musí být aplikovatelná na takový blok dat, který je sensorový uzel schpen jednoduše zpracovat
+posílá svému rodiči. Funkce $f$ je konstruována tak, aby splňovala následující požadavky: funkce musí být aplikovatelná na takový blok dat, který je sensorový uzel schopen jednoduše zpracovat
 (omezení je zde dáno výpočetním výkonem uzlu a velikostí dostupné paměťové kapacity). Funkce musí produkovat výstup fixní délky a pro jakoukoliv výslednou hodnotu by mělo být výpočetně neproveditelné 
 získat původní parametry funkce (důvodem je, aby uzly níže v hierarchii nebyly schopné získat informaci zpracovávanou uzlem v hierarchii výše).
-Funkce samotná má různou podobu v závisloti na konkrétním počtu potomků jednotlivých uzlů. 
+Funkce samotná má různou podobu v závislosti na konkrétním počtu potomků jednotlivých uzlů. 
 
 Proces výpočtu pokračuje směrem vzhůru, až ke kořenovému uzlu clusteru. Tento vypočítá sdílený klíč pro celý cluster a rozešle vypočítaný klíč hromadnou zprávou všem uzlům v clusteru. 
-Pro celý proces ustanovení klíče je iniciálně použit preddistribuovaný symetrický klíč, který je po úspěšném ustanovení nového klíče smazán. Tento klíč slouží jednak k ochraně samotných posílaných 
+Pro celý proces ustanovení klíče je iniciálně použit predistribuovaný symetrický klíč, který je po úspěšném ustanovení nového klíče smazán. Tento klíč slouží jednak k ochraně samotných posílaných 
 hodnot a jednak k výpočtu MAC hodnoty, která je taktéž součástí posílané zprávy. Pokud je proces ustanovení klíče spuštěn znovu, je pro komunikaci použit aktuální klíč. Proces ustanovení klíčů pro 
-komunikaci mezi clustery probíhá obdobně, kořenové elementy jendotlivých clusterů odešlou hodnotu spočítanou uzly svého clusteru k centrálnímu uzlu a tento opět pomocí funkce $f$ vypočítá klíč, který 
-následně zpětně zasílá kořenovým uzlům jednotlivých clusterů. Tto hodnota však zůstává známa jen kořenovým uzlům, tedy bežné sensorové uzly jsou schopné dešifrovat pouze komunikaci ve vlastním clusteru
-a zároveň kořenové uzly nejsou schopné dešivrovat interní komunikaci jiných clusterů, síť je tedy rozdělená a případný útok velmi pravděpodobně postihne pouze jeden cluster z mnoha. 
+komunikaci mezi clustery probíhá obdobně, kořenové elementy jednotlivých clusterů odešlou hodnotu spočítanou uzly svého clusteru k centrálnímu uzlu a tento opět pomocí funkce $f$ vypočítá klíč, který 
+následně zpětně zasílá kořenovým uzlům jednotlivých clusterů. Tato hodnota však zůstává známa jen kořenovým uzlům, tedy běžné sensorové uzly jsou schopné dešifrovat pouze komunikaci ve vlastním clusteru
+a zároveň kořenové uzly nejsou schopné dešifrovat interní komunikaci jiných clusterů, síť je tedy rozdělená a případný útok velmi pravděpodobně postihne pouze jeden cluster z mnoha. 
 
-V případě potřeby, ať už z důvodu útoku nebo pouze periodické aktualizace, je možné provédst úpravu klíče poze vyřazením , nebo naopak přidáním vybráné hodnoty do výpočtu funkce $f$. Tedy není zapotřebí
+V případě potřeby, ať už z důvodu útoku nebo pouze periodické aktualizace, je možné provést úpravu klíče pouze vyřazením, nebo naopak přidáním vybrané hodnoty do výpočtu funkce $f$. Tedy není zapotřebí
 procházet celý proces ustanovení klíče znovu, což výrazně snižuje dobu výpočtu a tedy náročnost této operace. 
 
 \subsection{Vhodnost použití}
 
 Síť s tímto schématem distribuce klíčů předpokládá náhodné rozmístění uzlů. Síť samotná vyřeší uspořádání do clusterů a nejvhodnější 
-variatu sestavení stromového grafu tak, aby došlo k optimálnímu pokrytí oblasti pomocí sensorů. Co se týká možností komunikace
-v síti, v rámci jednoho clusterů je komunikace velmi jednoduchá, jelikož všechny uzy sdílejí stejný klíč. Tuto vlastnost můžeme považovat 
-jak za výhodu, tak nevýhodu tohoto schématu. Z hllediska optimalizace komunikace je ideální, pokud je sdílený klíč použitý vícekrát, 
+variantu sestavení stromového grafu tak, aby došlo k optimálnímu pokrytí oblasti pomocí sensorů. Co se týká možností komunikace
+v síti, v rámci jednoho clusterů je komunikace velmi jednoduchá, jelikož všechny uzly sdílejí stejný klíč. Tuto vlastnost můžeme považovat 
+jak za výhodu, tak nevýhodu tohoto schématu. Z hlediska optimalizace komunikace je ideální, pokud je sdílený klíč použitý vícekrát, 
 protože odpadají paměťové nároky na uložení většího počtu klíčů a uzly mohou navzájem neomezeně komunikovat. Na druhou stranu při 
 kompromitování klíče dostane útočník přístup k značné části komunikace mezi všemi uzly až do doby, než bude útok detekován, nebo než 
 dojde k automatickému obnovení klíče. Tedy z pohledu bezpečnosti a odolnosti proti útokům není schéma ideální variantou. 
 
 Z druhého pohledu, schéma má výborné výsledky z hlediska paměťové náročnosti, taktéž je velmi dobře aplikovatelné na sítě s velkým
-počtem uzlů, vždy záleží pouze na vhodném výběru uspořádání do clusterů. Clustery taktéž přináši výhodu v podobě usnadněné komunikace, ať 
-už na lokální nebo globální úrovni. Cesta mezi každou dvojící uzlů je dána díky stromovému uspořádání jednoznačně a při přenosu informace 
+počtem uzlů, vždy záleží pouze na vhodném výběru uspořádání do clusterů. Clustery taktéž přináší výhodu v podobě usnadněné komunikace, ať 
+už na lokální nebo globální úrovni. Cesta mezi každou dvojicí uzlů je dána díky stromovému uspořádání jednoznačně a při přenosu informace 
 nedochází ke zvýšeným výpočetním nároků, protože klíče jsou v jednotlivých clusterech sdílené, tedy není potřeba informaci znovu 
-zašifrovávat při každém předání (tento krok je potřeba provédst pouze na hranicích clusterů). Celkově tedy schéma nabízí výměnu mezi 
+zašifrovávat při každém předání (tento krok je potřeba provést pouze na hranicích clusterů). Celkově tedy schéma nabízí výměnu mezi 
 bezpečností za cenu menších nároků na provoz sítě. 
 
 Z hlediska vhodnosti použití ve vyvíjené komponentě schéma vhodné není, protože sice má malé nároky na paměť jednotlivých uzlů, na druhou 
@@ -349,40 +350,40 @@ uzlů a malé paměťové náročnosti za odolnost proti útokům není pro vyv�
 
 \section{LEAP+}
 Z předchozích schémat zcela jasně vyplývá, že pro řešení problému distribuce klíčů není vhodný koncept jednoho okruhu klíčů (například pouze klíče pro komunikaci se sousedy, nebo pouze
-klíče pro komunikaci v clusteru). Z této myšleky vychází schéma LEAP+ \cite{Zhu2006} (Localized Encryption and Authentication Protocol -- lokalizovaný protokol pro šifrovaní a autentizaci) 
+klíče pro komunikaci v clusteru). Z této myšlenky vychází schéma LEAP+ \cite{Zhu2006} (Localized Encryption and Authentication Protocol -- lokalizovaný protokol pro šifrovaní a autentizaci) 
 a navrhuje síť zabezpečit pomocí čtyř typů klíčů. Každý uzel tedy může vlastnit následující klíče: klíč pro individuální komunikaci s centrální stanicí (Base Station -- BS), klíč pro komunikaci 
-ve skupině uzlů (clusteru), klíč pro hromadnou komunikaci se všemi uzly (například plošně vysílaná zpráva od BS ) a klíče pro komunikaci s přímými sousedy. Dále schéma umožnuje autentizaci hromadně 
+ve skupině uzlů (clusteru), klíč pro hromadnou komunikaci se všemi uzly (například plošně vysílaná zpráva od BS ) a klíče pro komunikaci s přímými sousedy. Dále schéma umožňuje autentizaci hromadně 
 zasílaných zpráv pomocí řetězce hash hodnot (keychain). 
 
 Schéma předpokládá statickou síť kde nedochází ke změnám topologie. Díky různým klíčům jsou možné různé způsoby komunikace, uzel s uzlem (unicast), uzel s celým clusterem (lokální broadcast) 
-a komunikace se všemi uzly v síti (globální broadcast). Cílem schématu je zajistit důvernost, autentizaci a spolehlivý přenos jednotlivých zpráv v síti a to při zachování malých nároků
-na energii spotřebovanou při výpočtech a komunikaci. Jak již bylo naznačeno dříve, síť počítá s existencí centrálního uzlu, u kterého je předpokládán vyšší výkon a zároveň zajištěné napajení tak 
+a komunikace se všemi uzly v síti (globální broadcast). Cílem schématu je zajistit důvěrnost, autentizaci a spolehlivý přenos jednotlivých zpráv v síti a to při zachování malých nároků
+na energii spotřebovanou při výpočtech a komunikaci. Jak již bylo naznačeno dříve, síť počítá s existencí centrálního uzlu, u kterého je předpokládán vyšší výkon a zároveň zajištěné napájení tak 
 aby centrální uzel nebyl omezován limitovanou dobou provozu. Tento uzel typicky nemá stejný hardware jako uzly tvořící síť a má na starost jak organizaci celé sítě, tak zprostředkování komunikace se 
 sítí vnějším stranám.  
 
 \subsection{Derivace klíčů}
 
 Derivace klíčů probíhá postupně, nejdříve jsou ustanoveny párové klíče pro komunikaci mezi sousedními uzly a tyto jsou následně využity pro ustanovení ostatních typů klíčů. 
-Na jednotlivé uzly je před rozmístěním předdistribuován jeden společný klíč, který slouží k počátečnímu navázání komunikace. Sice předpokládáme, že jednotlivé uzly nejsou odoplné vůči 
-útoku a tedy že je útočník chopen zíkat obsah paměti jendotlivých uzlů, tedy i případné klíče v paměti uložené. Nicméně proces získání informací z paměti uzlu má předpokládanou dobu trvání desítky sekund 
-až minuty v závisloti na konkrétních podmínkách \cite{Deng2005}. Pokud tedy je zajištěno, že klíč bude smazán z paměti uzlu v době, kdy není technologicky možné jej získat, je bezpečné tuto varinatu použít.
+Na jednotlivé uzly je před rozmístěním predistribuován jeden společný klíč, který slouží k počátečnímu navázání komunikace. Sice předpokládáme, že jednotlivé uzly nejsou odolné vůči 
+útoku a tedy že je útočník chopen získat obsah paměti jednotlivých uzlů, tedy i případné klíče v paměti uložené. Nicméně proces získání informací z paměti uzlu má předpokládanou dobu trvání desítky sekund 
+až minuty v závislosti na konkrétních podmínkách \cite{Deng2005}. Pokud tedy je zajištěno, že klíč bude smazán z paměti uzlu v době, kdy není technologicky možné jej získat, je bezpečné tuto variantu použít.
 K derivaci klíčů je použitý RC5 algoritmus \cite{Rivest1995}, používaný v podobě jednosměrné MAC funkce tak, aby nebylo možné zjistit původní hodnoty ze kterých byly klíče derivovány.
 
 \paragraph{Párové klíče} 
-Derivace párových klíčů vychází z předdistribuovaného iniciálního klíče $K_{IN}$, který je využit ke spočítání klíče každého jednotlivého uzlu. Výpočet proběhne pomocí jednosměrné funkce 
+Derivace párových klíčů vychází z predistribuovaného iniciálního klíče $K_{IN}$, který je využit ke spočítání klíče každého jednotlivého uzlu. Výpočet proběhne pomocí jednosměrné funkce 
 $K_u=f_{K_{IN}}(u)$, kde $K_u$ je nově spočítaný klíč uzlu s ID $n$ a $f$ je RC5 algoritmus upravený do podoby jednosměrné MAC funkce. Uzel následně provede vyslání požadavku o derivaci klíče všem dostupným 
-sousedům, zjistí jejich ID a následně každá dvojice provede výpočet společného klíče. Oba uzly znají původní hodnotu $K_{IN}$, tedy i uzel s ID $v$ dokáze spočítat $K_u$ a následně oba uzly mohou spočítat
+sousedům, zjistí jejich ID a následně každá dvojice provede výpočet společného klíče. Oba uzly znají původní hodnotu $K_{IN}$, tedy i uzel s ID $v$ dokáže spočítat $K_u$ a následně oba uzly mohou spočítat
 $K_{uv} = f_{K_{u}}(v)$, případně $K_{vu}$ při výpočtu v opačném pořadí. Uzly si následně pamatují vypočítané hodnoty klíčů a svoji původní hodnotu vypočítanou z původního $K_{IN}$ klíče. 
-$K_{IN}$ klíč je následně po vypršení časového limitu smazán z paměti uzlu a tede získáním obsahu paměti uzlu získá útočník přístup pouze ke klíčům obsaženým v paměti uzlu, ale nezíská data potřebná k 
+$K_{IN}$ klíč je následně po vypršení časového limitu smazán z paměti uzlu a tedy získáním obsahu paměti uzlu získá útočník přístup pouze ke klíčům obsaženým v paměti uzlu, ale nezíská data potřebná k 
 získání klíčů ostatních uzlů.
 
 V případě potřeby přidání nových uzlů postupujeme úplně stejně, pouze je možná pouze jedna varianta společného klíče, protože uzly již obsažené v síti nemají možnost spočítat klíč nového uzlu, jelikož 
 původní klíč už byl smazán z jejich paměti, zatímco nový uzel klíč zatím k dispozici má. 
 \paragraph{Ostatní typy klíčů} 
-Ostaní typy klíčů jsou ustanoveny pomocí již existujících spojení, tedy klíče pro komunikaci v clusteru jsou distribuovány pomocí párových klíčů a tedy předávány mezi jednotlivými uzly dokud 
-klíč neobdrží všechny uzly zařazené do konkrétního clusteru. Klíče pro hromadnou komunikacu jsou následně distribuovány pomocí jednotlivých cluster klíčů. 
+Ostatní typy klíčů jsou ustanoveny pomocí již existujících spojení, tedy klíče pro komunikaci v clusteru jsou distribuovány pomocí párových klíčů a tedy předávány mezi jednotlivými uzly dokud 
+klíč neobdrží všechny uzly zařazené do konkrétního clusteru. Klíče pro hromadnou komunikaci jsou následně distribuovány pomocí jednotlivých cluster klíčů. 
 
-Vyjímkou v této hierarchii jsou klíče pro individuální komunikaci s centrálním uzlem, tyto jsou spočítány před samotným rozmístěním a nahrány na jednotlivé uzly. Výpočet probíhá pomocí stejné funkce $f$, 
+Výjimkou v této hierarchii jsou klíče pro individuální komunikaci s centrálním uzlem, tyto jsou spočítány před samotným rozmístěním a nahrány na jednotlivé uzly. Výpočet probíhá pomocí stejné funkce $f$, 
 jako parametr je použito ID uzlu a klíč je znám pouze centrálnímu uzlu. Centrální uzel jednotlivé klíče neukládá, předpokládáme že má dostatečný výpočetní výkon, aby dokázal požadovaný klíč výdy v případě 
 potřeby vypočítat bez znatelného zpoždění v komunikaci.
 
@@ -391,12 +392,14 @@ LEAP+ schéma obsahuje podporu jednosměrných řetězců hash hodnot \cite{Lamp
 V případě potřeby odeslání autentizované zprávy uzel připojí následující hodnotu keychainu, která slouží jako autentizační informace. Jelikož k výpočtu je použita jednosměrná funkce, není možné z první 
 hodnoty získat hodnotu druhou, tedy druhou hodnotu může znát pouze uzel, který provedl původní výpočet keychainu a odeslal první hodnotu. Ostatní uzly tedy provedou výpočet vycházejí z druhé hodnoty a pokud 
 obdrží původní první hodnotu, je zpráva považovaná za autentizovanou. Každý uzel tedy svůj keychain potřebuje iniciálně vygenerovat v dostatečné délce a potřebuje uložit v paměti původní hodnotu, ze které 
-provádel výpočet, aby mohl pokaždé vypočítat hodnotu pro autentizaci zprávy. TODO: why weak
+prováděl výpočet, aby mohl pokaždé vypočítat hodnotu pro autentizaci zprávy. K výpočtu keychainu je použitý sdílený cluster klíč a ostatní uzly se znalostí sdíleného klíče mohou zprávu ověřovat.
+Tuto autentizační metodu můžeme považovat za takzvanou slabou autentizaci (na rozdíl od například asymetrické kryptografie, která poskytuje silnou autentizaci) a to především z důvodu použití symetrického 
+klíče. Tedy nelze zcela zamezit útokům, pokud se útočník cluster klíče dozví, pak se může vydávat za určitý uzel a autentizovat zprávy pomocí sdíleného klíče.
 
 \subsection{Vhodnost použití}
 LEAP+ poskytuje až čtyři různé typy klíčů, které mohou být použity k zvýšení bezpečnosti dalších protokolů. Důležitým faktorem je, že schéma poskytuje výhody hromadných klíčů, ale zároveň díky 
-párovým klíčům a možné obnově hromadných klíčů minimalizuje následky komromitování jednoltivých uzlů. Zároveň schéma obsahuje podporu pro slabou (nicméně dostečnou) formu autentizace zpráv. 
-Nevýhodou schématu je předpoklad staické sítě, nicméně v případě vyvíjené komponenty se jedná o očekávanou vlastnost sítě, tedy tento problém nelze považovat za skutečnou nevýhodu. Toto 
+párovým klíčům a možné obnově hromadných klíčů minimalizuje následky kompromitování jednotlivých uzlů. Zároveň schéma obsahuje podporu pro slabou (nicméně dostatečnou) formu autentizace zpráv. 
+Nevýhodou schématu je předpoklad statické sítě, nicméně v případě vyvíjené komponenty se jedná o očekávanou vlastnost sítě, tedy tento problém nelze považovat za skutečnou nevýhodu. Toto 
 schéma s níže popsanými úpravami tedy bylo vybráno pro implementování ve vyvíjené komponentě.
 
 
