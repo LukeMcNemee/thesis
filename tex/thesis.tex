@@ -97,7 +97,9 @@ TODO
 
 \chapter{Existující implementace pro distribuci a správu klíčů}
 Mechanismus bezpečného ustanovení klíčů pro komunikaci v bezdrátové sensorové síti tvoří jeden ze základních předpokladů 
-pro bezpečné a spolehlivé fungování sítě jako celku. Na zabezpečenou komunikaci například spoléhá ... TODO examples plus citations
+pro bezpečné a spolehlivé fungování sítě jako celku. Na zabezpečenou komunikaci například spoléhá protokol pro ustanovení cest v síti (je třeba k ustanovení cesty v síty využít
+pouze autentizované uzly, nikoliv uzly útočníka které mohou nabízet výhodnější cestu), protokoly pro společné výpočty v síti (uzel kontroluje hodnoty naměřené svými senzory oproti
+hodnotám naměřeným na okolních uzlech, a detekuje tak možné chyby) a případně protokoly pro detekci a reakci na provedený útok \cite{Alcaraz2012}.
 
 Přitom co se možných řešení týká, jsme zde limitování mnohými rozdíly oproti sítím v klasické podobě. Mezi nejvýznamnější rozdíly například
 patří omezené možnosti napájení (jednotlivé uzly mají většinou vlastní baterii a snahou je interval nutných výměn prodloužit co nejvíce), 
@@ -348,7 +350,7 @@ stranu vyžaduje vyšší výpočetní výkon pro proces ustanovení klíčů. Z
 kompromitování jednoho uzlu kompromituje komunikaci v celém clusteru. Schéma tedy nebylo vybráno, protože výměna možnosti velkého počtu
 uzlů a malé paměťové náročnosti za odolnost proti útokům není pro vyvíjenou komponentu žádoucí. 
 
-\section{LEAP+}
+\section{LEAP+} \label{sec:leap}
 Z předchozích schémat zcela jasně vyplývá, že pro řešení problému distribuce klíčů není vhodný koncept jednoho okruhu klíčů (například pouze klíče pro komunikaci se sousedy, nebo pouze
 klíče pro komunikaci v clusteru). Z této myšlenky vychází schéma LEAP+ \cite{Zhu2006} (Localized Encryption and Authentication Protocol -- lokalizovaný protokol pro šifrovaní a autentizaci) 
 a navrhuje síť zabezpečit pomocí čtyř typů klíčů. Každý uzel tedy může vlastnit následující klíče: klíč pro individuální komunikaci s centrální stanicí (Base Station -- BS), klíč pro komunikaci 
@@ -402,7 +404,60 @@ párovým klíčům a možné obnově hromadných klíčů minimalizuje následk
 Nevýhodou schématu je předpoklad statické sítě, nicméně v případě vyvíjené komponenty se jedná o očekávanou vlastnost sítě, tedy tento problém nelze považovat za skutečnou nevýhodu. Toto 
 schéma s níže popsanými úpravami tedy bylo vybráno pro implementování ve vyvíjené komponentě.
 
+\chapter{Implementace}
 
+\section{LEAP+}
+Jak již bylo zmíněno \ref{sec:leap}, pro implementaci komponenty pro distribuci klíčů bylo vybráno schéma LEAP+. Následuje tedy zdůvodnění výběru uvedené společně s předpokládanými vlastnostmi 
+vyvíjené komponenty, jelikož tyto dvě části spolu velmi úzce souvisí. Poté jsou popsány úpravy oproti původnímu schématu provedené při implementaci. 
+\subsection{Zdůvodnění výběru, předpokládané vlastnosti komponenty}
+
+Vyvíjená komponenta je určená pro statickou síť, tedy síť kde nepředpokládáme pohyb jednotlivých uzlů. Zároveň předpokládáme komunikaci uzlu se všemi jeho sousedy, komunikaci uzlu se centrální stanicí 
+(Base Station) a možnost zasílání plošných zpráv pro celou síť uzlů od centrálního uzlu. Dle předpokládáme možnost použití komponenty pro sítě o velikosti stovek až malých tisíců uzlů, tedy schéma musí 
+být dobře škálovatelné a zohledňovat náročnost na paměť jednotlivých uzlů. 
+
+Všechny tyto požadavky schéma LEAP+ splňuje, naopak při jeho implementaci nebudou některé typy klíčů využity (nicméně při případném rozšíření sítě není problém implementaci doplnit na původní rozsah). 
+Celá síť bude podporovat čtyři režimy (tyto se od sebe liší úrovní zabezpečení komunikace) a centrální uzel bude mít možnost pomocí autentizovaného broadcastu mezi režimy přepínat. Zde bude využito 
+autentizačního protokolu obsaženého v LEAP+ schématu. 
+
+Protože vyvíjená komponenta bude součástí rozsáhlejší aplikace a distribuci klíčů nelze považovat za primární funkce, ale pouze prostředek ke správnému fungování, je zapotřebí, aby vybrané schéma 
+nemělo příliš velké nároky na paměť či výpočetní výkon. Tyto parametry opět hovoří ve prospěch vybraného schématu, protože co se paměti týká, schéma ukládá pouze ty klíče, které zabezpečují spojení 
+buď s přímými sousedy,  nebo spojení s větší skupinou uzlů (zcela jistě nenastane situace, kdy uzel bude mít v paměti uloženo výrazně větší množství klíčů, než které použije). Taktéž výpočetní náročnost 
+schématu, především co se procedury na obnovení jednotlivých klíčů týká, můžeme považovat za dostatečně nízkou \cite{Zhu2006}. 
+
+Za pozitivní můžeme taktéž považovat informaci, že autorům původního návrhu se podařilo schéma úspěšně implementovat a otestovat na platformě TinyOS, konkrétně pro uzly MICA2. Tedy můžeme předpokládat, že 
+námi použité sensorové uzly (platforma TelosB) by taktéž neměly mít potíže s aplikací využívající komponentu založenou na tomto schématu.
+
+
+\subsection{Vlastní úpravy provedené při implementaci}
+
+\paragraph{AES}
+Zatímco původní schéma využívá šifrovací algoritmus RC5 \cite{Zhu2006}\cite{Rivest1995}, při implementaci komponenty byl použit šifrovací algoritmus AES \cite{Daemen1999} s délkou
+klíče 128 bitů. K této změně bylo přistoupeno, protože rozšířená knihovna TinyOS již implementaci AES algoritmu obsahuje \cite{Pelissier}, tedy ji bylo možné využít, zatímco RC5 algoritmus by bylo
+zapotřebí implementovat. Zatím sice nebylo provedeno porovnání RC5 algoritmu oproti AES algoritmu, nicméně podobné porovnání bylo provedeno vůči algoritmu RC6 \cite{Rivest1998} (zlepšená varianta RC5, 
+finalista AES soutěže) a AES algoritmus vychází ve srovnání shodně, či lépe \cite{Schneier1999} (v závislosti na platformě a konkrétních kritériích). Tedy nepředpokládáme, že nahrazení původního 
+algoritmu RC5 algoritmem AES by mělo mít významné důsledky na výpočetní náročnost schématu, či negativní vliv na zabezpečení sítě.
+
+\paragraph{Klíč pro komunikaci s BS}
+Jednou z nejvýznamnějších změn oproti původnímu schématu je použití pouze jednoho klíče pro komunikaci s centrálním uzlem, který je pro všechny uzly společný. Toto však nelze vnímat jako bezpečnostní hrozbu, 
+protože ze znalosti tohoto klíče útočník nedokáže odvodit klíče jednotlivých spojení a síť tedy stále může fungovat díky zabezpečeným spojením mezi jednotlivými uzly. Důvodem pro použití pouze jednoho klíče 
+je především zamýšlené použití tohoto klíče pro autentizaci zpráv posílaných z centrálního uzlu, jak je rozvedeno v následujícím odstavci.
+
+\paragraph{Autentizace globálního broadcastu}
+Původní návrh LEAP+ počítá s použitím autentizace pomocí keychainů pouze pro lokální broadcast, tedy zprávy zasílané mezi jednotlivými skupinami uzlů. Při implementaci komponenty je však tato funkčnost 
+využita k autentizaci globálního broadcastu. Původní návrh se autentizací tohoto typů zpráv nezabývá a předpokládá existenci pokročilejšího mechanizmu typu asymetrické kryptografie, případně protokolů
+s podobnou funkcionalitou, například $\mu$TESLA \cite{Perrig2001}. V původním návrhu je autentizace pomocí keychainu považována za takzvanou slabou autentizaci, protože keychain je počítán pomocí 
+cluster klíčů sdílených mezi více uzly. V našem případě nemá útočník možnost zjistit počáteční hodnotu keychainu, protože tuto hodnotu zná pouze centrální uzel (nepředpokládáme kompromitování centrálního
+uzlu, jelikož centrální uzel je unikátní v celé síti a jeho kompromitováním získá útočník přístup k informacím z celé sítě, tedy jakékoliv zabezpečení pozbývá v tomto okamžiku smysl). Protože je tedy 
+autentizační schéma použito tímto specifickým způsobem a díky použití jednosměrné hashovací funkce pro výpočet jednotlivých hodnot keychainu, autentizační schéma již není třeba považovat za slabou 
+autentizaci a je možné jej tímto způsobem využít, aniž bychom snížili zabezpečení sítě.
+
+\paragraph{Typy využitých klíčů}
+Z původního počtu klíčů v originálním návrhu, který předpokládá čtyři druhy klíčů v síti, je při implementaci použita pouze polovina. A to konkrétně klíč pro komunikaci s centrálním uzlem (jak bylo popsáno 
+výše, tento je pro všechny uzly stejný a slouží především pro autentizaci zpráv posílaných centrálním uzlem) a poté klíče pro komunikaci s přímými sousedy v síti, které jsou ustanoveny po spuštění uzlů. 
+
+\paragraph{Ustanovení sdíleného klíče mezi sousedními uzly}
+Ustanovení klíčů v původním návrhu počítá se společným klíčem, který je po určité době smazán z paměti uzlů. Aby bylo možné předejít nutnosti zabezpečit smazání klíče, bylo schéma upraveno tak, 
+že nevyžaduje sdílený klíč mezi uzly. 
 
 %% Lists of tables and figures, glossary, etc.
 %\printindex
