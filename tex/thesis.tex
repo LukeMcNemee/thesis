@@ -23,6 +23,43 @@
 \usepackage[small,bf]{caption}
 \usepackage[plainpages=false,pdfpagelabels,unicode]{hyperref}
 \usepackage[all]{hypcap}
+\usepackage{listings}
+
+\usepackage{color}
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+\lstset{ %
+   backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
+   basicstyle=\footnotesize,        % the size of the fonts that are used for the code
+   breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+   breaklines=false,                 % sets automatic line breaking
+   captionpos=b,                    % sets the caption-position to bottom
+   commentstyle=\color{mygreen},    % comment style
+   deletekeywords={...},            % if you want to delete keywords from the given language
+   escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+   extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+   frame=single,                    % adds a frame around the code
+   keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+   keywordstyle=\color{blue},       % keyword style
+   language=Octave,                 % the language of the code
+   morekeywords={*,...},            % if you want to add more keywords to the set
+   numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+   numbersep=5pt,                   % how far the line-numbers are from the code
+   numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+   rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+   showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+   showstringspaces=false,          % underline spaces within strings only
+   showtabs=false,                  % show tabs within strings adding particular underscores
+   stepnumber=1,                    % the step between two line-numbers. If it's 1, each line will be numbered
+   stringstyle=\color{mymauve},     % string literal style
+   tabsize=2,                       % sets default tabsize to 2 spaces
+   title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+
+\renewcommand\lstlistingname{Kód}
 
 %% Fix long URLs in DVIs
 \usepackage{ifpdf}
@@ -37,7 +74,7 @@
 %\makeindex
 
 \usepackage[xindy]{glossaries}
-\makeglossary
+%\makeglossary
 
 %% Use STAR and CIRCLE signs for nested
 %% itemized lists
@@ -86,7 +123,7 @@ TODO
 \MainMatter
 
 %% TOC (required)
-\tableofcontents
+%\tableofcontents
 
 %% Thesis text structured using
 %% chapters, sections, subsections, etc.
@@ -352,7 +389,7 @@ uzlů a malé paměťové náročnosti za odolnost proti útokům není pro vyv�
 
 \section{LEAP+} \label{sec:leap}
 Z předchozích schémat zcela jasně vyplývá, že pro řešení problému distribuce klíčů není vhodný koncept jednoho okruhu klíčů (například pouze klíče pro komunikaci se sousedy, nebo pouze
-klíče pro komunikaci v clusteru). Z této myšlenky vychází schéma LEAP+ \cite{Zhu2006} (Localized Encryption and Authentication Protocol -- lokalizovaný protokol pro šifrovaní a autentizaci) 
+klíče pro komunikaci v clusteru). Z této myšlenky vychází schéma LEAP+\footnote{Localized Encryption and Authentication Protocol -- lokalizovaný protokol pro šifrovaní a autentizaci} \cite{Zhu2006} 
 a navrhuje síť zabezpečit pomocí čtyř typů klíčů. Každý uzel tedy může vlastnit následující klíče: klíč pro individuální komunikaci s centrální stanicí (Base Station -- BS), klíč pro komunikaci 
 ve skupině uzlů (clusteru), klíč pro hromadnou komunikaci se všemi uzly (například plošně vysílaná zpráva od BS ) a klíče pro komunikaci s přímými sousedy. Dále schéma umožňuje autentizaci hromadně 
 zasílaných zpráv pomocí řetězce hash hodnot (keychain). 
@@ -386,8 +423,8 @@ Ostatní typy klíčů jsou ustanoveny pomocí již existujících spojení, ted
 klíč neobdrží všechny uzly zařazené do konkrétního clusteru. Klíče pro hromadnou komunikaci jsou následně distribuovány pomocí jednotlivých cluster klíčů. 
 
 Výjimkou v této hierarchii jsou klíče pro individuální komunikaci s centrálním uzlem, tyto jsou spočítány před samotným rozmístěním a nahrány na jednotlivé uzly. Výpočet probíhá pomocí stejné funkce $f$, 
-jako parametr je použito ID uzlu a klíč je znám pouze centrálnímu uzlu. Centrální uzel jednotlivé klíče neukládá, předpokládáme že má dostatečný výpočetní výkon, aby dokázal požadovaný klíč výdy v případě 
-potřeby vypočítat bez znatelného zpoždění v komunikaci.
+jako parametr je použito ID uzlu a klíč je znám pouze centrálnímu uzlu. Centrální uzel jednotlivé klíče neukládá, předpokládáme že má dostatečný výpočetní výkon, aby dokázal požadovaný klíč vždy v případě 
+potřeby vypočítat a to bez znatelného zpoždění v komunikaci.
 
 \subsection{Autentizace hromadných zpráv}
 LEAP+ schéma obsahuje podporu jednosměrných řetězců hash hodnot \cite{Lamport1981} (keychain), kde každý uzel vygeneruje vlastní keychain a první hodnotu pošle svým sousedům. 
@@ -406,12 +443,78 @@ schéma s níže popsanými úpravami tedy bylo vybráno pro implementování ve
 
 \chapter{Implementace}
 
+\section{Specifika implementace pro TinyOS}
+
+Operační systém TinyOS je běžně používaný operační systém pro bezdrátové sensorové sítě. K programování aplikací pro TinyOS je určený jazyk nesC\footnote{network embedded system C}, který vychází z běžně 
+známého jazyka C. Na první pohled může nesC vypadat velmi podobně, nicméně ve specifických oblastech se od původního jazyka C velmi liší. Pokud pomineme absenci části běžně známých funkcí (TinyOS například 
+nepodporuje dynamickou alokaci, tedy je zcela logické, že funkce pro práci s dynamickou alokací paměti v nesC chybí), nejvýraznějším rozdílem je model propojení jednotlivých komponent.
+
+\subsection{Propojení \uv{wiring} komponent}
+Jednotlivé komponenty jsou v určitém slova smyslu podobné objektům, tak jak je známe například z jazyka C++. Oproti většině objektově orientovaných jazyků však nesC využívá striktně lokální jmenný prostor, 
+tedy komponenta nejenže musí deklarovat funkce které implementuje, musí také deklarovat funkce které používá z jiných komponent. \cite{Levis2009} Toto propojování jednotlivých komponent se nazývá \uv{wiring} 
+a u každé komponenty je třeba definovat, které rozhraní poskytuje a které používá. Taktéž je třeba definovat, která komponenta poskytuje rozhraní, které komponenta používá. Tento princip je poté využit pi 
+kompilaci, protože umožňuje provést spojení jednotlivých komponent již v okamžiku kompilace a tedy při samotném běhu aplikace není potřeba ukládat ukazatele na funkce, nebo provádět alokaci paměti. Navíc
+tento princip umožňuje kompilátoru provádět optimalizace napříč komponentami a tak výrazně zmenšit nároky na výkon jednotlivých uzlů.
+
+Jak vypadá spojování jednotlivých komponent vidíme na ukázce \ref{code:wiring}, kde je část kódu komponenty KeyDistribC, která slouží pro správu klíčů. Vidíme, že komponenta poskytuje rozhraní 
+KeyDistrib, tedy ostatní komponenty mohou toto rozhraní využít. Dále vidíme, že v části zabývající se implementací komponenta používá komponentu KeyDistribP (privátní část komponenty KeyDistribC, obsahuje 
+implementaci jednotlivých funkcí) a taktéž používá komponentu CryptoC, která poskytuje kryptografické funkce. Taktéž můžeme vidět napojení komponenty Crypto pomocí symbolu $->$.
+
+\begin{lstlisting}[float, language=C,caption=Ukázka propojení komponent,label=code:wiring]
+configuration KeyDistribC {
+	provides {
+		interface KeyDistrib;
+	}
+}
+implementation {
+	components KeyDistribP;  
+	components CryptoC;
+		
+	KeyDistrib = KeyDistribP.KeyDistrib;
+
+	KeyDistribP.Crypto -> CryptoC.Crypto;	
+}
+\end{lstlisting}
+
+
+
+\subsection{Dlouho trvající operace}
+Protože jednotlivé uzly musí být schopné zpracovávat příchozí zprávy a případně na ně reagovat, nemůžeme dlouhotrvající operace spouštět bez přerušení. Protože jednotlivé uzly nemají podporu pro vlákna, 
+způsobily by tyto časově náročné operace ztrátu příchozích zpráv a to až po dobu desítek sekund. Mezi tyto časově náročné operace můžeme například řadit dlouho trvající výpočty, nebo operace čtení z EEPROM 
+paměti. NesC nám proto poskytuje možnost pro přerušované spuštění těchto operací. Jako příklad můžeme uvést získání hodnot klíčů z EEPROM paměti. 
+
+Na ukázce \ref{code:event} vidíme událost (event), kterou 
+komponentě KeyDistrib signalizuje komponenta ResourceArbiter po dokončení čtení klíče z paměti. Následně dojde k zavolání úlohy \ref{code:task} (task), která ověří počet již získaných klíčů a pokud byly 
+úspěšně získány klíče pro všechny sousedy, spustí inicializaci Crypto komponenty. Pokud zatím všechny klíče získány nebyly, zavolá komponentu SharedData s požadavkem na získání dalšího klíče. Následně opět 
+čeká na signalizaci události a systém může provádět jinou činnost. Obě ukázky jsou upraveny z důvodu názornosti a srozumitelnosti
+
+\begin{lstlisting}[float, language=C,caption=Ukázka události (event),label=code:event]
+event void ResourceArbiter.restoreKeyFromFlashDone(){	
+	
+	post retrievePreKeysTask();		
+}
+\end{lstlisting}
+
+\begin{lstlisting}[float, language=C,caption=Ukázka úkolu (task),label=code:task]
+task void retrievePrekeysTask() {
+ 
+	combData = call SharedData.getAllData();
+	
+	if(preKeysRetrieved == combData->actualNeighborCount){
+	      call Crypto.initCryptoIIB();
+	} else {
+	      call SharedData.getPredistributedKeyForNode(...));	      
+	}
+}
+\end{lstlisting}
+
 \section{LEAP+}
 Jak již bylo zmíněno \ref{sec:leap}, pro implementaci komponenty pro distribuci klíčů bylo vybráno schéma LEAP+. Následuje tedy zdůvodnění výběru uvedené společně s předpokládanými vlastnostmi 
 vyvíjené komponenty, jelikož tyto dvě části spolu velmi úzce souvisí. Poté jsou popsány úpravy oproti původnímu schématu provedené při implementaci. 
 \subsection{Zdůvodnění výběru, předpokládané vlastnosti komponenty}
 
-Vyvíjená komponenta je určená pro statickou síť, tedy síť kde nepředpokládáme pohyb jednotlivých uzlů. Zároveň předpokládáme komunikaci uzlu se všemi jeho sousedy, komunikaci uzlu se centrální stanicí 
+Vyvíjená komponenta je určená pro statickou síť, tedy síť kde nepředpokládáme pohyb jednotlivých uzlů, taktéž předpokládáme znalost rozmístění jednotlivých uzlů, tedy možnost predistribuovat specifické
+klíče na jednotlivé uzly. Zároveň předpokládáme komunikaci uzlu se všemi jeho sousedy, komunikaci uzlu se centrální stanicí 
 (Base Station) a možnost zasílání plošných zpráv pro celou síť uzlů od centrálního uzlu. Dle předpokládáme možnost použití komponenty pro sítě o velikosti stovek až malých tisíců uzlů, tedy schéma musí 
 být dobře škálovatelné a zohledňovat náročnost na paměť jednotlivých uzlů. 
 
@@ -457,7 +560,12 @@ výše, tento je pro všechny uzly stejný a slouží především pro autentiza
 
 \paragraph{Ustanovení sdíleného klíče mezi sousedními uzly}
 Ustanovení klíčů v původním návrhu počítá se společným klíčem, který je po určité době smazán z paměti uzlů. Aby bylo možné předejít nutnosti zabezpečit smazání klíče, bylo schéma upraveno tak, 
-že nevyžaduje sdílený klíč mezi uzly. 
+že nevyžaduje jeden sdílený klíč mezi všemi uzly, tedy při případném získání uzlu nemá útočník možnost získat klíče ke všem uzlům najednou. Této vlastnosti bylo možné dosáhnou díky statické síti a
+předem známým sousedům jednotlivých uzlů. Tedy každé dva sousedící uzly sdílejí při spuštění sítě společný klíč, který však není určen k šifrování komunikace, ale k ustanovení nového sdíleného klíče.
+Derivace klíče využívá znalost ID obou sousedů, tyto hodnoty spojí ta, že nejdříve je nižší hodnota a poté hodnota vyšší. Tímto je zabezpečeno, že oba uzly získají stejnou hodnotu pro derivaci klíče. 
+Každý uzel takto derivuje klíč pro všechny své dostupné sousedy a může s nimi začít komunikovat.
+
+\section{Komponenta  }
 
 %% Lists of tables and figures, glossary, etc.
 %\printindex
