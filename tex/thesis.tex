@@ -29,7 +29,7 @@
 
 \definecolor{mygreen}{rgb}{0,0.6,0}
 \definecolor{mygray}{rgb}{0.5,0.5,0.5}
-\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\definecolor{mymauve}{rgb}{0,0,0}
 
 \lstset{ %
    backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
@@ -61,6 +61,14 @@
 
 \renewcommand\lstlistingname{Kód}
 
+\newcommand*{\captionsource}[2]{%
+  \caption[{#1}]{%
+    #1%
+    \\\hspace{\linewidth}%
+    \textbf{Zdroj:} #2%
+  }%
+}
+
 %% Fix long URLs in DVIs
 \usepackage{ifpdf}
 
@@ -70,11 +78,11 @@
 \fi
 
 %% Packages used to generate various lists
-%\usepackage{makeidx}
-%\makeindex
+\usepackage{makeidx}
+\makeindex
 
 \usepackage[xindy]{glossaries}
-%\makeglossary
+\makeglossary
 
 %% Use STAR and CIRCLE signs for nested
 %% itemized lists
@@ -107,6 +115,10 @@
 %% Thanks (optional)
 \begin{ThesisThanks}
 TODO
+
+Tato práce vznikla na základě projektu VG20102014031, který je součástí
+Programu bezpečnostního výzkumu České republiky v letech 2010 - 2015
+(BVII/2 - VS).
 \end{ThesisThanks}
 
 %% Abstract (required)
@@ -123,14 +135,47 @@ TODO
 \MainMatter
 
 %% TOC (required)
-%\tableofcontents
+\tableofcontents
 
 %% Thesis text structured using
 %% chapters, sections, subsections, etc.
 \chapter{Úvod}
 
+Bezdrátová senzorová síť je složená z velkého množství malých autonomních zařízení, které spolu navzájem komunikují přes rádiové spojení. Každé zařízení, nazývané senzorový uzel, je napájené pomocí
+baterií a je vybavené potřebnými senzory pro monitorování okolí. Pokroky v oblasti vývoje a výroby integrovaných obvodů vedly v poslední době k dramatické redukci jejich velikosti, spotřeby elektrické 
+energie a ceny, což nám umožňuje využívat senzorové sítě v široké škále aplikací. Typický scénář nasazení senzorové sítě je náhodné rozmístění stovek až tisíců uzlů a následný sběr dat pomocí jednotlivých 
+senzorů. Jako příklady oborů, kde mohou bezdrátové senzorové sítě nalézt uplatnění, lze uvést například armádu, zdravotnictví, zemědělství a další. Konkrétně je možné zmínit projekt SmartDust 
+\cite{Kahn1999}, nebo projekt sledování sopečné aktivity \cite{Werner-Allen2006}. 
 
-TODO
+V mnohých případy uplatnění bezdrátových senzorových sítí je však kritické zabezpečení informací předávaných mezi jednotlivými uzly. Především se snažíme o zajištění důvěrnosti a autenticity jednotlivých 
+zpráv. Důvěrnost je potřeba zajistit v případě monitorování citlivých (zdravotní stav osoby, pohyb osob v monitorované oblasti), nebo jinak cenných informací. Taktéž můžeme mít zájem, aby vlastník sítě měl 
+možnost informace získané senzory zpeněžit, což by nebylo možné, pokud by byly veřejně dostupné. V případě autenticity jednotlivých zpráv je podstatné, aby pro útočníka nebylo možné do sítě přidávat vlastní 
+uzly nebo jiným způsobem modifikovat komunikaci. Zcela jistě je nežádoucí, aby senzory, určené pro varování před přírodními katastrofami, vyvolávaly falešné poplachy. Díky aktuální situaci, kdy vývoj 
+bezdrátových sítí je stále v raném stádiu, máme jedinečnou možnost sítě budovat bezpečné již od počátku. Díky tomu se můžeme vyhnout dodatečnému přidávání bezpečnostních opatření a tím předejít 
+budoucím problémům.
+
+Pro senzorové uzly je v~současné době velmi rozšířený operační systém TinyOS \cite{Levis2005}, který vznikl na univerzitě v~Berkeley a v~současné době je vyvíjen jako open-source projekt.  Tento systém 
+zabezpečuje jak zasílání a příjem zpráv mezi jednotlivými uzly, tak zároveň obsluhu senzorů na jednotlivých uzlech i vše ostatní nezbytné pro fungování senzorové sítě. Systém se vyskytuje na několika 
+hardwarových platformách, mezi nejběžnější patří TelosB a MICAz \cite{Inc.}\cite{MemsicInc.}. TinyOS však obsahuje zranitelná místa, která mohou být využita potencionálním útočníkem \cite{Drexler2010} a pro 
+reálnou použitelnost tohoto systému je zapotřebí tyto mezery v~zabezpečení odstranit. Práce samotná se tedy zabývá bezpečností v bezdrátových senzorových sítí, konkrétně problematikou výměny klíčů.
+
+Cílem práce je vybrat vhodné schéma pro distribuci a správu klíčů v bezdrátové senzorové síti, toto schéma implementovat a začlenit do vyvíjené platformy ProtectLayer \cite{Svenda2014a}, která slouží pro 
+ochranu komunikace v bezdrátových senzorových sítích, a poté vyhodnotit výsledky z experimentálního provozu této platformy. Struktura práce samotné je následující:
+
+\begin {itemize}
+\item První kapitola obsahuje popis a hodnocení již existujících schémat pro distribuci a správu klíčů v bezdrátových sítích pro platformu TinyOS. Nejdříve jsou uvedena klasická řešení problému distribuce klíčů 
+a zároveň odůvodnění, proč tyto nejsou vhodné pro použití v bezdrátových senzorových sítích. Následuje šesti vybraných schémat pro distribuci klíčů, kdy u každého je uveden krátký popis principu fungování
+a následně hodnocení schématu z hlediska možného použití ve vyvíjené komponentě. 
+
+\item Druhá kapitola se zabývá samotnou implementací vybraného schématu pro platformu TelosB v rámci vyvíjené komponenty, tedy nejdříve je popsán samotný systém TinyOS, včetně specifických vlastností tohoto 
+systému. Následuje popis vybraného schématu, se zaměřením na skutečnosti, které byly rozhodující při výběru. Poslední část této kapitoly se zabývá implementací samotnou, jsou zde popsány změny v implementaci 
+oproti původnímu schématu a popis důležitých vlastností jak hlavní komponenty pro správu klíčů, tak podpůrných komponent zabezpečujících kryptografické funkce. 
+
+\item V poslední kapitole je popsán experiment, který proběh v únoru 2014, jehož cílem bylo ověření funkčnosti celé vyvíjené platformy. V kapitole je tedy popsán scénář samotného experimentu, poté nástroje které 
+byly použity k vyhodnocení. Na konec jsou uvedeny výsledky samotné včetně doplňujících komentářů k nim. 
+\end{itemize}
+
+
 
 \chapter{Existující implementace pro distribuci a správu klíčů}
 Mechanismus bezpečného ustanovení klíčů pro komunikaci v bezdrátové sensorové síti tvoří jeden ze základních předpokladů 
@@ -478,10 +523,10 @@ implementation {
 
 
 
-\subsection{Dlouho trvající operace}
+\subsection{Dlouho trvající operace} \label{sub:long}
 Protože jednotlivé uzly musí být schopné zpracovávat příchozí zprávy a případně na ně reagovat, nemůžeme dlouhotrvající operace spouštět bez přerušení. Protože jednotlivé uzly nemají podporu pro vlákna, 
 způsobily by tyto časově náročné operace ztrátu příchozích zpráv a to až po dobu desítek sekund. Mezi tyto časově náročné operace můžeme například řadit dlouho trvající výpočty, nebo operace čtení z EEPROM 
-paměti. NesC nám proto poskytuje možnost pro přerušované spuštění těchto operací. Jako příklad můžeme uvést získání hodnot klíčů z EEPROM paměti. 
+paměti. NesC nám proto poskytuje možnost pro přerušované spuštění těchto operací. Jako příklad můžeme uvést získání hodnot klíčů z EEPROM paměti. \cite{Levis2009}
 
 Na ukázce \ref{code:event} vidíme událost (event), kterou 
 komponentě KeyDistrib signalizuje komponenta ResourceArbiter po dokončení čtení klíče z paměti. Následně dojde k zavolání úlohy \ref{code:task} (task), která ověří počet již získaných klíčů a pokud byly 
@@ -507,6 +552,8 @@ task void retrievePrekeysTask() {
 	}
 }
 \end{lstlisting}
+
+
 
 \section{LEAP+}
 Jak již bylo zmíněno \ref{sec:leap}, pro implementaci komponenty pro distribuci klíčů bylo vybráno schéma LEAP+. Následuje tedy zdůvodnění výběru uvedené společně s předpokládanými vlastnostmi 
@@ -558,14 +605,174 @@ autentizaci a je možné jej tímto způsobem využít, aniž bychom snížili z
 Z původního počtu klíčů v originálním návrhu, který předpokládá čtyři druhy klíčů v síti, je při implementaci použita pouze polovina. A to konkrétně klíč pro komunikaci s centrálním uzlem (jak bylo popsáno 
 výše, tento je pro všechny uzly stejný a slouží především pro autentizaci zpráv posílaných centrálním uzlem) a poté klíče pro komunikaci s přímými sousedy v síti, které jsou ustanoveny po spuštění uzlů. 
 
-\paragraph{Ustanovení sdíleného klíče mezi sousedními uzly}
+\paragraph{Ustanovení sdíleného klíče mezi sousedními uzly} \label{par:derive}
 Ustanovení klíčů v původním návrhu počítá se společným klíčem, který je po určité době smazán z paměti uzlů. Aby bylo možné předejít nutnosti zabezpečit smazání klíče, bylo schéma upraveno tak, 
 že nevyžaduje jeden sdílený klíč mezi všemi uzly, tedy při případném získání uzlu nemá útočník možnost získat klíče ke všem uzlům najednou. Této vlastnosti bylo možné dosáhnou díky statické síti a
 předem známým sousedům jednotlivých uzlů. Tedy každé dva sousedící uzly sdílejí při spuštění sítě společný klíč, který však není určen k šifrování komunikace, ale k ustanovení nového sdíleného klíče.
 Derivace klíče využívá znalost ID obou sousedů, tyto hodnoty spojí ta, že nejdříve je nižší hodnota a poté hodnota vyšší. Tímto je zabezpečeno, že oba uzly získají stejnou hodnotu pro derivaci klíče. 
 Každý uzel takto derivuje klíč pro všechny své dostupné sousedy a může s nimi začít komunikovat.
 
-\section{Komponenta  }
+\section{Popis implementovaných komponent}
+Následuje popis jednotlivých implementovaných komponent a jejich rozhraní. 
+\subsection{KeyDistrib -- komponenta pro správu a distribuci klíčů}
+
+Komponenta především poskytuje ostatním komponentám ukazatele na místa uložení jednotlivých klíčů. Zvlášť jsou řešeny funkce pro získání klíčů k sousedním uzlů a pro získání klíče k centrálnímu uzlu. 
+Funkce jsou rozděleny, protože při požadavku o klíč k sousednímu uzlu je potřeba jako parametr zadat ID uzlu, o jehož klíč máme zájem, zatímco klíč k centrálnímu uzlu je pouze jeden. Dále komponenta 
+poskytuje ukazatel na klíč pro výpočet hashovací funkce.
+
+Kromě poskytování jednotlivých klíčů má komponenta na starost i derivaci jednotlivých klíčů. Jednotlivé predistribuované klíče nejdříve získá z EEPROM paměti pomocí mechanizmu pro dlouhotrvající operace 
+\ref{sub:long} a následně spustí samotnou derivaci klíčů. Samotný výpočet derivace již má na starosti Crypto komponenta \ref{sub:crypto}. 
+
+Poslední funkcionalitou, kterou komponenta nabízí, je funkce selfTest, která slouží jako primitivní varianta unit testů pro ověření správného fungování komponenty v průběhu vývoje. Ve finální verzi je
+celý obsah této funkce uveden jako komentář, aby bylo možné zmenšit paměťové nároky komponenty na nejnutnější minimum. 
+
+\subsection{Crypto -- komponenta poskytující kryptografické funkce} \label{sub:crypto}
+
+První funkcí, která je po spuštění uzlu zavolaná, je funkce sloužící k derivaci klíčů. KeyDistrib komponenta získá jednotlivé predistribuované klíče a zde následně dojde 
+k samotné derivaci klíčů nových. K derivaci jsou použitá ID jednotlivých uzlů, jak již bylo zmíněno dříve \ref{par:derive}.
+
+Komponenta poskytuje rozhraní pro ostatní komponenty, které potřebují využívat kryptografické funkce. Co se ochrany obsahu zpráv týká, nabízí jednak spočítání MAC hodnoty, tedy ochranu integrity zprávy, 
+tak i zašifrování zprávy (včetně spočítání MAC hodnoty). K šifrování a výpočtu MAC hodnoty je využit AES algoritmus, funkce vždy nejdříve získá požadovaný klíč pro konkrétní operaci a následně použije 
+společnou implementaci šifrovacích funkcí v CryptoRaw komponentě \ref{sub:rawcrypto}. Funkce rozlišují šifrování (počítání MAC hodnoty) pro sousední uzel a pro centrální uzel, důvod je stejný jako v 
+předchozím případě, funkce obsluhující požadavky pro sousední uzly potřebují jako parametr znát ID konkrétního uzlu, zatímco centrální uzel je pouze jeden. Funkce pro šifrování a MAC obsahu umožňují využít rozdílných rozsahů pro šifrovaná a pro výpočet MAC hodnoty. Tuto 
+vlastnost lze s výhodou využít, pokud je potřeba spočítat MAC pro celou zprávu, ale například hlavičku ponechat v otevřené podobě tak, 
+aby bylo možné zprávu identifikovat bez nutnosti znát klíč. 
+
+Komponenta dále poskytuje funkce pro výpočet a ověření hash hodnoty. Tyto funkce jsou v rozhraní obsaženy ve dvou provedeních, jednak nabízí vrácení plné délky hash hodnoty a jednak vrácením hodnoty 
+poloviční délky (poloviční délka je získána provedením XOR operace mezi první a druhou polovinou hash hodnoty o původní délce). Hash hodnota poloviční délky je poskytována z důvodů menších nároků na uložení 
+v paměti a kratší délky při posílání hodnoty jinému uzlu. 
+
+Taktéž zde nalezneme funkce pro výpočet a ověření hodnot keychainů (podpisů zpráv), tyto slouží jak pro centrální uzel pro výpočet jednotlivých hodnot, tak pro ostatní uzly, které tyto funkce využívají k 
+ověření obdržených hodnot. Zatímco funkce pro výpočet hodnoty bere jako vstupní i výstupní parametr přímo strukturu obsahující podpis, funkce pro ověření má jako vstupní parametr pouze pole číselných hodnot 
+a o jejich reprezentaci do formy podpisu se stará sama. Takto ostatní komponenty mohou přímo předat data přijatá od centrálního uzlu a nemusí se jejich reprezentací zabývat.
+
+Stejně jako v případě předchozí komponenty, i komponenta Crypto nabízí funkci selfTest, která slouží k ověření správného fungování komponenty. Stejně jako v předchozím případě, z důvodu minimalizace 
+paměťových nároků je celý obsah této funkce uveden jako komentář a v případě potřeby spuštění testů je možné jej upravit do spustitelné podoby.
+
+\subsection{CryptoRaw -- vnitřní funkce pro Crypto komponentu} \label{sub:rawcrypto}
+
+Tato komponenta je koncipovaná jako privátní součást Crypto komponenty. I když ostatní komponenty mohou využít funkce které 
+nabízí, není zde předpoklad, že by tomu tak bylo. Primárně je komponenta určená k napojení na Crypto komponentu a poskytuje 
+společné pozadí funkcím Crypto komponenty. Například v Crypto komponentě rozdílné funkce pro zašifrování obsahu pro sousední uzel a pro 
+centrální uzel využívají společnou funkci v komponentě Crypto Raw. Tedy motivace ke vzniku této komponenty byla omezit duplikaci kódu a 
+a celkově kód zpřehlednit. 
+
+Komponenta tedy poskytuje obecné funkce pro výpočet a ověření MAC hodnoty a funkce pro šifrování a dešifrování obsahu zpráv. 
+Taktéž je zde obsažena funkce na výpočet hash hodnoty dat o velikosti jednoho vstupního bloku a funkce pro derivaci klíče z 
+poskytnutých derivačních dat. Stejně jako všechny předchozí komponenty i zde je obsažena funkce selfTest, která slouží k ověření
+správné funkčnosti. 
+
+\chapter{Experiment Mírov 2014}
+Poslední částí práce je vyhodnocení experimentu \cite{Svenda2014}, který proběhl za účelem otestování funkčnosti jak vyvíjené komponenty 
+pro správy klíčů, tak projektu ProtectLayer jako celku. Tento experiment proběhl v průběhu února 2014 a v jeho průběhu byl otestován
+policejní scénář provozu ProtectLayer ve finální podobě vývoje. 
+
+\section{Popis scénáře}
+Scénář předpokládá rozmístění 29 uzlů dle nákresu \ref{img:scenario} s nahranou aplikací včetně ProtectLayer a po rozmístění čekajících 
+na zprávu od centrálního uzlu. Po rozmístění všech uzlů došlo k manuálnímu odeslání zprávy z centrálního uzlu pomocí autentizovaného 
+broacastu a následně započalo ustanovení komunikace mezi jednotlivými uzly. Policejní scénář předpokládá, že každý uzel zasílá každých 
+pět sekund zprávu, že je uzel stále funkční (still-alive zpráva). Tyto zprávy jsou po ustanovených cestách přeposílány směrem k 
+centrálnímu uzlu, který je zaznamenává. Dále jsou v pravidelných intervalech posílány zprávy komponenty IDS \footnote{Intrusion detection 
+system, systém pro detekci narušení sítě} které oznamují, pokud je u některého uzlu zaznamenáno, že nepřeposílá zprávy. 
+
+V průběhu experimentu dojde v monitorované oblasti k pohybu útočníka, tento pohyb je zachycen uzly, které následně posílají zprávy
+o detekci pohyby. Tyto zprávy jsou opět přeposílány k centrálnímu uzlu, kde jsou zaznamenány.  
+
+V průběhu experimentu je postupně manuálně přepínána úroveň zabezpečení celé sítě tak, aby bylo možné otestovat všechny režimy fungování 
+sítě. Výsledkem z experimentu jsou záznamy zachycených zpráv, jak z centrálního uzlu, tak z rovnoměrně rozmístěných uzlů, poslouchajících 
+síť v promiskuitním režimu (přijímají veškerý provoz v síti bez ohledu na odesílatele a příjemce zprávy). Ke každé zprávě poslouchající 
+uzel připojí časovou známku, aby bylo možné přesně určit čas zachycení zprávy.  Tyto záznamy zpráv jsou následně sloučeny dohromady a 
+vyhodnoceny.
+
+
+\section{Vyvinuté nástroje pro vyhodnocení experimentu}
+\subsection{Program pro sloučení souborů}
+Protože každý poslouchající uzel monitoroval pouze část sítě, žádný z individuálních záznamů neobsahuje veškerý provoz, který v síti 
+probíhal. Obyčejným spojením všech souborů sice získáme všechny zachycené zprávy, ale zároveň se ve výsledném souboru objeví velké 
+množství duplicitních informací, protože zpráva většinou byla zachycena vícekrát. Cílem tedy je získat soubor, obsahující všechny zprávy, 
+ale tak, aby soubor neobsahoval žádné duplicitní informace. Zároveň požadujeme, aby zprávy obsažené v souboru byly seřazeny podle času, 
+kdy byly zachyceny, tedy aby výsledný soubor co nejvíce odpovídal reálnému obrazu komunikace v síti. 
+
+Za tímto účelem jsem vytvořil program LogMerge, který na vstupu přijímá libovolné množství vstupních souborů, obsahujících informace z 
+jednotlivých poslouchajících uzlů a jeho výstupem je jeden soubor obsahující sloučené záznamy vstupních souborů. 
+
+Program pro každý soubor vytvoří frontu záznamů v souboru obsažených. Pro $n$ souborů je tedy vytvořeno $n$ front a každá z nich obsahuje 
+seřazené záznamy zpráv z konkrétního uzlu. Protože každý uzel zprávy zaznamenává v pořadí, v jaké zprávy zachytí, jsou již jednotlivé 
+fronty seřazené. Program následně projde všechny zprávy na čele jednotlivých front a vybere tu, který byla zachycena nejdříve. Tuto 
+zprávu zapíše do nově vytvářeného souboru a následně se pokusí zprávu vyhledat ve všech frontách a smazat ji. Tímto se zamezí možné 
+duplikaci zpráv ve výsledném souboru. Program zpracovává zprávy dokud alespoň jedna fronta obsahuje záznamy, v okamžiku kdy jsou všechny 
+fronty prázdné, program ukončí zápis do souboru a skončí. 
+
+\subsection{Program pro vyhodnocení souborů}
+Protože každý uzel vysílal zprávy alespoň jednou za každých pět sekund, mnohé však častěji a protože experiment probíhal po dobu 
+přibližně 45 minut, je množství zpráv v souboru takové, že jejich zpracování je nemožné provést manuálně. Tedy za účelem zpracování 
+jsem vytvořil program Evaluate, který slouží k automatickému zpracování souborů se záznamem zachycených zpráv. 
+
+Výstupem programu je možné rozdělit do dvou kategorií a to statické a dynamické výsledky. Statická část ukazuje statistiky jednotlivých 
+typů zpráv, kolik který uzel zpráv poslal z vlastní iniciativy, kolik jich přeposlal směrem k centrálnímu uzlu a případně tyto data 
+zobrazuje pomocí grafů sítě a spojnic mezi jednotlivými uzly. 
+
+Dynamická část se zabývá specifickou podmnožinou zpráv, konkrétně zprávami o pohybu útočníka a zprávami autentizovaného broadcastu. 
+Tyto zprávy zobrazuje pomocí animací, aby bylo možné pozorovat pohyb útočníka v síti a v případě autentizovaného broadcastu, jakým 
+způsobem se v síti tyto zprávy šířily. Díky animacím je možné tyto události zobrazit tak, jak postupně probíhaly a tak výrazně usnadnit 
+jejich prezentaci. 
+
+Po spuštění program postupně prochází soubor obsahující zprávy po jednotlivých řádcích. Soubor může obsahovat i informace jiné, než 
+samotné zprávy (ladící informace zapisujícího programu, informace kdy byl záznam pořízen a další). Program tedy tyto přidané informace
+ignoruje a zpracovává pouze řádky obsahující zprávy.
+
+Protože hlavička zprávy a zpráva samotná má má jednotný formát \ref{sec:msg}, je možné ze správy postupně získat jejího odesílatele a délku zprávy. S těmito informacemi již můžeme zprávu dále zpracovávat, 
+tedy postupně zprávy roztřídit dle typu a započítat do příslušné statistiky. 
+
+Zpracování je rozděleno na statistiku uzlů a statistiku spojení. Statistika spojení vyjadřuje, kolik zpráv bylo odesláno mezi jednotlivými uzly a zároveň kolik zpráv každý uzel přijal a přeposlal. 
+Touto metodou jsou zpracovávány informace o \uv{still-alive} zprávách a zprávách o útočníkovi. Druhá metoda se zaměřuje na jednotlivé uzly, tedy informace, kolik který uzel poslal zpráv konkrétního typu, 
+nezávisle na příjemci zprávy. Zde jsou zpracovány informace o zprávách IDS komponenty a zprávách určujících změnu zabezpečení sítě. Část zpráv je zpracovaná pomocí obou způsobů, například zprávy o detekci
+útočníka. Zde statistika spojení vyjadřuje celkový počet poslaných zpráv, zatímco statistika uzlů slouží ke generování animace pohybu útočníka v čase.
+
+Program umožňuje různé způsoby výpisu informací a jednotlivé přístupy vhodně kombinuje. Část informací je vypisována do textových souborů, část do statických grafů, které umožňují vizualizovat 
+rozmístění uzlů v síti a tak posoudit vliv umístění uzlu na statistické výsledky a část je prezentována v podobě animací. Grafy a animace vyžadují další zpracování.
+
+\subsubsection{Graphviz, Gifsicle}
+
+Program při tvoření grafů a animací na výstupu poskytuje pouze zdrojové souboru pro Graphviz\footnote{Software pro znázorňování grafů}, je tedy potřeba jejich další zpracování. Zdrojové soubory 
+v sobě obsahují komentář s ukázkou příkladu, jakým způsobem se souboru vytvořit graf. Se soubory pro animace je situace složitější, protože je potřeba nejenom z jednotlivých souborů vytvořit graf, ale 
+tyto soubory poté převést do gif\footnote{Graphics Interchange Format --  grafický formát určený pro rastrovou grafiku} formátu a následně jednotlivé soubory sloučit do animace. Protože jednotlivých
+grafů skládajících animaci může být vytvořeno poměrně velké množství (podle konkrétního použití i malé tisíce), je velmi nepraktické tyto úkony provádět manuálně. Za tímto účelem jsem tedy vytvořil 
+jednoduchý skript \ref{sec:script}, který potřebnou sekvenci úloh provede automatizovaně a uživatel vzápětí obdrží výslednou animaci. 
+
+\section{Vyhodnocení experimentu}
+
+
+
+
+\appendix
+
+\chapter{Přílohy}
+
+\section{Skript pro vytvoření animace}\label{sec:script}
+\begin{lstlisting}[ language=sh,caption=Skript pro vytvoření animace]
+#!/bin/bash
+for file in *.dot; do dot -Kneato -n -Tpng "$file" -o\
+"$(basename $file .dot).png"; done
+
+for file in *.png; do convert\
+"$file" "$(basename $file .png).gif"; done
+
+gifsicle --delay=1 --loop *.gif > anim.gif
+
+\end{lstlisting}
+
+\section{Rozmístění uzlů během experimentu}
+\begin{figure}[h]
+     \centering
+     \includegraphics[width=1\textwidth]{images/scenario.png}
+     \captionsource{Experiment - rozmístění uzlů}{\cite{Svenda2014}}
+     \label{img:scenario}
+\end{figure}
+
+\section{TinyOS -- formát zpráv} \label{sec:msg}
+
+
 
 %% Lists of tables and figures, glossary, etc.
 %\printindex
@@ -588,7 +795,7 @@ Každý uzel takto derivuje klíč pro všechny své dostupné sousedy a může 
 \endgroup
 
 %% Additional materials
-\appendix
+
 
 %% End of the whole document
 \end{document}
