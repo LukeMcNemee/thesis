@@ -140,7 +140,6 @@ TODO
 %% Thesis text structured using
 %% chapters, sections, subsections, etc.
 \chapter{Úvod}
-
 Bezdrátová senzorová síť je složená z velkého množství malých autonomních zařízení, které spolu navzájem komunikují přes rádiové spojení. Každé zařízení, nazývané senzorový uzel, je napájené pomocí
 baterií a je vybavené potřebnými senzory pro monitorování okolí. Pokroky v oblasti vývoje a výroby integrovaných obvodů vedly v poslední době k dramatické redukci jejich velikosti, spotřeby elektrické 
 energie a ceny, což nám umožňuje využívat senzorové sítě v široké škále aplikací. Typický scénář nasazení senzorové sítě je náhodné rozmístění stovek až tisíců uzlů a následný sběr dat pomocí jednotlivých 
@@ -163,16 +162,16 @@ Cílem práce je vybrat vhodné schéma pro distribuci a správu klíčů v bezd
 ochranu komunikace v bezdrátových senzorových sítích, a poté vyhodnotit výsledky z experimentálního provozu této platformy. Struktura práce samotné je následující:
 
 \begin {itemize}
-\item První kapitola obsahuje popis a hodnocení již existujících schémat pro distribuci a správu klíčů v bezdrátových sítích pro platformu TinyOS. Nejdříve jsou uvedena klasická řešení problému distribuce klíčů 
-a zároveň odůvodnění, proč tyto nejsou vhodné pro použití v bezdrátových senzorových sítích. Následuje šesti vybraných schémat pro distribuci klíčů, kdy u každého je uveden krátký popis principu fungování
-a následně hodnocení schématu z hlediska možného použití ve vyvíjené komponentě. 
+\item První kapitola obsahuje popis a hodnocení již existujících schémat pro distribuci a správu klíčů v bezdrátových sítích pro platformu TinyOS. Nejdříve jsou uvedena klasická řešení problému distribuce 
+klíčů a zároveň odůvodnění, proč tyto nejsou vhodné pro použití v bezdrátových senzorových sítích. Následuje šesti vybraných schémat pro distribuci klíčů, kdy u každého je uveden krátký popis principu 
+fungování a následně hodnocení schématu z hlediska možného použití ve vyvíjené komponentě. 
 
 \item Druhá kapitola se zabývá samotnou implementací vybraného schématu pro platformu TelosB v rámci vyvíjené komponenty, tedy nejdříve je popsán samotný systém TinyOS, včetně specifických vlastností tohoto 
 systému. Následuje popis vybraného schématu, se zaměřením na skutečnosti, které byly rozhodující při výběru. Poslední část této kapitoly se zabývá implementací samotnou, jsou zde popsány změny v implementaci 
 oproti původnímu schématu a popis důležitých vlastností jak hlavní komponenty pro správu klíčů, tak podpůrných komponent zabezpečujících kryptografické funkce. 
 
-\item V poslední kapitole je popsán experiment, který proběh v únoru 2014, jehož cílem bylo ověření funkčnosti celé vyvíjené platformy. V kapitole je tedy popsán scénář samotného experimentu, poté nástroje které 
-byly použity k vyhodnocení. Na konec jsou uvedeny výsledky samotné včetně doplňujících komentářů k nim. 
+\item V poslední kapitole je popsán experiment, který proběh v únoru 2014, jehož cílem bylo ověření funkčnosti celé vyvíjené platformy. V kapitole je tedy popsán scénář samotného experimentu, poté nástroje 
+které byly použity k vyhodnocení. Na konec jsou uvedeny výsledky samotné včetně doplňujících komentářů k nim. 
 \end{itemize}
 
 
@@ -243,7 +242,7 @@ splňuje všechny požadavky, nicméně schéma tak jak je nevyhovuje pro použi
 a správu komunikace mezi uzly samotnými, ale neřeší jakékoliv návazné problémy, jako například hromadné posílání zpráv z centrálního uzlu a vyžadovalo by příliš mnoho modifikací oproti 
 původnímu návrhu a proto nebylo vybráno.
 
-\section{Chan, Perrig a Song} \label{sec:Chan}
+\section{Upravené pravděpodobnostní rozdělení (Chan, Perrig a Song)} \label{sec:Chan}
 Návrh dvou možnosti rozšíření \cite{Perrig2003} předchozího schématu \cite{Eschenauer2002} tak, aby bylo odolnější vůči možným útokům a aby síť měla možnost znovu zabezpečit spojení, jehož
 klíč byl prozrazen. Obě části počítají se stejnými podmínkami jako předchozí, tedy nahrání množiny klíčů na jednotlivé uzly s tím, že jednotlivé klíče jsou náhodně vybrány 
 z větší množiny všech generovaných klíčů.
@@ -261,7 +260,7 @@ o žádoucí vlastnosti, jelikož malé útoky je těžké zaznamenat (malé pro
 bude tedy možné provést patřičná protiopatření. 
 
 \subsection{Vícecestné obnovením spojení (multipath)}
-Druhý návrh se zabývá obnovením spojení, jehož klíč byl prozrazen, nicméně uzly samotné zůstaly útokem nedotčeny. K této situaci například dojde, pokud je klíč používaný pro komunikaci mezi
+Druhý návrh \cite{Svenda2009} se zabývá obnovením spojení, jehož klíč byl prozrazen, nicméně uzly samotné zůstaly útokem nedotčeny. K této situaci například dojde, pokud je klíč používaný pro komunikaci mezi
 uzly $A$ a $B$ uložen v paměti uzlu $C$ a útočník získá klíče na uložené na uzlu $C$. Obnovení komunikačního klíče je provedeno přes více nezávislých cest, konkrétně uzly $A$ a $B$ zjistí společné sousedy
 přes které se mohou spojit tak, že délka cesty je kratší než předem stanovená maximální hodnota přeskoků. Pokud tedy existuje $j$ cest spojujících tyto dva uzly, pak uzel $A$ pošle po každé cestě náhodně 
 generovanou hodnotu $v$, celkově tedy pošle hodnoty $v_1, v_2, \dots v_j$. Na uzlu $B$ je nová hodnota klíče spočítána z původní hodnoty následovně $k' = k \oplus v_1 \oplus v_2 \oplus \dots \oplus v_j$
@@ -280,7 +279,7 @@ variantě multipath) neobsahuje schéma všechny požadované vlastnosti. Přede
 s jiným přístupem. Z tohoto důvodu tedy schéma nebylo vybráno. 
 
 
-\section{Du, Deng, Han and Varshney}
+\section{Blomovo pravděpodobnostní rozdělení (Du, Deng, Han a Varshney)}
 Zajímavý návrh \cite{Du2005} koncepčně vycházející ze schématu původně navrženého Blomem \cite{Blom1985}, ale rozšiřující jej o pravděpodobnostní rozdělení klíčů \ref{sec:Eschenauer}.
 Díky tomu získáváme schéma pro distribuci klíčů vhodné pro použití v bezdrátových sensorových sítích. Oproti předchozím variantám návrh celkově zvyšuje odolnost sítě vůči 
 útočníkovi a to za cenu vyšší výpočetní náročnosti, nicméně tato zůstává na rozumné míře (tedy stále výrazně menší než u asymetrické kryptografie). 
