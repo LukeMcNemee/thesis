@@ -24,7 +24,7 @@
 \usepackage[plainpages=false,pdfpagelabels,unicode]{hyperref}
 \usepackage[all]{hypcap}
 \usepackage{listings}
-
+\usepackage{array}
 \usepackage{color}
 
 \definecolor{mygreen}{rgb}{0,0.6,0}
@@ -200,10 +200,10 @@ tedy útočník se získáním uzlu získá pouze zprávy směřující k tomuto
 obsahuje jiný problém. V případě skutečně rozsáhlé sítě (tisíce až sta tisíce uzlů) není technicky možné, aby paměť uzlu obsahovala natolik 
 velké množství klíčů, minimálně hardware který je v současné době dostupný pro stavbu sensorových sítí toto neumožňuje\footnote{pokud uvažujeme 
 AES \cite{Daemen1999} klíč o velikosti 128 bitů a 1000 uložených klíčů v paměti uzlu, dostáváme celkem 16 KB dat, které je potřeba uložit do paměti uzlu. 
-Pokud uvažujeme například platformu TelosB \cite{MemsicInc.}, zde máme k dispozici právě 16 KB EEPROM paměti určené k ukládání dat. Musíme však počítat s 
-tím, že není primárním cílem zabezpečená komunikace, ale sběr dat pomocí senzorů, tedy kryptografická data by neměla zabírat většinu paměťového prostoru 
-uzlu a to neuvažujme rozsáhlejší sítě s násobně větším množstvím uzlů}. Hlavní slabinou této varianty je tedy velmi velká paměťová náročnost a obtížná 
-škálovatelnost pro rozsáhlejší sítě. 
+Pokud uvažujeme například platformu TelosB \cite{MemsicInc.}, zde sice máme k dispozici 1MB paměti určené k ukládání dat, ale RAM paměť uzlu je pouze 10KB. 
+A to nepočítáme s dalšími daty, které se kterými je potřeba pracovat, například naměřené hodnoty sensorů či další data aplikace. Celý problém je navíc umocněn tím, že
+primárním cílem není zabezpečená komunikace, ale sběr dat pomocí senzorů, tedy kryptografická data by měla zabírat pouze zlomek celkové paměťové kapacity uzlu.}.
+Hlavní slabinou této varianty je tedy velmi velká paměťová náročnost a obtížná škálovatelnost pro rozsáhlejší sítě. 
 
 \subsection{Asymetrická kryptografie} Při použití asymetrické kryptografie narážíme na problém ve omezeném výpočetním výkonu jednotlivých uzlů, 
 které jsou aktuálně schopné provádět pouze podmnožinu operací potřebných k bezpečnému fungování asymetrické kryptografie tak jak ji známe.
@@ -741,8 +741,92 @@ jednoduchý skript \ref{sec:script}, který potřebnou sekvenci úloh provede au
 
 \section{Vyhodnocení experimentu}
 
+\subsection{Still-alive zprávy} \label{sub:alive}
+
+Na obrázku \ref{img:msgs} můžeme vidět jednotlivé uzly reprezentované pomocí uzlů v grafu, u každého uzlu vidíme označení pomocí příslušného ID uzlu. Taktéž zde vidíme spojení mezi jednotlivými uzly, kdy u 
+každého spojení jsou dvě čísla. První vyjadřuje kolik zpráv odeslal uzel z vlastní iniciativy, druhé číslo vyjadřuje počet přeposlaných zpráv. Graf zobrazuje informace z první části experimentu, tedy
+nezabezpečenou komunikaci. 
+
+\begin{figure}[h]
+     \centering
+     \includegraphics[width=1\textwidth]{images/messages.png}
+     \caption{Experiment - počty zaslaných a přeposlaných zpráv}
+     \label{img:msgs}
+\end{figure}
 
 
+První informace, kterou můžeme vidět je, že při práci s bezdrátovými sensorovými sítěmi je třeba počítat chybami. V případě provedeného experimentu se jedná o uzel s ID 30, který v průběhu celého experimentu 
+nekomunikoval, tedy se pravděpodobně nepodařilo správně nainstalovat či inicializovat aplikaci na tomto konkrétním uzlu. Veškeré následují výpočty nezapočítávají tento uzel do výsledků, tedy celkový počet 
+uzlů, který uvažujeme je 27 sensorových uzlů a jeden uzel centrální. 
+
+Dále můžeme vidět, že maximální počet zpráv, které odeslal jeden uzel je $192$. Ze záznamů víme, že doba po kterou byly zprávy zachytávány  byla $939$ sekund a pokud počítáme jednu 
+zprávu za $5$ sekund, vyjde nám předpokládaný počet odeslaných zpráv poněkud nižší, konkrétně $187$ zpráv. Obě hodnoty jsou však natolik blízké, že rozdíl lze zdůvodnit drobným rozdílem hodin na jednotlivých 
+uzlech či jiným vlivům. Pokud tedy jako maximální počet zpráv, které uzel měl možnost odeslat určíme experimentálně zjištěnou hodnotu $192$, pak spočítáme, že se nám podařilo zachytit $96\%$ všech zpráv, 
+které mohly být odeslány.
+
+Zajímavější informace uvidíme, pokud se podíváme na jednotlivá procenta přeposlaných zpráv. Například uzlu s ID $50$ bylo určeno celkem 359 zpráv, které měl přeposlat, nicméně učinil tak pouze u 61 zpráv. 
+Můžeme předpokládat, že zprávy které přijal, také přeposlal. Tedy můžeme dovodit, že uzel přijal pouze $17\%$ jemu určených zpráv. Pokud tuto statistiku spočítáme pro všechny uzly mimo okrajových, tyto žádné 
+zprávy nepřeposílaly, zjistíme, že z celkového součtu zpráv určených k přeposlání bylo přeposláno pouze $32.4\%$ a jeden uzel průměrně přeposlal $36.9\%$. 
+
+Procento přeposlaných zpráv je tedy překvapivě nízké. To že uzel nebyl schopen přijmout průměrně $64.5\%$ zpráv, které mu byly adresované lze vysvětlit tím, že uzel v době vysílání zprávy byl vytížen 
+jinou činností. Vzhledem k faktu, že data pochází z první části experimentu, můžeme předpokládat, že uzel nebyl vytížen kryptografickými výpočty. Jako jediný logický původ vytížení uzlu lze tedy vnímat
+velké množství informací v síti, kdy většinu uzle sice pouze přijme a následně vyhodnotí, že není adresátem zprávy a zprávu zahodí, nicméně tato rutina při velkém množství zpráv pravděpodobně znamená 
+vytížení uzlů natolik výrazné, že uzly nestíhají přijímat zprávy jim určené.
+
+Logickým krokem pro další experimenty či skutečný provoz by mělo být buď snížení dosahu rádiové komunikace, případně snížení frekvence posílání zpráv. Celkově by výsledkem mělo být snížení zatížení 
+jednotlivých uzlů a tedy zvýšení pravděpodobnosti, že uzel přijme větší procento zpráv.
+
+\subsection{IDS zprávy}
+
+Druhá statistika \ref{img:reported} se zabývá systémem pro hlášení narušení sítě (IDS), kde jednotlivé uzly zaznamenávají aktivitu ostatních uzlů a pokud vyhodnotí, že některý z okolních uzlů zahazuje 
+zprávy, které měl přeposlat, pak tento uzel nahlásí pomocí IDS zprávy. Tato statistika je zajímavá především v porovnání s předchozí statistikou přeposílání zpráv \ref{sub:alive}. Vzhledem k velmi vysokému 
+procentu nepřeposlaných zpráv zde můžeme vidět velký počet IDS zpráv hlásících, že jednotlivé uzly zahazují zprávy. V našem případě se nejedná o úmyslné zahazování zpráv, ale toto IDS komponenta neumí 
+rozlišit.
+
+\begin{figure}[h]
+     \centering
+     \includegraphics[width=1\textwidth]{images/idsReported.png}
+     \caption{Experiment - statistika nahlášení jednotlivých uzlů pomocí IDS}
+     \label{img:reported}
+\end{figure}
+
+Dle předpokladů můžeme vidět, že uzly umístěné na listech sítě \ref{img:scenario} nebyly ani jednou nahlášeny, protože nebyla žádná zpráva, kterou by měly přeposlat. Naopak všechny ostatní uzly nahlášeny 
+byly a průměr nahlášení na jeden uzel je $181$ zpráv. 
+
+V druhém grafu \ref{img:reporting} můžeme vidět, kolikrát který uzel poslal IDS zprávu, zde však nenalezneme překvapivý výsledek, počty zpráv jsou poměrně rovnoměrně rozděleny mezi všechny uzly v síti. 
+
+Konkrétní porovnání hodnot přeposlaných zpráv a příslušný počet IDS zpráv pro konkrétní uzly je možné vidět v následující tabulce. Uzly umístěné na listech sítě nejsou do tabulky zahrnuty, protože jak 
+bylo zmíněno dříve, tyto uzly nepřeposílaly žádné zprávy. 
+
+\begin {table}[H]
+\caption {Table Title} \label{tab:title} 
+\begin{center}
+\begin{tabular}{ccrrr}
+ID  &              & přeposlané \newline zprávy & procento \newline přeposlaných zpráv& počet IDS \newline nahlášení \\
+\hline
+4   &        480  &        166  &        34,58 \%  &        311 \\
+14  &        183  &        55   &        30,05 \%  &        89  \\
+17  &        368  &        84   &        22,83 \%  &        292 \\
+19  &        171  &        111  &        64,91 \%  &        106 \\
+22  &        671  &        132  &        19,67 \%  &        402 \\
+25  &        180  &        44   &        24,44 \%  &        158 \\
+31  &        247  &        137  &        55,47 \%  &        95 \\
+33  &        460  &        144  &        31,30 \%  &        207 \\
+37  &        515  &        166  &        32,23 \%  &        252 \\
+40  &        192  &        29   &        15,10 \%  &        177 \\
+42  &        185  &        71   &        38,38 \%  &        66 \\
+44  &        230  &        144  &        62,61 \%  &        65 \\
+46  &        176  &        85   &        48,30 \%  &        132 \\
+50  &        359  &        61   &        16,99 \%  &        340 \\
+\hline
+\hline
+součet &        4417 &        1429 &        32,4 \%   &        2692 \\
+průměr &             &             &        35,5 \%  &        183 \\
+
+
+\end{tabular}
+\end{center}
+\end {table}
 
 \appendix
 
@@ -761,6 +845,12 @@ gifsicle --delay=1 --loop *.gif > anim.gif
 
 \end{lstlisting}
 
+
+\section{TinyOS -- formát zpráv} \label{sec:msg}
+
+
+\chapter{Doplňující materiály k experimentu}
+
 \section{Rozmístění uzlů během experimentu}
 \begin{figure}[h]
      \centering
@@ -769,7 +859,16 @@ gifsicle --delay=1 --loop *.gif > anim.gif
      \label{img:scenario}
 \end{figure}
 
-\section{TinyOS -- formát zpráv} \label{sec:msg}
+\newpage
+\section{Statistika IDS hlášení poslaných jednotlivými uzly }
+\begin{figure}[h]
+     \centering
+     \includegraphics[width=1\textwidth]{images/idsReporting.png}
+     \caption{Experiment - statistika IDS hlášení poslaných jednotlivými uzly}
+     \label{img:reporting}
+\end{figure}
+
+
 
 
 
