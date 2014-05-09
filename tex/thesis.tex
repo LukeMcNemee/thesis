@@ -790,19 +790,21 @@ rozlišit.
      \label{img:reported}
 \end{figure}
 
-Dle předpokladů můžeme vidět, že uzly umístěné na listech sítě \ref{img:scenario} nebyly ani jednou nahlášeny, protože nebyla žádná zpráva, kterou by měly přeposlat. Naopak všechny ostatní uzly nahlášeny 
-byly a průměr nahlášení na jeden uzel je $181$ zpráv. 
+Dle předpokladů můžeme vidět, že uzly umístěné na listech sítě nebyly ani jednou nahlášeny, protože nebyla žádná zpráva, kterou by měly přeposlat. Naopak všechny ostatní uzly nahlášeny 
+byly a průměr nahlášení na jeden uzel je $183$ zpráv. 
 
 V druhém grafu \ref{img:reporting} můžeme vidět, kolikrát který uzel poslal IDS zprávu, zde však nenalezneme překvapivý výsledek, počty zpráv jsou poměrně rovnoměrně rozděleny mezi všechny uzly v síti. 
 
-Konkrétní porovnání hodnot přeposlaných zpráv a příslušný počet IDS zpráv pro konkrétní uzly je možné vidět v následující tabulce. Uzly umístěné na listech sítě nejsou do tabulky zahrnuty, protože jak 
+Konkrétní porovnání hodnot přeposlaných zpráv a příslušný počet IDS zpráv pro konkrétní uzly je možné vidět v následující tabulce 
+\ref{tab:ids}. Uzly umístěné na listech sítě nejsou do tabulky zahrnuty, protože jak 
 bylo zmíněno dříve, tyto uzly nepřeposílaly žádné zprávy. 
 
-\begin {table}[H]
-\caption {Table Title} \label{tab:title} 
+\begin {table}[h]
+\caption {počty přeposlaných zpráv a IDS hlášení pro konkrétní uzly} \label{tab:ids} 
 \begin{center}
-\begin{tabular}{ccrrr}
-ID  &              & přeposlané \newline zprávy & procento \newline přeposlaných zpráv& počet IDS \newline nahlášení \\
+\begin{tabular}{rrrrr}
+
+ID  & AliveExp &  AliveSend & $\frac{AliveSend}{AliveExp}$& IDS \\
 \hline
 4   &        480  &        166  &        34,58 \%  &        311 \\
 14  &        183  &        55   &        30,05 \%  &        89  \\
@@ -825,6 +827,11 @@ průměr &             &             &        35,5 \%  &        183 \\
 
 
 \end{tabular}
+\bigskip
+\caption*{Zkratky použité pro pojmenování sloupců:\\
+	  AliveExp -- očekávaný počet přeposlaných zpráv \\
+	  AliveSend -- skutečný počet přeposlaných zpráv \\	  
+	  IDS -- počet IDS nahlášení uzlu}
 \end{center}
 \end {table}
 
