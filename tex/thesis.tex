@@ -140,30 +140,30 @@ TODO
 %% Thesis text structured using
 %% chapters, sections, subsections, etc.
 \chapter{Úvod}
-Bezdrátová senzorová síť je složená z velkého množství malých autonomních zařízení, které spolu navzájem komunikují přes rádiové spojení. Každé zařízení, nazývané senzorový uzel, je napájené pomocí
-baterií a je vybavené potřebnými senzory pro monitorování okolí. Pokroky v oblasti vývoje a výroby integrovaných obvodů vedly v poslední době k dramatické redukci jejich velikosti, spotřeby elektrické 
-energie a ceny, což nám umožňuje využívat senzorové sítě v široké škále aplikací. Typický scénář nasazení senzorové sítě je náhodné rozmístění stovek až tisíců uzlů a následný sběr dat pomocí jednotlivých 
-senzorů. Jako příklady oborů, kde mohou bezdrátové senzorové sítě nalézt uplatnění, lze uvést například armádu, zdravotnictví, zemědělství a další. Konkrétně je možné zmínit projekt SmartDust 
+Bezdrátová sensorová síť je složená z velkého množství malých autonomních zařízení, které spolu navzájem komunikují přes rádiové spojení. Každé zařízení, nazývané sensorový uzel, je napájené pomocí
+baterií a je vybavené potřebnými sensory pro monitorování okolí. Pokroky v oblasti vývoje a výroby integrovaných obvodů vedly v poslední době k dramatické redukci jejich velikosti, spotřeby elektrické 
+energie a ceny, což nám umožňuje využívat sensorové sítě v široké škále aplikací. Typický scénář nasazení sensorové sítě je náhodné rozmístění stovek až tisíců uzlů a následný sběr dat pomocí jednotlivých 
+sensorů. Jako příklady oborů, kde mohou bezdrátové sensorové sítě nalézt uplatnění, lze uvést například armádu, zdravotnictví, zemědělství a další. Konkrétně je možné zmínit projekt SmartDust 
 \cite{Kahn1999}, nebo projekt sledování sopečné aktivity \cite{Werner-Allen2006}. 
 
-V mnohých případy uplatnění bezdrátových senzorových sítí je však kritické zabezpečení informací předávaných mezi jednotlivými uzly. Především se snažíme o zajištění důvěrnosti a autenticity jednotlivých 
+V mnohých případy uplatnění bezdrátových sensorových sítí je však kritické zabezpečení informací předávaných mezi jednotlivými uzly. Především se snažíme o zajištění důvěrnosti a autenticity jednotlivých 
 zpráv. Důvěrnost je potřeba zajistit v případě monitorování citlivých (zdravotní stav osoby, pohyb osob v monitorované oblasti), nebo jinak cenných informací. Taktéž můžeme mít zájem, aby vlastník sítě měl 
-možnost informace získané senzory zpeněžit, což by nebylo možné, pokud by byly veřejně dostupné. V případě autenticity jednotlivých zpráv je podstatné, aby pro útočníka nebylo možné do sítě přidávat vlastní 
-uzly nebo jiným způsobem modifikovat komunikaci. Zcela jistě je nežádoucí, aby senzory, určené pro varování před přírodními katastrofami, vyvolávaly falešné poplachy. Díky aktuální situaci, kdy vývoj 
+možnost informace získané sensory zpeněžit, což by nebylo možné, pokud by byly veřejně dostupné. V případě autenticity jednotlivých zpráv je podstatné, aby pro útočníka nebylo možné do sítě přidávat vlastní 
+uzly nebo jiným způsobem modifikovat komunikaci. Zcela jistě je nežádoucí, aby sensory, určené pro varování před přírodními katastrofami, vyvolávaly falešné poplachy. Díky aktuální situaci, kdy vývoj 
 bezdrátových sítí je stále v raném stádiu, máme jedinečnou možnost sítě budovat bezpečné již od počátku. Díky tomu se můžeme vyhnout dodatečnému přidávání bezpečnostních opatření a tím předejít 
 budoucím problémům.
 
-Pro senzorové uzly je v~současné době velmi rozšířený operační systém TinyOS \cite{Levis2005}, který vznikl na univerzitě v~Berkeley a v~současné době je vyvíjen jako open-source projekt.  Tento systém 
-zabezpečuje jak zasílání a příjem zpráv mezi jednotlivými uzly, tak zároveň obsluhu senzorů na jednotlivých uzlech i vše ostatní nezbytné pro fungování senzorové sítě. Systém se vyskytuje na několika 
+Pro sensorové uzly je v~současné době velmi rozšířený operační systém TinyOS \cite{Levis2005}, který vznikl na univerzitě v~Berkeley a v~současné době je vyvíjen jako open-source projekt.  Tento systém 
+zabezpečuje jak zasílání a příjem zpráv mezi jednotlivými uzly, tak zároveň obsluhu sensorů na jednotlivých uzlech i vše ostatní nezbytné pro fungování sensorové sítě. Systém se vyskytuje na několika 
 hardwarových platformách, mezi nejběžnější patří TelosB a MICAz \cite{Inc.}\cite{MemsicInc.}. TinyOS však obsahuje zranitelná místa, která mohou být využita potencionálním útočníkem \cite{Drexler2010} a pro 
-reálnou použitelnost tohoto systému je zapotřebí tyto mezery v~zabezpečení odstranit. Práce samotná se tedy zabývá bezpečností v bezdrátových senzorových sítí, konkrétně problematikou výměny klíčů.
+reálnou použitelnost tohoto systému je zapotřebí tyto mezery v~zabezpečení odstranit. Práce samotná se tedy zabývá bezpečností v bezdrátových sensorových sítí, konkrétně problematikou výměny klíčů.
 
-Cílem práce je vybrat vhodné schéma pro distribuci a správu klíčů v bezdrátové senzorové síti, toto schéma implementovat a začlenit do vyvíjené platformy ProtectLayer \cite{Svenda2014a}, která slouží pro 
-ochranu komunikace v bezdrátových senzorových sítích, a poté vyhodnotit výsledky z experimentálního provozu této platformy. Struktura práce samotné je následující:
+Cílem práce je vybrat vhodné schéma pro distribuci a správu klíčů v bezdrátové sensorové síti, toto schéma implementovat a začlenit do vyvíjené platformy ProtectLayer \cite{Svenda2014a}, která slouží pro 
+ochranu komunikace v bezdrátových sensorových sítích, a poté vyhodnotit výsledky z experimentálního provozu této platformy. Struktura práce samotné je následující:
 
 \begin {itemize}
 \item První kapitola obsahuje popis a hodnocení již existujících schémat pro distribuci a správu klíčů v bezdrátových sítích pro platformu TinyOS. Nejdříve jsou uvedena klasická řešení problému distribuce 
-klíčů a zároveň odůvodnění, proč tyto nejsou vhodné pro použití v bezdrátových senzorových sítích. Následuje šesti vybraných schémat pro distribuci klíčů, kdy u každého je uveden krátký popis principu 
+klíčů a zároveň odůvodnění, proč tyto nejsou vhodné pro použití v bezdrátových sensorových sítích. Následuje šest vybraných schémat pro distribuci klíčů, kdy u každého je uveden krátký popis principu 
 fungování a následně hodnocení schématu z hlediska možného použití ve vyvíjené komponentě. 
 
 \item Druhá kapitola se zabývá samotnou implementací vybraného schématu pro platformu TelosB v rámci vyvíjené komponenty, tedy nejdříve je popsán samotný systém TinyOS, včetně specifických vlastností tohoto 
@@ -179,7 +179,7 @@ které byly použity k vyhodnocení. Na konec jsou uvedeny výsledky samotné v�
 \chapter{Existující implementace pro distribuci a správu klíčů}
 Mechanismus bezpečného ustanovení klíčů pro komunikaci v bezdrátové sensorové síti tvoří jeden ze základních předpokladů 
 pro bezpečné a spolehlivé fungování sítě jako celku. Na zabezpečenou komunikaci například spoléhá protokol pro ustanovení cest v síti (je třeba k ustanovení cesty v síty využít
-pouze autentizované uzly, nikoliv uzly útočníka které mohou nabízet výhodnější cestu), protokoly pro společné výpočty v síti (uzel kontroluje hodnoty naměřené svými senzory oproti
+pouze autentizované uzly, nikoliv uzly útočníka které mohou nabízet výhodnější cestu), protokoly pro společné výpočty v síti (uzel kontroluje hodnoty naměřené svými sensory oproti
 hodnotám naměřeným na okolních uzlech, a detekuje tak možné chyby) a případně protokoly pro detekci a reakci na provedený útok \cite{Alcaraz2012}.
 
 Přitom co se možných řešení týká, jsme zde limitování mnohými rozdíly oproti sítím v klasické podobě. Mezi nejvýznamnější rozdíly například
@@ -202,7 +202,7 @@ velké množství klíčů, minimálně hardware který je v současné době do
 AES \cite{Daemen1999} klíč o velikosti 128 bitů a 1000 uložených klíčů v paměti uzlu, dostáváme celkem 16 KB dat, které je potřeba uložit do paměti uzlu. 
 Pokud uvažujeme například platformu TelosB \cite{MemsicInc.}, zde sice máme k dispozici 1MB paměti určené k ukládání dat, ale RAM paměť uzlu je pouze 10KB. 
 A to nepočítáme s dalšími daty, které se kterými je potřeba pracovat, například naměřené hodnoty sensorů či další data aplikace. Celý problém je navíc umocněn tím, že
-primárním cílem není zabezpečená komunikace, ale sběr dat pomocí senzorů, tedy kryptografická data by měla zabírat pouze zlomek celkové paměťové kapacity uzlu.}.
+primárním cílem není zabezpečená komunikace, ale sběr dat pomocí sensorů, tedy kryptografická data by měla zabírat pouze zlomek celkové paměťové kapacity uzlu.}.
 Hlavní slabinou této varianty je tedy velmi velká paměťová náročnost a obtížná škálovatelnost pro rozsáhlejší sítě. 
 
 \subsection{Asymetrická kryptografie} Při použití asymetrické kryptografie narážíme na problém ve omezeném výpočetním výkonu jednotlivých uzlů, 
@@ -212,7 +212,7 @@ tyto nejsou určeny pro komunikaci mezi jednotlivými uzly navzájem, ale spíš
 Navíc při použití veřejných klíčů vyvstává problém s jejich revokací a opět je zde problém, že klíč z uzlu, který získá útočník může být použit 
 na kterémkoliv místě v síti.
 
-Celkově bráno, většina známých klasických přístupů není vhodná pro řešení správy klíčů v bezdrátové sensorové síti, je tedy na místě hledat alternativní řešení,
+Celkově zhodnoceno, většina známých klasických přístupů není vhodná pro řešení správy klíčů v bezdrátové sensorové síti, je tedy na místě hledat alternativní řešení,
 která již budou brát v úvahu všechna omezení těchto sítí a využijí vlastnosti bezdrátových sensorových sítí ve svůj prospěch.
 
 \section{Pravděpodobnostní rozdělení klíčů (Eschenauer a Gligor)} \label{sec:Eschenauer}
@@ -321,8 +321,7 @@ je síť odolnější proti potenciálnímu útoku.
 
 Schéma je sice co se implementace a paměti týká náročnější než předchozí varianty, nicméně tato náročnost přináší výhody v oblasti bezpečnosti a to výhody nikoliv 
 nepodstatné. Jedná se tedy o pravděpodobně nejslibnější variantu pravděpodobnostního rozdělení klíčů ze všech tří diskutovaných. Nicméně stejně jako předchozí varianty, toto schéma nepokrývá celý 
-zamýšlený rozsah vyvíjené komponenty a proto by bylo potřeba jej rozšířit či kombinovat s jiným schématem. Navíc schéma počítá s náhodným rozmístěním jednotlivých uzlů v prostoru, zatímco v našem případě 
-bude poloha uzlů předem známa, tedy potenciál tohoto schématu by nebyl zcela využit. Z těchto důvodů tedy schéma nebylo vybráno.
+zamýšlený rozsah vyvíjené komponenty a proto by bylo potřeba jej rozšířit či kombinovat s jiným schématem. Tedy z tohoto důvodu nebylo schéma vybráno.
 
 \section{TinyPK}
 TinyPK \cite{Watro2004} je návrhem způsobu, jak použít principy asymetrické kryptografie 
@@ -375,7 +374,7 @@ nám může posloužit jiný, je implementovaná funkcionalita navíc a plýtvá
 se třetí stanou po omezenou dobu, s tím že třetí strana není přítomna od začátku existence sítě a po získání potřebných informací komunikaci ukončí. Zde můžeme konstatovat, že 
 TinyPK nezapadá do celkového konceptu zamýšlené funkcionality vyvíjené komponenty a proto toto schéma nebylo vybráno. 
 
-\section{Panja, Madria and Bhargava}
+\section{Skupinová správa klíčů v hierarchických sítích (Panja, Madria and Bhargava)}
 
 Na stromové struktuře grafu založený návrh \cite{Panja2007} distribuce klíčů, který se svým přístupem odlišuje od většiny ostatních. Původní myšlenka využití stromové struktury
 vychází z Tree Based Group Diffie-Hellman (TGDH) protokolu \cite{Kim2000} a k této jsou přidány další vlastnosti potřebné pro úspěšné nasazení v oblasti bezdrátových sensorových sítí. 
@@ -460,8 +459,9 @@ $K_{uv} = f_{K_{u}}(v)$, případně $K_{vu}$ při výpočtu v opačném pořad�
 $K_{IN}$ klíč je následně po vypršení časového limitu smazán z paměti uzlu a tedy získáním obsahu paměti uzlu získá útočník přístup pouze ke klíčům obsaženým v paměti uzlu, ale nezíská data potřebná k 
 získání klíčů ostatních uzlů.
 
-V případě potřeby přidání nových uzlů postupujeme úplně stejně, pouze je možná pouze jedna varianta společného klíče, protože uzly již obsažené v síti nemají možnost spočítat klíč nového uzlu, jelikož 
+V případě potřeby přidání nových uzlů postupujeme úplně stejně, pouze je možná jen jedna varianta společného klíče, protože uzly již obsažené v síti nemají možnost spočítat klíč nového uzlu, jelikož 
 původní klíč už byl smazán z jejich paměti, zatímco nový uzel klíč zatím k dispozici má. 
+
 \paragraph{Ostatní typy klíčů} 
 Ostatní typy klíčů jsou ustanoveny pomocí již existujících spojení, tedy klíče pro komunikaci v clusteru jsou distribuovány pomocí párových klíčů a tedy předávány mezi jednotlivými uzly dokud 
 klíč neobdrží všechny uzly zařazené do konkrétního clusteru. Klíče pro hromadnou komunikaci jsou následně distribuovány pomocí jednotlivých cluster klíčů. 
@@ -483,7 +483,7 @@ klíče. Tedy nelze zcela zamezit útokům, pokud se útočník cluster klíče 
 LEAP+ poskytuje až čtyři různé typy klíčů, které mohou být použity k zvýšení bezpečnosti dalších protokolů. Důležitým faktorem je, že schéma poskytuje výhody hromadných klíčů, ale zároveň díky 
 párovým klíčům a možné obnově hromadných klíčů minimalizuje následky kompromitování jednotlivých uzlů. Zároveň schéma obsahuje podporu pro slabou (nicméně dostatečnou) formu autentizace zpráv. 
 Nevýhodou schématu je předpoklad statické sítě, nicméně v případě vyvíjené komponenty se jedná o očekávanou vlastnost sítě, tedy tento problém nelze považovat za skutečnou nevýhodu. Toto 
-schéma s níže popsanými úpravami tedy bylo vybráno pro implementování ve vyvíjené komponentě.
+schéma s níže popsanými úpravami \ref{sub:edits} tedy bylo vybráno pro implementování ve vyvíjené komponentě.
 
 \chapter{Implementace}
 
@@ -496,7 +496,7 @@ nepodporuje dynamickou alokaci, tedy je zcela logické, že funkce pro práci s 
 \subsection{Propojení \uv{wiring} komponent}
 Jednotlivé komponenty jsou v určitém slova smyslu podobné objektům, tak jak je známe například z jazyka C++. Oproti většině objektově orientovaných jazyků však nesC využívá striktně lokální jmenný prostor, 
 tedy komponenta nejenže musí deklarovat funkce které implementuje, musí také deklarovat funkce které používá z jiných komponent. \cite{Levis2009} Toto propojování jednotlivých komponent se nazývá \uv{wiring} 
-a u každé komponenty je třeba definovat, které rozhraní poskytuje a které používá. Taktéž je třeba definovat, která komponenta poskytuje rozhraní, které komponenta používá. Tento princip je poté využit pi 
+a u každé komponenty je třeba definovat, které rozhraní poskytuje a které používá. Taktéž je třeba definovat, která komponenta poskytuje rozhraní, které komponenta používá. Tento princip je poté využit při 
 kompilaci, protože umožňuje provést spojení jednotlivých komponent již v okamžiku kompilace a tedy při samotném běhu aplikace není potřeba ukládat ukazatele na funkce, nebo provádět alokaci paměti. Navíc
 tento princip umožňuje kompilátoru provádět optimalizace napříč komponentami a tak výrazně zmenšit nároky na výkon jednotlivých uzlů.
 
@@ -525,12 +525,12 @@ implementation {
 \subsection{Dlouho trvající operace} \label{sub:long}
 Protože jednotlivé uzly musí být schopné zpracovávat příchozí zprávy a případně na ně reagovat, nemůžeme dlouhotrvající operace spouštět bez přerušení. Protože jednotlivé uzly nemají podporu pro vlákna, 
 způsobily by tyto časově náročné operace ztrátu příchozích zpráv a to až po dobu desítek sekund. Mezi tyto časově náročné operace můžeme například řadit dlouho trvající výpočty, nebo operace čtení z EEPROM 
-paměti. NesC nám proto poskytuje možnost pro přerušované spuštění těchto operací. Jako příklad můžeme uvést získání hodnot klíčů z EEPROM paměti. \cite{Levis2009}
+paměti. NesC nám proto poskytuje možnost pro rozdělení těchto operací. Jako příklad můžeme uvést získání hodnot klíčů z EEPROM paměti \cite{Levis2009}.
 
 Na ukázce \ref{code:event} vidíme událost (event), kterou 
 komponentě KeyDistrib signalizuje komponenta ResourceArbiter po dokončení čtení klíče z paměti. Následně dojde k zavolání úlohy \ref{code:task} (task), která ověří počet již získaných klíčů a pokud byly 
 úspěšně získány klíče pro všechny sousedy, spustí inicializaci Crypto komponenty. Pokud zatím všechny klíče získány nebyly, zavolá komponentu SharedData s požadavkem na získání dalšího klíče. Následně opět 
-čeká na signalizaci události a systém může provádět jinou činnost. Obě ukázky jsou upraveny z důvodu názornosti a srozumitelnosti
+čeká na signalizaci události a systém může provádět jinou činnost. Obě ukázky jsou upraveny z důvodu názornosti a srozumitelnosti.
 
 \begin{lstlisting}[float, language=C,caption=Ukázka události (event),label=code:event]
 event void ResourceArbiter.restoreKeyFromFlashDone(){	
@@ -554,37 +554,37 @@ task void retrievePrekeysTask() {
 
 
 
-\section{LEAP+}
+\section{LEAP+} 
 Jak již bylo zmíněno \ref{sec:leap}, pro implementaci komponenty pro distribuci klíčů bylo vybráno schéma LEAP+. Následuje tedy zdůvodnění výběru uvedené společně s předpokládanými vlastnostmi 
-vyvíjené komponenty, jelikož tyto dvě části spolu velmi úzce souvisí. Poté jsou popsány úpravy oproti původnímu schématu provedené při implementaci. 
+vyvíjené komponenty, jelikož tyto dvě části spolu velmi úzce souvisí. Poté jsou popsány úpravy oproti původnímu schématu, které byly provedené při implementaci. 
 \subsection{Zdůvodnění výběru, předpokládané vlastnosti komponenty}
 
-Vyvíjená komponenta je určená pro statickou síť, tedy síť kde nepředpokládáme pohyb jednotlivých uzlů, taktéž předpokládáme znalost rozmístění jednotlivých uzlů, tedy možnost predistribuovat specifické
-klíče na jednotlivé uzly. Zároveň předpokládáme komunikaci uzlu se všemi jeho sousedy, komunikaci uzlu se centrální stanicí 
-(Base Station) a možnost zasílání plošných zpráv pro celou síť uzlů od centrálního uzlu. Dle předpokládáme možnost použití komponenty pro sítě o velikosti stovek až malých tisíců uzlů, tedy schéma musí 
-být dobře škálovatelné a zohledňovat náročnost na paměť jednotlivých uzlů. 
+Předpokládáme, že topologie sítě není dopředu známa, tedy uzel musí být schopen ustanovit spojení s kterýmkoliv možným sousedem. Poté při samotném spuštění sítě komunikaci uzlu se všemi jeho blízkými 
+sousedy, komunikaci uzlu se centrální stanicí (Base Station) a možnost zasílání plošných zpráv pro celou síť uzlů od centrálního uzlu. Dle předpokládáme možnost použití komponenty pro sítě o velikosti stovek 
+až malých tisíců uzlů, tedy schéma musí být dobře škálovatelné a zohledňovat náročnost na paměť jednotlivých uzlů. 
 
-Všechny tyto požadavky schéma LEAP+ splňuje, naopak při jeho implementaci nebudou některé typy klíčů využity (nicméně při případném rozšíření sítě není problém implementaci doplnit na původní rozsah). 
+Všechny tyto požadavky schéma LEAP+ splňuje, nabízí dokonce více možností, z kterých nebudou všechny implementovány. Především nebudou využity některé typy klíčů (nicméně při případném 
+rozšíření sítě není problém implementaci doplnit na původní rozsah). 
 Celá síť bude podporovat čtyři režimy (tyto se od sebe liší úrovní zabezpečení komunikace) a centrální uzel bude mít možnost pomocí autentizovaného broadcastu mezi režimy přepínat. Zde bude využito 
 autentizačního protokolu obsaženého v LEAP+ schématu. 
 
 Protože vyvíjená komponenta bude součástí rozsáhlejší aplikace a distribuci klíčů nelze považovat za primární funkce, ale pouze prostředek ke správnému fungování, je zapotřebí, aby vybrané schéma 
 nemělo příliš velké nároky na paměť či výpočetní výkon. Tyto parametry opět hovoří ve prospěch vybraného schématu, protože co se paměti týká, schéma ukládá pouze ty klíče, které zabezpečují spojení 
-buď s přímými sousedy,  nebo spojení s větší skupinou uzlů (zcela jistě nenastane situace, kdy uzel bude mít v paměti uloženo výrazně větší množství klíčů, než které použije). Taktéž výpočetní náročnost 
+buď s přímými sousedy,  nebo spojení s větší skupinou uzlů (zcela jistě nenastane situace, kdy uzel bude mít v RAM paměti uloženo výrazně větší množství klíčů, než které použije). Taktéž výpočetní náročnost 
 schématu, především co se procedury na obnovení jednotlivých klíčů týká, můžeme považovat za dostatečně nízkou \cite{Zhu2006}. 
 
 Za pozitivní můžeme taktéž považovat informaci, že autorům původního návrhu se podařilo schéma úspěšně implementovat a otestovat na platformě TinyOS, konkrétně pro uzly MICA2. Tedy můžeme předpokládat, že 
 námi použité sensorové uzly (platforma TelosB) by taktéž neměly mít potíže s aplikací využívající komponentu založenou na tomto schématu.
 
 
-\subsection{Vlastní úpravy provedené při implementaci}
+\subsection{Vlastní úpravy provedené při implementaci} \label{sub:edits}
 
 \paragraph{AES}
 Zatímco původní schéma využívá šifrovací algoritmus RC5 \cite{Zhu2006}\cite{Rivest1995}, při implementaci komponenty byl použit šifrovací algoritmus AES \cite{Daemen1999} s délkou
-klíče 128 bitů. K této změně bylo přistoupeno, protože rozšířená knihovna TinyOS již implementaci AES algoritmu obsahuje \cite{Pelissier}, tedy ji bylo možné využít, zatímco RC5 algoritmus by bylo
-zapotřebí implementovat. Zatím sice nebylo provedeno porovnání RC5 algoritmu oproti AES algoritmu, nicméně podobné porovnání bylo provedeno vůči algoritmu RC6 \cite{Rivest1998} (zlepšená varianta RC5, 
-finalista AES soutěže) a AES algoritmus vychází ve srovnání shodně, či lépe \cite{Schneier1999} (v závislosti na platformě a konkrétních kritériích). Tedy nepředpokládáme, že nahrazení původního 
-algoritmu RC5 algoritmem AES by mělo mít významné důsledky na výpočetní náročnost schématu, či negativní vliv na zabezpečení sítě.
+klíče 128 bitů. K této změně bylo přistoupeno, protože knihovna TinyOS již implementaci AES algoritmu obsahuje \cite{Pelissier}, tedy ji bylo možné využít, zatímco RC5 algoritmus by bylo
+zapotřebí implementovat. Přímé porovnání RC5 algoritmu oproti AES algoritmu pravděpodobně nikdy nebyl důvod provádět, nicméně podobné porovnání bylo provedeno vůči algoritmu RC6 \cite{Rivest1998} (zlepšená 
+varianta RC5, finalista AES soutěže) a AES algoritmus vychází ve srovnání shodně, či lépe \cite{Schneier1999} (v závislosti na platformě a konkrétních kritériích). Tedy nepředpokládáme, že nahrazení 
+původního algoritmu RC5 algoritmem AES by mělo mít významné důsledky na výpočetní náročnost schématu, či negativní vliv na zabezpečení sítě.
 
 \paragraph{Klíč pro komunikaci s BS}
 Jednou z nejvýznamnějších změn oproti původnímu schématu je použití pouze jednoho klíče pro komunikaci s centrálním uzlem, který je pro všechny uzly společný. Toto však nelze vnímat jako bezpečnostní hrozbu, 
@@ -606,9 +606,9 @@ výše, tento je pro všechny uzly stejný a slouží především pro autentiza
 
 \paragraph{Ustanovení sdíleného klíče mezi sousedními uzly} \label{par:derive}
 Ustanovení klíčů v původním návrhu počítá se společným klíčem, který je po určité době smazán z paměti uzlů. Aby bylo možné předejít nutnosti zabezpečit smazání klíče, bylo schéma upraveno tak, 
-že nevyžaduje jeden sdílený klíč mezi všemi uzly, tedy při případném získání uzlu nemá útočník možnost získat klíče ke všem uzlům najednou. Této vlastnosti bylo možné dosáhnou díky statické síti a
-předem známým sousedům jednotlivých uzlů. Tedy každé dva sousedící uzly sdílejí při spuštění sítě společný klíč, který však není určen k šifrování komunikace, ale k ustanovení nového sdíleného klíče.
-Derivace klíče využívá znalost ID obou sousedů, tyto hodnoty spojí ta, že nejdříve je nižší hodnota a poté hodnota vyšší. Tímto je zabezpečeno, že oba uzly získají stejnou hodnotu pro derivaci klíče. 
+že nevyžaduje jeden sdílený klíč mezi všemi uzly, tedy při případném získání uzlu nemá útočník možnost získat klíče ke všem uzlům najednou. Při spuštění sítě dojde tedy ke zjištění všech sousedních uzlů a 
+klíče pro komunikaci s nimi jsou přesunuty z EEPROM paměti do RAM paměti uzlu. Tento klíč je následně použit k derivaci nového sdíleného klíče.
+Derivace klíče využívá znalost ID obou sousedů TODO , tyto hodnoty spojí tak, že za nižší hodnotu je připojena hodnota vyšší. Tímto je zabezpečeno, že oba uzly získají stejnou hodnotu pro derivaci klíče. 
 Každý uzel takto derivuje klíč pro všechny své dostupné sousedy a může s nimi začít komunikovat.
 
 \section{Popis implementovaných komponent}
@@ -627,13 +627,14 @@ celý obsah této funkce uveden jako komentář, aby bylo možné zmenšit pamě
 
 \subsection{Crypto -- komponenta poskytující kryptografické funkce} \label{sub:crypto}
 
-První funkcí, která je po spuštění uzlu zavolaná, je funkce sloužící k derivaci klíčů. KeyDistrib komponenta získá jednotlivé predistribuované klíče a zde následně dojde 
+Jednou z prvních funkcí, které jsou po spuštění uzlu zavolané, je funkce sloužící k derivaci klíčů. KeyDistrib komponenta získá jednotlivé predistribuované klíče a zde následně dojde 
 k samotné derivaci klíčů nových. K derivaci jsou použitá ID jednotlivých uzlů, jak již bylo zmíněno dříve \ref{par:derive}.
 
 Komponenta poskytuje rozhraní pro ostatní komponenty, které potřebují využívat kryptografické funkce. Co se ochrany obsahu zpráv týká, nabízí jednak spočítání MAC hodnoty, tedy ochranu integrity zprávy, 
 tak i zašifrování zprávy (včetně spočítání MAC hodnoty). K šifrování a výpočtu MAC hodnoty je využit AES algoritmus, funkce vždy nejdříve získá požadovaný klíč pro konkrétní operaci a následně použije 
 společnou implementaci šifrovacích funkcí v CryptoRaw komponentě \ref{sub:rawcrypto}. Funkce rozlišují šifrování (počítání MAC hodnoty) pro sousední uzel a pro centrální uzel, důvod je stejný jako v 
-předchozím případě, funkce obsluhující požadavky pro sousední uzly potřebují jako parametr znát ID konkrétního uzlu, zatímco centrální uzel je pouze jeden. Funkce pro šifrování a MAC obsahu umožňují využít rozdílných rozsahů pro šifrovaná a pro výpočet MAC hodnoty. Tuto 
+předchozím případě, funkce obsluhující požadavky pro sousední uzly potřebují jako parametr znát ID konkrétního uzlu, zatímco centrální uzel je pouze jeden. Funkce pro šifrování zprávy a MAC jejího obsahu 
+umožňují využít rozdílných rozsahů pro šifrovaní a pro výpočet MAC hodnoty. Tuto 
 vlastnost lze s výhodou využít, pokud je potřeba spočítat MAC pro celou zprávu, ale například hlavičku ponechat v otevřené podobě tak, 
 aby bylo možné zprávu identifikovat bez nutnosti znát klíč. 
 
@@ -645,15 +646,15 @@ Taktéž zde nalezneme funkce pro výpočet a ověření hodnot keychainů (podp
 ověření obdržených hodnot. Zatímco funkce pro výpočet hodnoty bere jako vstupní i výstupní parametr přímo strukturu obsahující podpis, funkce pro ověření má jako vstupní parametr pouze pole číselných hodnot 
 a o jejich reprezentaci do formy podpisu se stará sama. Takto ostatní komponenty mohou přímo předat data přijatá od centrálního uzlu a nemusí se jejich reprezentací zabývat.
 
-Stejně jako v případě předchozí komponenty, i komponenta Crypto nabízí funkci selfTest, která slouží k ověření správného fungování komponenty. Stejně jako v předchozím případě, z důvodu minimalizace 
-paměťových nároků je celý obsah této funkce uveden jako komentář a v případě potřeby spuštění testů je možné jej upravit do spustitelné podoby.
+Stejně jako v případě předchozí komponenty, i komponenta Crypto nabízí funkci selfTest, která slouží k ověření správného fungování komponenty. Opět je z důvodu minimalizace 
+paměťových nároků celý obsah této funkce uveden jako komentář a v případě potřeby spuštění testů je možné jej upravit do spustitelné podoby.
 
 \subsection{CryptoRaw -- vnitřní funkce pro Crypto komponentu} \label{sub:rawcrypto}
 
 Tato komponenta je koncipovaná jako privátní součást Crypto komponenty. I když ostatní komponenty mohou využít funkce které 
 nabízí, není zde předpoklad, že by tomu tak bylo. Primárně je komponenta určená k napojení na Crypto komponentu a poskytuje 
-společné pozadí funkcím Crypto komponenty. Například v Crypto komponentě rozdílné funkce pro zašifrování obsahu pro sousední uzel a pro 
-centrální uzel využívají společnou funkci v komponentě Crypto Raw. Tedy motivace ke vzniku této komponenty byla omezit duplikaci kódu a 
+společné pozadí jejím funkcím. Například v Crypto komponentě rozdílné funkce pro zašifrování obsahu pro sousední uzel a pro 
+centrální uzel využívají společnou funkci v komponentě Crypto Raw. Tedy motivací ke vzniku této komponenty bylo omezit duplikaci kódu 
 a celkově kód zpřehlednit. 
 
 Komponenta tedy poskytuje obecné funkce pro výpočet a ověření MAC hodnoty a funkce pro šifrování a dešifrování obsahu zpráv. 
@@ -663,8 +664,8 @@ správné funkčnosti.
 
 \chapter{Experiment Mírov 2014}
 Poslední částí práce je vyhodnocení experimentu \cite{Svenda2014}, který proběhl za účelem otestování funkčnosti jak vyvíjené komponenty 
-pro správy klíčů, tak projektu ProtectLayer jako celku. Tento experiment proběhl v průběhu února 2014 a v jeho průběhu byl otestován
-policejní scénář provozu ProtectLayer ve finální podobě vývoje. 
+pro správy klíčů, tak platformy ProtectLayer jako celku. Tento experiment proběhl v únoru 2014 a v jeho průběhu byl otestován
+policejní scénář provozu ProtectLayer. 
 
 \section{Popis scénáře}
 Scénář předpokládá rozmístění 29 uzlů dle nákresu \ref{img:scenario} s nahranou aplikací včetně ProtectLayer a po rozmístění čekajících 
@@ -678,7 +679,7 @@ V průběhu experimentu dojde v monitorované oblasti k pohybu útočníka, tent
 o detekci pohyby. Tyto zprávy jsou opět přeposílány k centrálnímu uzlu, kde jsou zaznamenány.  
 
 V průběhu experimentu je postupně manuálně přepínána úroveň zabezpečení celé sítě tak, aby bylo možné otestovat všechny režimy fungování 
-sítě. Výsledkem z experimentu jsou záznamy zachycených zpráv, jak z centrálního uzlu, tak z rovnoměrně rozmístěných uzlů, poslouchajících 
+sítě. Výsledkem z experimentu jsou záznamy zachycených zpráv, jak z centrálního uzlu, tak z pěti rovnoměrně rozmístěných uzlů, poslouchajících 
 síť v promiskuitním režimu (přijímají veškerý provoz v síti bez ohledu na odesílatele a příjemce zprávy). Ke každé zprávě poslouchající 
 uzel připojí časovou známku, aby bylo možné přesně určit čas zachycení zprávy.  Tyto záznamy zpráv jsou následně sloučeny dohromady a 
 vyhodnoceny.
@@ -703,7 +704,7 @@ duplikaci zpráv ve výsledném souboru. Program zpracovává zprávy dokud ales
 fronty prázdné, program ukončí zápis do souboru a skončí. 
 
 \subsection{Program pro vyhodnocení souborů}
-Protože každý uzel vysílal zprávy alespoň jednou za každých pět sekund, mnohé však častěji a protože experiment probíhal po dobu 
+Protože každý uzel vysílal zprávy alespoň jednou za každých pět sekund, mnohé však častěji (předpokládáme i přeposílání zpráv) a protože experiment probíhal po dobu 
 přibližně 45 minut, je množství zpráv v souboru takové, že jejich zpracování je nemožné provést manuálně. Tedy za účelem zpracování 
 jsem vytvořil program Evaluate, který slouží k automatickému zpracování souborů se záznamem zachycených zpráv. 
 
@@ -756,25 +757,23 @@ nezabezpečenou komunikaci.
 
 
 První informace, kterou můžeme vidět je, že při práci s bezdrátovými sensorovými sítěmi je třeba počítat chybami. V případě provedeného experimentu se jedná o uzel s ID 30, který v průběhu celého experimentu 
-nekomunikoval, tedy se pravděpodobně nepodařilo správně nainstalovat či inicializovat aplikaci na tomto konkrétním uzlu. Veškeré následují výpočty nezapočítávají tento uzel do výsledků, tedy celkový počet 
+nekomunikoval, tedy se pravděpodobně nepodařilo správně nainstalovat či inicializovat aplikaci na tomto konkrétním uzlu. Veškeré následují statistiky nezapočítávají tento uzel do výsledků, tedy celkový počet 
 uzlů, který uvažujeme je 27 sensorových uzlů a jeden uzel centrální. 
 
 Dále můžeme vidět, že maximální počet zpráv, které odeslal jeden uzel je $192$. Ze záznamů víme, že doba po kterou byly zprávy zachytávány  byla $939$ sekund a pokud počítáme jednu 
 zprávu za $5$ sekund, vyjde nám předpokládaný počet odeslaných zpráv poněkud nižší, konkrétně $187$ zpráv. Obě hodnoty jsou však natolik blízké, že rozdíl lze zdůvodnit drobným rozdílem hodin na jednotlivých 
-uzlech či jiným vlivům. Pokud tedy jako maximální počet zpráv, které uzel měl možnost odeslat určíme experimentálně zjištěnou hodnotu $192$, pak spočítáme, že se nám podařilo zachytit $96\%$ všech zpráv, 
+uzlech. Pokud tedy jako maximální počet zpráv, které uzel měl možnost odeslat určíme experimentálně zjištěnou hodnotu $192$, pak spočítáme, že se nám podařilo zachytit $96\%$ všech zpráv, 
 které mohly být odeslány.
 
 Zajímavější informace uvidíme, pokud se podíváme na jednotlivá procenta přeposlaných zpráv. Například uzlu s ID $50$ bylo určeno celkem 359 zpráv, které měl přeposlat, nicméně učinil tak pouze u 61 zpráv. 
 Můžeme předpokládat, že zprávy které přijal, také přeposlal. Tedy můžeme dovodit, že uzel přijal pouze $17\%$ jemu určených zpráv. Pokud tuto statistiku spočítáme pro všechny uzly mimo okrajových, tyto žádné 
 zprávy nepřeposílaly, zjistíme, že z celkového součtu zpráv určených k přeposlání bylo přeposláno pouze $32.4\%$ a jeden uzel průměrně přeposlal $36.9\%$. 
 
-Procento přeposlaných zpráv je tedy překvapivě nízké. To že uzel nebyl schopen přijmout průměrně $64.5\%$ zpráv, které mu byly adresované lze vysvětlit tím, že uzel v době vysílání zprávy byl vytížen 
-jinou činností. Vzhledem k faktu, že data pochází z první části experimentu, můžeme předpokládat, že uzel nebyl vytížen kryptografickými výpočty. Jako jediný logický původ vytížení uzlu lze tedy vnímat
-velké množství informací v síti, kdy většinu uzle sice pouze přijme a následně vyhodnotí, že není adresátem zprávy a zprávu zahodí, nicméně tato rutina při velkém množství zpráv pravděpodobně znamená 
-vytížení uzlů natolik výrazné, že uzly nestíhají přijímat zprávy jim určené.
+Procento přeposlaných zpráv je tedy překvapivě nízké. To že uzel nebyl schopen přijmout průměrně $64.5\%$ zpráv, které mu byly adresované lze vysvětlit tím, že při posílání zpráv není vyžadováno potvrzení o 
+doručení a rušení způsobuje vysoké procento nedoručených zpráv. Rušení může být způsobeno jak ostatní komunikací v síti, tak vlivy vnějšího prostředí. Zde by tedy bylo vhodné zvážit dvě varianty řešení 
+problému. Jednak je možné snížit komunikaci v síti pomocí prodloužení intervalů posílání jednotlivých zpráv a případně snížení dosahu rádiové komunikace tak, aby uzel měl možnost komunikovat pouze se 
+sousedními uzly, tedy omezit rušení komunikace. Druhou variantou je změna typu zprávy tak, aby bylo vyžadováno potvrzení o doručení. Zde sice výrazně zvýšíme množství doručených zpráv, nicméně za cenu vyšší zátěže jednotlivých uzlů.
 
-Logickým krokem pro další experimenty či skutečný provoz by mělo být buď snížení dosahu rádiové komunikace, případně snížení frekvence posílání zpráv. Celkově by výsledkem mělo být snížení zatížení 
-jednotlivých uzlů a tedy zvýšení pravděpodobnosti, že uzel přijme větší procento zpráv.
 
 \subsection{IDS zprávy}
 
@@ -824,23 +823,113 @@ ID  & AliveExp &  AliveSend & $\frac{AliveSend}{AliveExp}$& IDS \\
 \hline
 součet &        4417 &        1429 &        32,4 \%   &        2692 \\
 průměr &             &             &        35,5 \%  &        183 \\
-
-
 \end{tabular}
 \bigskip
 \caption*{Zkratky použité pro pojmenování sloupců:\\
-	  AliveExp -- očekávaný počet přeposlaných zpráv \\
-	  AliveSend -- skutečný počet přeposlaných zpráv \\	  
+	  AliveExp -- očekávaný počet přeposlaných still-alive zpráv \\
+	  AliveSend -- skutečný počet přeposlaných still-alive zpráv \\	  
 	  IDS -- počet IDS nahlášení uzlu}
 \end{center}
 \end {table}
+
+Celkově z IDS statistiky můžeme vidět, že detekce nepřeposílání zpráv funguje lépe, než samotné přeposílání. Tento fakt je pravděpodobně 
+způsoben tím, že přeposlání zprávy má na starost pouze jeden uzel, zatímco detekovat nepřeposílání může kterýkoliv uzel v síti.
+Protože víme, že velmi často docházelo k nepřeposílání zpráv \ref{sub:alive}, můžeme konstatovat, že IDS systém toto nepřeposílání správě
+detekoval a tedy funguje tak, jak bylo zamýšleno.
+
+
+\subsection{Zprávy detekce útočníka}
+
+V průběhu experimentu došlo v oblasti monitorované sítí k pohybu útočníka. Tento byl z důvodu nedostatečné rozlišovací schopnosti sensorů 
+pro detekci pohybu nahrazen uzlem vysílajícím zprávu, že se jedná o útočníka. Pokud uzly sítě přijmou zprávu vysílanou útočníkem, je tato 
+skutečnost zaznamenána jako detekce pohybu útočníka. 
+
+Zprávy o detekci útočníka byly zpracovány jednak pomocí statického grafu \ref{img:attacker}, který vyjadřuje kolik který uzel poslal 
+zpráv o zaznamenání útočníka a jednak pomocí animace, která znázorňuje detekci pohybu útočníka v čase. 
+
+Z grafu můžeme vidět, že detekce pohybu útočníka byla rozdílně úspěšná u jednotlivých uzlů, zatímco některé útočníka nezaznamenaly vůbec, 
+tak jiné uzly zaznamenaly pohyb útočníka až šestkrát. Tento rozdíl je možné zdůvodnit pohybem útočníka, zatímco k některým uzlům se mohl 
+uzel útočníka přiblížit na kratší vzdálenost či delší dobu, tak k jiným se nemusel přiblížit vůbec. Pohyb útočníka byl sice proveden 
+po trase přibližně stejně vzdálené od všech uzlů v síti, nicméně k rozdílům mohlo dojít. Dále pokud se podíváme na statistiku doručení 
+still-alive zpráv \ref{sub:alive} a předpokládáme stejnou úspěšnost doručení zpráv z uzlu útočníka, pak zcela jistě mohlo dojít k 
+situaci, kdy část uzlů útočníka nezaznamenala vůbec. 
+
+Lepší pohled na pohyb útočníka nám poskytne animace, kde můžeme pomocí změny barvy jednotlivých uzlů vidět, že odeslaly zprávu o 
+detekování útočníka. Animace nám poskytuje data ve zpomalené podobě za účelem názornosti a lepší přehlednosti a jednotlivé zprávy 
+o detekci útočníka jsou v animaci zobrazeny i po krátký časový interval po jejich odeslání tak, aby je bylo možné v animaci zaznamenat.
+
+Celkově tedy můžeme vidět, jak jednotlivé uzly odesílají zprávy o detekci útočníka s tím, že tyto zprávy se objevují postupně a 
+v oblastech, ve kterých se útočník pohyboval. Celkově lze tedy konstatovat, že systém detekce útočníka funguje, i když by bylo vhodné 
+zvýšit množství zpráv indikujících přítomnost útočníka, což mimo jiné souvisí s již dříve diskutovaným problémem s doručováním zpráv. 
+
+\subsection{Zprávy plošného vysílaní z centrálního uzlu}
+Poslední skupina zpráv, která byla vyhodnocována, jsou zprávy vysílané z centrálního uzlu pomocí globálního broadcastu, určené všem uzlům 
+v síti a slouží k přepnutí úrovně zabezpečení. U těchto zpráv nás zajímá jejich šíření v celé síti, protože tyto zprávy byly šířeny 
+pomocí záplavy, tedy jakmile uzel zprávu obdrží, tak ji v původní podobě odvysílá, aby byla možnost rozšíření zprávy do všech oblastí 
+sítě. V záznamech z průběhu experimentu máme možnost sledovat právě vysílání stejné zprávy z jednotlivých uzlů, tedy předpokládáme, že jakmile uzel zprávu 
+odesílá, tak ji předtím v pořádku přijal.
+
+Jediný rozumný způsob znázornění průběhu tohoto šíření zprávy v síti je animace postupného průběhu, protože statický graf by nám poskytl
+u každého uzlu pouze logickou hodnotu, zdali přijal či nepřijal zprávu. Sice by šlo tento graf rozšířit o vhodné označení pořadí 
+jednotlivých uzlů, nicméně i tak by byla orientace v grafu značně problematická. 
+
+Díky animaci můžeme vidět, že původní záměr šíření zprávy postupnou záplavou od nejbližších uzlů po nejvzdálenější uzly zcela 
+nefunguje. Můžeme totiž sledovat, že proces šíření zprávy je velmi chaotický a i když jednotlivé uzly reagují postupně, pak to zcela 
+jistě není v námi zamýšleném pořadí. Z toho je tedy možné dovodit, stejně jako v předchozích případech, že úspěšnost doručení zpráv je 
+velmi malá a taktéž to, že vysílací výkon jednotlivých uzlů nezahrnuje pouze nejbližší sousedy, ale i například uzly na opačné polovině 
+sítě. 
+
+Celkově se vždy podařilo zaznamenat doručení zprávy na většinu uzlů (pravděpodobně se zprávu podařilo doručit na všechny uzly, jelikož 
+všechny uzly dále vysílají na odpovídajícím stupni zabezpečení), ale zjistili jsme, že způsob šíření zprávy je velmi chaotický, především
+kvůli nepředpokládaně vysokému vysílacímu výkonu jednotlivých uzlů a taktéž kvůli nízké úspěšnosti doručování jednotlivých zpráv.
+
+\chapter{Závěr}
+
+V práci jsem se zabýval problémem distribuce klíčů v bezdrátových sensorových sítích. V první kapitole jsem nejdříve uvedl důvody, proč není vhodné používat klasická řešení distribuce klíčů
+a následně jsem rozebral několik různých návrhů optimalizovaných pro bezdrátové sensorové sítě. U každého z nich jsem postupně uvedl základní principy a následně krátké zhodnocení výhod a nevýhod konkrétního 
+návrhu včetně vyhodnocení vhodnosti použití schématu při implementaci vyvíjené komponenty. 
+
+Následující kapitola se zabývá samotnou implementací schématu LEAP+. Nejdříve je krátce uveden použitý operační systém TinyOS a specifické problémy při psaní aplikace pro tento systém. Následuje podrobný 
+popis předpokládaných vlastností vyvíjené komponenty společně s důvody pro výběr LEAP+ schématu. Dále jsou zde rozvedeny a odůvodněny odlišnosti v implementaci oproti původnímu návrhu. Poslední část kapitoly 
+tvoří krátký popis implementace samotné. 
+
+Třetí kapitola je zaměřena na experiment Mírov 2014, postupně je popsán průběh experimentu a programy použité pro vyhodnocení. Kapitola končí samotným vyhodnocením, jsou rozebrány jednotlivé typy zachycených 
+zpráv a získaná data jsou interpretována. 
+
+Jak vyplynulo z dat získaných při experimentu, celá experimentální platforma ProtectLayer funguje, nicméně pro optimální výkon celé sítě by bylo potřeba provést několik změn. Především by komunikaci v síti 
+velmi pomohlo snížení dosahu rádiové komunikace tak, aby uzel měl možnost kontaktovat pouze nejbližší sousedy. I když se tato skutečnost může zdát přesně tím opačným řešením, které by se nabízelo, ve 
+skutečnosti snížení dosahu komunikace sníží vytížení jednotlivých uzlů a tím pravděpodobně zvýší pravděpodobnost doručení zpráv. Tuto úpravu by ještě bylo možné vylepšit, pokud by intervaly posílání 
+jednotlivých zpráv byly prodlouženy. Druhou variantou zlepšení výkonu je vyžadování potvrzení o přijetí odeslaných zpráv.
+
+Z hlediska možností navázání na tuto práci, konkrétně co se týká rozšíření současné podoby implementace o další funkcionalitu, moc prostoru nenaskýtá, protože při experimentu se jednotlivé uzly pohybovaly 
+na hranici svých možností, především z hlediska dostupné paměti. Na druhou stranu je zcela jistě možné hledat jiné přístupy k řešení problému distribuce klíčů a například 
+optimalizovat celou komponentu vzhledem k paměťové kapacitě jednotlivých uzlů.
+Dále se nabízí spousta příležitostí pro další práci v oblasti vyhodnocení získaných dat, kde je zcela určitě možné vyvinuté nástroje rozšířit 
+tak, aby poskytovaly celou řadu dalších statistik, případně aby program samotný umožňoval propojení různých statistik dohromady a tak usnadnil hledání závislostí.
+
 
 \appendix
 
 \chapter{Přílohy}
 
+
+\section{TinyOS -- formát zpráv} \label{sec:msg}
+
+V případě, že použijeme standardní variantu posílání zpráv v systému TinyOS, setkáme se u zachycených zpráv s následujícím formátem hlavičky \cite{TinyOSmsgs}.
+
+\begin{verbatim}
+00  ff ff  00 10  04  22  06
+\end{verbatim}
+
+První byte (00) určuje, že se jedná o AM paket\footnote{active message -- formát zprávy využívaný v TinyOS k událostmi řízenému modelu zpracování přijatých zpráv.}
+Následující dva byty (ff~ff) určují adresu příjemce zprávy, v tomto případě zde můžeme vidět maximální možnou hodnotu, tedy se jedná o zprávu určenou všem uzlům.
+Poté je uvedena adresa odesílajícího uzlu (00~10), tedy tato zpráva byla odeslána uzlem s ID 16 (hodnoty jsou uváděny v hexadecimální podobě). Další pole (04) určuje délku zprávy
+a poslední dvě hodnoty (22~06) jsou postupně skupinové ID a poté ID komponenty navázané na tento typ zprávy (handler~ID). Skupinové ID slouží k tomu, aby na stejném kanálu bylo možné provozovat více
+skupin uzlů bez vzájemného rušení. Handler~ID je využito v modelu událostmi řízeného zpracování přijatých zpráv tak, že zpráva je předána komponentě, jejíž ID zpráva obsahuje. 
+
+
 \section{Skript pro vytvoření animace}\label{sec:script}
-\begin{lstlisting}[ language=sh,caption=Skript pro vytvoření animace]
+\begin{lstlisting}[ language=sh]
 #!/bin/bash
 for file in *.dot; do dot -Kneato -n -Tpng "$file" -o\
 "$(basename $file .dot).png"; done
@@ -851,9 +940,6 @@ for file in *.png; do convert\
 gifsicle --delay=1 --loop *.gif > anim.gif
 
 \end{lstlisting}
-
-
-\section{TinyOS -- formát zpráv} \label{sec:msg}
 
 
 \chapter{Doplňující materiály k experimentu}
@@ -875,7 +961,14 @@ gifsicle --delay=1 --loop *.gif > anim.gif
      \label{img:reporting}
 \end{figure}
 
-
+\newpage
+\section{Počet hlášení o pohybu útočníka u jednotlivých uzlů}
+\begin{figure}[h]
+     \centering
+     \includegraphics[width=1\textwidth]{images/attackerSum.png}
+     \caption{Experiment - statistika hlášení o pohybu útočníka u jednotlivých uzlů}
+     \label{img:attacker}
+\end{figure}
 
 
 
