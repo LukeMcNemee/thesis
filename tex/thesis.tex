@@ -114,8 +114,13 @@
 
 %% Thanks (optional)
 \begin{ThesisThanks}
-TODO
+Rád bych tímto poděkoval RNDr. Petru Švendovi, Ph.D. za jeho ochotu, cenné připomínky a rady, stejně jako za možnost spolupracovat na projektu ProtectLayer. 
+Taktéž bych rád poděkoval všem ostatním, kteří mě při vypracování této práce podporovali, protože bez nich by vše bylo mnohem složitější. 
 
+\bigskip
+\bigskip
+\bigskip
+\bigskip
 Tato práce vznikla na základě projektu VG20102014031, který je součástí
 Programu bezpečnostního výzkumu České republiky v letech 2010 - 2015
 (BVII/2 - VS).
@@ -123,12 +128,16 @@ Programu bezpečnostního výzkumu České republiky v letech 2010 - 2015
 
 %% Abstract (required)
 \begin{ThesisAbstract}
-TODO
+Cílem práce je poskytnou ucelený přehled existujících implementací schémat pro distribuci a správu klíčů v bezdrátových sensorových sítích. Na základě porovnání těchto schémat je 
+provedena implementace komponenty pro správu a distribuci klíčů dle vybraného schématu a tato je následně začleněna do experimentální platformy pro ochranu komunikace v bezdrátových sensorových sítích. 
+Práce se dále zabývá provedeným experimentem s touto platformou a vyhodnocením získaných dat.
+
+%The aim of thesis is to review existing schemes for management and distribution of keys in wireless sensor networks. Based on comparison of these schemes, selected scheme is implemented in component for key management and key distribution. This component is then incorporated into experimental platform for secure communication in wireless sensor networks. Thesis also deals with undertaken experiment and evaluation of data gathered during this experiment.
 \end{ThesisAbstract}
 
 %% Keywords (required)
 \begin{ThesisKeyWords}
-TODO
+bezdrátová sensorová síť, WSN, distribuce klíčů, správa klíčů, LEAP+, TinyOS, TelosB, 
 \end{ThesisKeyWords}
 
 %% Beginning of the thesis itself
@@ -374,7 +383,7 @@ nám může posloužit jiný, je implementovaná funkcionalita navíc a plýtvá
 se třetí stanou po omezenou dobu, s tím že třetí strana není přítomna od začátku existence sítě a po získání potřebných informací komunikaci ukončí. Zde můžeme konstatovat, že 
 TinyPK nezapadá do celkového konceptu zamýšlené funkcionality vyvíjené komponenty a proto toto schéma nebylo vybráno. 
 
-\section{Skupinová správa klíčů v hierarchických sítích (Panja, Madria and Bhargava)}
+\section{Skupinová správa klíčů v hierarchických sítích (Panja, Madria a Bhargava)}
 
 Na stromové struktuře grafu založený návrh \cite{Panja2007} distribuce klíčů, který se svým přístupem odlišuje od většiny ostatních. Původní myšlenka využití stromové struktury
 vychází z Tree Based Group Diffie-Hellman (TGDH) protokolu \cite{Kim2000} a k této jsou přidány další vlastnosti potřebné pro úspěšné nasazení v oblasti bezdrátových sensorových sítí. 
@@ -608,11 +617,11 @@ výše, tento je pro všechny uzly stejný a slouží především pro autentiza
 Ustanovení klíčů v původním návrhu počítá se společným klíčem, který je po určité době smazán z paměti uzlů. Aby bylo možné předejít nutnosti zabezpečit smazání klíče, bylo schéma upraveno tak, 
 že nevyžaduje jeden sdílený klíč mezi všemi uzly, tedy při případném získání uzlu nemá útočník možnost získat klíče ke všem uzlům najednou. Při spuštění sítě dojde tedy ke zjištění všech sousedních uzlů a 
 klíče pro komunikaci s nimi jsou přesunuty z EEPROM paměti do RAM paměti uzlu. Tento klíč je následně použit k derivaci nového sdíleného klíče.
-Derivace klíče využívá znalost ID obou sousedů TODO , tyto hodnoty spojí tak, že za nižší hodnotu je připojena hodnota vyšší. Tímto je zabezpečeno, že oba uzly získají stejnou hodnotu pro derivaci klíče. 
-Každý uzel takto derivuje klíč pro všechny své dostupné sousedy a může s nimi začít komunikovat.
+Derivace klíče v současné době využívá znalost ID obou sousedů, které používá místo náhodných hodnot. Pro reálné použití budou ID uzlů nahrazeny náhodnými hodnotami, které si uzly navzájem vymění, nicméně 
+tento postup je nedeterministický a tedy neumožňuje replikovat proces generování klíčů pro účely ladění. Uzel tedy získá dvě hodnoty, a tyto hodnoty spojí tak, že za nižší hodnotu je připojena hodnota vyšší. 
+Tímto je zabezpečeno, že oba uzly získají stejnou hodnotu pro derivaci klíče. Každý uzel takto derivuje klíč pro všechny své dostupné sousedy a může s nimi začít komunikovat.
 
 \section{Popis implementovaných komponent}
-Následuje popis jednotlivých implementovaných komponent a jejich rozhraní. 
 \subsection{KeyDistrib -- komponenta pro správu a distribuci klíčů}
 
 Komponenta především poskytuje ostatním komponentám ukazatele na místa uložení jednotlivých klíčů. Zvlášť jsou řešeny funkce pro získání klíčů k sousedním uzlů a pro získání klíče k centrálnímu uzlu. 
@@ -738,7 +747,7 @@ Program při tvoření grafů a animací na výstupu poskytuje pouze zdrojové s
 v sobě obsahují komentář s ukázkou příkladu, jakým způsobem se souboru vytvořit graf. Se soubory pro animace je situace složitější, protože je potřeba nejenom z jednotlivých souborů vytvořit graf, ale 
 tyto soubory poté převést do gif\footnote{Graphics Interchange Format --  grafický formát určený pro rastrovou grafiku} formátu a následně jednotlivé soubory sloučit do animace. Protože jednotlivých
 grafů skládajících animaci může být vytvořeno poměrně velké množství (podle konkrétního použití i malé tisíce), je velmi nepraktické tyto úkony provádět manuálně. Za tímto účelem jsem tedy vytvořil 
-jednoduchý skript \ref{sec:script}, který potřebnou sekvenci úloh provede automatizovaně a uživatel vzápětí obdrží výslednou animaci. 
+jednoduchý skript \ref{code:script}, který potřebnou sekvenci úloh provede automatizovaně a uživatel vzápětí obdrží výslednou animaci. 
 
 \section{Vyhodnocení experimentu}
 
@@ -901,11 +910,10 @@ velmi pomohlo snížení dosahu rádiové komunikace tak, aby uzel měl možnost
 skutečnosti snížení dosahu komunikace sníží vytížení jednotlivých uzlů a tím pravděpodobně zvýší pravděpodobnost doručení zpráv. Tuto úpravu by ještě bylo možné vylepšit, pokud by intervaly posílání 
 jednotlivých zpráv byly prodlouženy. Druhou variantou zlepšení výkonu je vyžadování potvrzení o přijetí odeslaných zpráv.
 
-Z hlediska možností navázání na tuto práci, konkrétně co se týká rozšíření současné podoby implementace o další funkcionalitu, moc prostoru nenaskýtá, protože při experimentu se jednotlivé uzly pohybovaly 
-na hranici svých možností, především z hlediska dostupné paměti. Na druhou stranu je zcela jistě možné hledat jiné přístupy k řešení problému distribuce klíčů a například 
-optimalizovat celou komponentu vzhledem k paměťové kapacitě jednotlivých uzlů.
-Dále se nabízí spousta příležitostí pro další práci v oblasti vyhodnocení získaných dat, kde je zcela určitě možné vyvinuté nástroje rozšířit 
-tak, aby poskytovaly celou řadu dalších statistik, případně aby program samotný umožňoval propojení různých statistik dohromady a tak usnadnil hledání závislostí.
+Z hlediska možností navázání na tuto práci, bylo by potřeba provést změny nejenom v komponentě pro distribuci správu klíčů, ale i v ostatních komponentách, jelikož se při experimentu jednotlivé uzly 
+pohybovaly na hranici svých možností především z hlediska dostupné paměti, Za předpokladu, že paměťové nároky ProtectLayer jako celku zůstanou přibližně stejné, je možné komponentu rozšiřovat, či jinak 
+upravovat. Dále se nabízí spousta příležitostí pro další práci v oblasti vyhodnocení získaných dat, kde je zcela určitě možné vyvinuté nástroje rozšířit 
+tak, aby poskytovaly celou řadu dalších statistik, případně aby program samotný umožňoval propojení různých statistik dohromady a tak usnadnil hledání různých závislostí.
 
 
 \appendix
@@ -927,9 +935,9 @@ Poté je uvedena adresa odesílajícího uzlu (00~10), tedy tato zpráva byla od
 a poslední dvě hodnoty (22~06) jsou postupně skupinové ID a poté ID komponenty navázané na tento typ zprávy (handler~ID). Skupinové ID slouží k tomu, aby na stejném kanálu bylo možné provozovat více
 skupin uzlů bez vzájemného rušení. Handler~ID je využito v modelu událostmi řízeného zpracování přijatých zpráv tak, že zpráva je předána komponentě, jejíž ID zpráva obsahuje. 
 
-
-\section{Skript pro vytvoření animace}\label{sec:script}
-\begin{lstlisting}[ language=sh]
+\setcounter{lstlisting}{1}
+\section{Skript pro vytvoření animace}
+\begin{lstlisting}[ language=sh,caption=Skript pro vytvoření animace,label=code:script]
 #!/bin/bash
 for file in *.dot; do dot -Kneato -n -Tpng "$file" -o\
 "$(basename $file .dot).png"; done
