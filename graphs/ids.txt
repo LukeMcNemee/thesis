@@ -1,0 +1,29 @@
+41 reported from: 
+44 reported from: 25 - 20x, 31 - 16x, 33 - 12x, 50 - 17x, 
+25 reported from: 10 - 50x, 29 - 17x, 31 - 19x, 33 - 11x, 44 - 13x, 46 - 12x, 47 - 31x, 50 - 5x, 
+10 reported from: 
+33 reported from: 4 - 25x, 25 - 29x, 44 - 28x, 46 - 69x, 48 - 56x, 
+46 reported from: 6 - 14x, 10 - 12x, 25 - 17x, 33 - 25x, 44 - 7x, 47 - 46x, 48 - 11x, 
+47 reported from: 
+48 reported from: 
+4 reported from: 17 - 24x, 19 - 81x, 28 - 74x, 33 - 54x, 37 - 31x, 48 - 47x, 
+19 reported from: 4 - 6x, 6 - 43x, 7 - 10x, 28 - 34x, 48 - 13x, 
+6 reported from: 
+28 reported from: 
+37 reported from: 4 - 33x, 14 - 71x, 17 - 60x, 22 - 39x, 35 - 49x, 
+17 reported from: 4 - 23x, 7 - 72x, 14 - 16x, 15 - 63x, 19 - 46x, 28 - 41x, 37 - 16x, 43 - 15x, 
+7 reported from: 
+15 reported from: 
+14 reported from: 15 - 22x, 17 - 11x, 35 - 7x, 37 - 5x, 43 - 44x, 
+43 reported from: 
+30 reported from: 
+35 reported from: 
+22 reported from: 5 - 47x, 14 - 48x, 31 - 55x, 35 - 77x, 37 - 49x, 40 - 44x, 42 - 82x, 
+42 reported from: 5 - 1x, 22 - 14x, 35 - 11x, 36 - 40x, 
+36 reported from: 
+40 reported from: 5 - 47x, 22 - 26x, 31 - 20x, 32 - 15x, 36 - 24x, 42 - 27x, 50 - 18x, 
+5 reported from: 
+31 reported from: 5 - 23x, 22 - 14x, 40 - 9x, 44 - 22x, 50 - 27x, 
+50 reported from: 5 - 19x, 10 - 45x, 25 - 19x, 29 - 62x, 31 - 47x, 32 - 98x, 40 - 16x, 44 - 34x, 
+32 reported from: 
+29 reported from: 
